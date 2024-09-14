@@ -9,7 +9,7 @@
 관리자
 ★index,★user_list,notice,☆신고글 리스트,☆신고글 디테일,answer
 DB
-user
+user(신고당한 게시글,댓글 개수 컬럼)
 posts(user)
 유저 이동 기록(목적:footer의 개인 추천 게시글)(user,posts,category)user당 최근 30개까지 저장
 댓글(posts)
@@ -17,7 +17,8 @@ category
 notice
 question
 answer
-신고(user,posts/nullable:false,comments/nullable:false)
+신고(user/nullable:false,posts/nullable:false,comments/nullable:false)
+차단(댓글 못쓰게 하는 기능/user)
 post_category(다대다 중간 테이블)
 img(user,posts,option)
 option(블로그 설정:main img 등)(img)
