@@ -110,14 +110,22 @@
 					<div class="heading">Search: 'Thought'</div>
 				</div>
 			</div>
-			<div class="row posts-entry">
-				<div class="col-lg-8">
+			<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom:30px;">
+				<li class="nav-item col-md-6" role="presentation">
+					<button style="width: 100%;" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Post</button>
+				</li>
+				<li class="nav-item col-md-6" role="presentation">
+					<button style="width: 100%;" class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Blog</button>
+				</li>
+			</ul>
+			<div class="row posts-entry tab-content" id="myTabContent">
+				<div class="col-lg-8 tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="blog-entry d-flex blog-entry-search-item">
 						<a href="single.html" class="img-link me-4">
 							<img src="../images/img_1_sq.jpg" alt="Image" class="img-fluid">
 						</a>
 						<div>
-							<span class="date">Apr. 14th, 2022</span>
+							<span class="date">블로그명 / Apr. 14th, 2022</span>
 							<h2><a href="single.html">Thought you loved Python? Wait until you meet Rust</a></h2>
 							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
 							<p><a href="single.html" class="btn btn-sm btn-outline-primary">Read More</a></p>
@@ -186,15 +194,35 @@
 					</div>
 
 				</div>
+				<div class="col-md-8 tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+					<div class="blog-entry d-flex blog-entry-search-item">
+						<a href="single.html" class="img-link me-4">
+							<img src="../images/img_1_sq.jpg" alt="Image" class="img-fluid">
+						</a>
+						<div>
+							<span class="date">블로그명 / Apr. 14th, 2022</span>
+							<h2><a href="single.html">Thought you loved Python? Wait until you meet Rust</a></h2>
+							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, nobis ea quis inventore vel voluptas.</p>
+							<p><a href="single.html" class="btn btn-sm btn-outline-primary">Read More</a></p>
+						</div>
+					</div>
+
+					<div class="row text-start pt-5 border-top">
+						<div class="col-md-12">
+							<div class="custom-pagination">
+								<span>1</span>
+								<a href="#">2</a>
+								<a href="#">3</a>
+								<a href="#">4</a>
+								<span>...</span>
+								<a href="#">15</a>
+							</div>
+						</div>
+					</div>
+
+				</div>
 
 				<div class="col-lg-4 sidebar">
-					
-					<div class="sidebar-box search-form-wrap mb-4">
-						<form action="#" class="sidebar-search-form">
-							<span class="bi-search"></span>
-							<input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
-						</form>
-					</div>
 					<!-- END sidebar-box -->
 					<div class="sidebar-box">
 						<h3 class="heading">Popular Posts</h3>
@@ -386,6 +414,7 @@
 
 
     <script src="../js/bootstrap.bundle.min.js"></script>
+	<script src="../js/bootstrap.bundle.js"></script>
     <script src="../js/tiny-slider.js"></script>
 
     <script src="../js/flatpickr.min.js"></script>
