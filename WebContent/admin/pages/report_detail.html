@@ -224,8 +224,8 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 text-gray-800 mb-15">QnA</h1>
-                    <h6 class="mb-4"><a href="#">Main</a> / <a href="#">문의리스트</a> / 문의상세</h6>
+                    <h1 class="h3 text-gray-800 mb-15">신고 상세</h1>
+                    <h6 class="mb-4"><a href="#">Main</a> / <a href="#">신고리스트</a> / 신고상세</h6>
                     <!-- DataTales Example -->
                     <!-- ============================================================== -->
 	                <!-- content  -->
@@ -239,57 +239,32 @@
 	                                        <div class="user-avatar-info">
 	                                            <div class="m-b-20">
 	                                                <div class="user-avatar-name" style="text-align: center;">
-	                                                    <h2 class="mb-1">문의 제목</h2>
+	                                                    <h2 class="mb-1">신고 제목</h2>
 	                                                </div>
 	                                            </div>
 	                                                <!--  <div class="float-right"><a href="#" class="user-avatar-email text-secondary">www.henrybarbara.com</a></div> -->
 	                                            <div class="user-avatar-address mt-15">
 	                                                <p class="border-bottom pb-3" style="display: flex;justify-content: center;">
-	                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">User : <a href="#">nawj0603</a></span>
-	                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">문의 작성일: 23 June, 2018  </span>
-	                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">답변 작성일: 23 June, 2018  </span>
+	                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">신고한 User : <a href="#">nawj0603</a></span>
+	                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">신고당한 User : <a href="#">nawj0603</a></span>
+	                                                    <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">신고대상 게시글 : <a href="#">바로가기</a></span>
+	                                                </p>
+                                                    <p class="border-bottom pb-3" style="display: flex;justify-content: center;">
+	                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">신고 작성일: 23 June, 2018  </span>
+	                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">조치 여부: 해당 게시글 삭제  </span>
+	                                                    <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">신고 조치일: 23 June, 2018  </span>
 	                                                </p>
 	                                            </div>
 	                                        </div>
-											<div class="user-avatar-info">
+											<div class="user-avatar-info" style="text-align: center;">
+                                                <label><strong>신고 내용</strong></label>
 	                                            <div class="m-b-20" style="display: flex;justify-content: center;">
 	                                                <textarea name="reason" readonly style="border: 1px solid #d1d3e2;border-radius: .35rem;min-height: 500px;width: 800px;"></textarea>
 	                                            </div>
 	                                        </div>
-											<div class="user-avatar-info mt-30" style="display: flex;justify-content: center;">
-	                                            <div class="m-b-20 col-10" style="display: flex;justify-content: center;flex-wrap: wrap;">
-	                                                <img src="../img/undraw_posting_photo.svg" style="width: 300px;height: 400px;border: 1px solid #d1d3e2;">
-	                                            </div>
-	                                        </div>
 											<div class="user-avatar-info mt-30 mb-12" id="q-btn-box" style="display: block;">
 	                                            <div class="m-b-20" style="display: flex;justify-content: center;">
-													<button class="btn btn-primary" type="button" onclick="answer()" id="to-a-btn">답변하기</button>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                        </div>
-							<div class="card influencer-profile-data mt-30 mb-23" id="answer-box" style="display: none;">
-	                            <div class="card-body">
-	                                <div class="row">
-	                                    <div class="col-12">
-											<div class="user-avatar-info mb-20">
-	                                            <div class="m-b-20">
-	                                                <div class="user-avatar-name" style="text-align: center;">
-	                                                    <h2 class="mb-1">답변 작성</h2>
-	                                                </div>
-	                                            </div>
-	                                        </div>
-											<div class="user-avatar-info">
-	                                            <div class="m-b-20" style="display: flex;justify-content: center;">
-	                                                <textarea id="a-txtarea" name="reason" style="resize: none;border: 1px solid #d1d3e2;border-radius: .35rem;min-height: 500px;width: 800px;"></textarea>
-	                                            </div>
-	                                        </div>
-											<div class="user-avatar-info mt-30 mb-12">
-	                                            <div class="m-b-20" style="display: flex;justify-content: center;">
-													<button class="btn btn-primary mr-15">답변하기</button>
-													<button class="btn btn-danger" style="width: 89.6px;" onclick="cancel()" id="btn-cancel">취소</button>
+													<button class="btn btn-primary" type="button" id="to-a-btn">조치 완료</button>
 	                                            </div>
 	                                        </div>
 	                                    </div>
@@ -305,9 +280,6 @@
 
             	</div>
             <!-- End of Main Content -->
-
-			<!-- answer form scripts -->
-			<script src="../js/question_detail.js"></script>
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
