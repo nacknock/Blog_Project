@@ -78,7 +78,7 @@ var myLineChart = new Chart(ctx, {
           padding: 10,
           // Include a dollar sign in the ticks
           callback: function(value, index, values) {
-            return '$' + number_format(value);
+            return number_format(value);
           }
         },
         gridLines: {
@@ -110,9 +110,127 @@ var myLineChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          return datasetLabel + number_format(tooltipItem.yLabel);
         }
       }
     }
   }
 });
+
+function updateChart(period) {
+  const chart_text = document.getElementById('chart-text');
+  const chart_small = document.getElementById('chart-small');
+  if(period === '조회수' || period === '게시글' || period === '댓글'){
+    if(period === '조회수'){
+      chart_text.textContent = "조회수 추이";
+      if(chart_small.textContent === '1년'){
+      }
+      else if(chart_small.textContent === '1달'){
+      }
+      else if(chart_small.textContent === '1일'){
+      }
+    }
+    else if(period === '게시글'){
+      chart_text.textContent = "게시글 추이";
+      if(chart_small.textContent === '1년'){
+      }
+      else if(chart_small.textContent === '1달'){
+      }
+      else if(chart_small.textContent === '1일'){
+      }
+    }
+    else if(period === '댓글'){
+      chart_text.textContent = "댓글 추이";
+      if(chart_small.textContent === '1년'){
+      }
+      else if(chart_small.textContent === '1달'){
+      }
+      else if(chart_small.textContent === '1일'){
+      }
+    }
+    
+  }
+  if(period === '1년' || period === '1달' || period === '1일'){
+    if(chart_text.textContent === '조회수 추이'){
+      if (period === '1년') {
+        // 1년 데이터
+        myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000];
+        myLineChart.data.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        chart_small.textContent = "(기준:1년)";
+      } else if (period === '1달') {
+          // 1달 데이터 예시
+          myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000];
+          myLineChart.data.labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"];
+          chart_small.textContent = "(기준:1달)";
+      } else if (period === '1일') {
+          // 1일 데이터 예시
+          myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000];
+          myLineChart.data.labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24"];
+          chart_small.textContent = "(기준:1일)";
+      }
+    }
+    else if(chart_text.textContent === '게시글 추이'){
+      if (period === '1년') {
+        // 1년 데이터
+        myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000];
+        myLineChart.data.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        chart_small.textContent = "(기준:1년)";
+      } else if (period === '1달') {
+          // 1달 데이터 예시
+          myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000];
+          myLineChart.data.labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"];
+          chart_small.textContent = "(기준:1달)";
+      } else if (period === '1일') {
+          // 1일 데이터 예시
+          myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000];
+          myLineChart.data.labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24"];
+          chart_small.textContent = "(기준:1일)";
+      }
+    }
+    else if(chart_text.textContent === '댓글 추이'){
+      if (period === '1년') {
+        // 1년 데이터
+        myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000];
+        myLineChart.data.labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        chart_small.textContent = "(기준:1년)";
+      } else if (period === '1달') {
+          // 1달 데이터 예시
+          myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000];
+          myLineChart.data.labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"];
+          chart_small.textContent = "(기준:1달)";
+      } else if (period === '1일') {
+          // 1일 데이터 예시
+          myLineChart.data.datasets[0].data = [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000,
+                                                0, 10000, 5000, 15000];
+          myLineChart.data.labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+                "21", "22", "23", "24"];
+          chart_small.textContent = "(기준:1일)";
+      }
+    }
+  }
+  
+  
+  myLineChart.update(); // 차트를 업데이트합니다.
+}

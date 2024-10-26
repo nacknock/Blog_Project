@@ -33,3 +33,26 @@ var myPieChart = new Chart(ctx, {
     cutoutPercentage: 80,
   },
 });
+
+function updateChartPie(period) {
+  const chartPie_small = document.getElementById('chartPie-small');
+  if (period === '1년') {
+    // 1년 데이터
+    myPieChart.data.datasets[0].data = [55, 15, 15, 15];
+    myPieChart.data.labels = ["요리", "스포츠", "영화","그 외"];
+    chartPie_small.textContent = "(기준:1년)";
+  } else if (period === '1달') {
+      // 1달 데이터 예시
+    myPieChart.data.datasets[0].data = [35, 30, 15, 20];
+    myPieChart.data.labels = ["만화", "게임", "요리","그 외"];
+      chartPie_small.textContent = "(기준:1달)";
+  } else if (period === '1일') {
+      // 1일 데이터 예시
+    myPieChart.data.datasets[0].data = [25, 30, 15, 20, 15];
+    myPieChart.data.labels = ["스포츠", "여행", "맛집","그 외"];
+      chartPie_small.textContent = "(기준:1일)";
+  }
+  
+  
+    myPieChart.update(); // 차트를 업데이트합니다.
+}
