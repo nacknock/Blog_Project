@@ -93,6 +93,7 @@
 								<li><a href="category.html">Culture</a></li>
 								<li><a href="category.html">Business</a></li>
 								<li><a href="category.html">Politics</a></li>
+								<li><a href="category.html">Login</a></li>
 							</ul>
 						</div>
 						<div class="col-2 text-end">
@@ -103,7 +104,7 @@
 								<input type="text" class="form-control" placeholder="Search...">
 								<span class="bi-search"></span>
 							</form>
-						</div>
+						</div>						
 					</div>
 				</div>
 			</div>
@@ -148,6 +149,7 @@
 						<ul class="categories ml-5">
 							<li><a href="#">글 관리</a></li>
 							<li><a href="#">카테고리 관리</a></li>
+							<li><a href="#">공지 관리</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
@@ -155,6 +157,7 @@
 						<h3 class="heading"><i class="fa-solid fa-newspaper mr-5 ml-5"></i>댓글</h3>
 						<ul class="categories ml-5">
 							<li><a href="#">댓글 관리</a></li>
+							<li><a href="#">설정</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
@@ -162,20 +165,49 @@
 						<h3 class="heading"><i class="fa-solid fa-palette mr-5 ml-5"></i>디자인</h3>
 						<ul class="categories ml-5">
 							<li><a href="#">디자인 관리</a></li>
+							<li><a href="#">설정</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
 				</div>
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>비밀번호 확인</h2>
+						<h2>회원 탈퇴 </h2>
 					</div>
-					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between pr-50 pl-50" style="padding-top: 23px !important;border: 1px solid rgba(0, 0, 0, 0.125);">
-						<input type="password" class="form-control" name="pw" id="pw" placeholder="password" required="" style="background-color: white !important;">
+					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
+						<div class="post-entry-sidebar" style="display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
+							<div class="email-list">
+								<div class="email-list-item email-list-item--unread">									
+									<div class="email-list-detail pb-30 pt-30" style="text-align: center;">
+										<p class="mb-30"><b>회원 탈퇴 시 유의사항</b></p>
+										<ul id="" style="padding-left: 35px;">
+											<li style="margin-bottom: 15px;">게시판형 서비스(문의게시판,상품평 등)에 등록된 게시물은 탈퇴 후에도 삭제되지 않습니다.</li>
+											<li>게시물 등의 삭제를 원하시는 경우 반드시 직접 삭제하신 후 탈퇴 신청 해주시기 바랍니다.</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="post-entry-sidebar mb-15" style="display: flex;flex-direction: column;">
+							<div class="mt-15" style="display: flex;justify-content: center;">
+								<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
+									<div class="email-list-actions mr-10 ml-10 pt-7">
+										<label class="custom-control custom-checkbox">
+											<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
+										</label>
+									</div>
+									<div class="email-list-detail">
+										<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
+											상기 사항에 모두 동의합니다.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
+							<button type="submit" class="btn btn-sm btn-outline-primary">회원 탈퇴</button>
+						</div>							
 					</div>
-					<div class="col-12 mt-55 mb-15 pr-15 pl-15" style="display: flex;justify-content: center;">
-						<button type="button" class="btn btn-sm btn-primary">확인</button>
-					</div>					
 				</div>
 			</div>
 		</div>
