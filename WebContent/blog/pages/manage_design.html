@@ -148,6 +148,7 @@
 						<ul class="categories ml-5">
 							<li><a href="#">글 관리</a></li>
 							<li><a href="#">카테고리 관리</a></li>
+							<li><a href="#">공지 관리</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
@@ -155,6 +156,7 @@
 						<h3 class="heading"><i class="fa-solid fa-newspaper mr-5 ml-5"></i>댓글</h3>
 						<ul class="categories ml-5">
 							<li><a href="#">댓글 관리</a></li>
+							<li><a href="#">설정</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
@@ -162,110 +164,32 @@
 						<h3 class="heading"><i class="fa-solid fa-palette mr-5 ml-5"></i>디자인</h3>
 						<ul class="categories ml-5">
 							<li><a href="#">디자인 관리</a></li>
+							<li><a href="#">설정</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
 				</div>
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>카테고리 관리</h2>
-					</div>
-					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
-						<div class="d-flex flex-row align-items-center justify-content-between">
-							<div class="email-list-actions mr-30 ml-15 pt-7">
-								<label class="custom-control custom-checkbox">
-									<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
-								</label>
-							</div>
-							<h6 class="m-0 font-weight-bold text-primary" id="chart-text">일괄 적용</h6>
-							<div class="dropdown no-arrow">
-								<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-									aria-labelledby="dropdownMenuLink">
-									<div class="dropdown-header">상태 변경:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">공개</a>
-									<a class="dropdown-item" onclick="updateChart('1달')">비공개</a>
-									<a class="dropdown-item" onclick="updateChart('1일')">삭제</a>
-								</div>
-							</div>
-						</div>
+						<h2>디자인 관리 </h2>
 					</div>
 					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-						<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
+						<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
 							<div class="email-list">
-								<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
-									<div class="email-list-actions mr-30 ml-30 pt-7">
-										<label class="custom-control custom-checkbox">
-											<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
-										</label>
-									</div>
-									<div class="email-list-detail" style="display: flex;">
-										<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
-											카테고리명
+								<div class="email-list-item email-list-item--unread">									
+									<div class="email-list-detail" style="width: 450px;">
+										<p class="msg mb-7 ml-15 float-l" style="color: #000;">
+											 페이지 상단부 이미지 설정
 										</p>
-										<input class="input" type="text" value="카테고리명" id="none-input-1" style="display: none;">
-										<p class="ml-5">(1)</p>
+										<input class="input" type="file">
 									</div>
 								</div>
 							</div>
-							<div class="dropdown no-arrow">
-								<i class="fa-solid fa-eye"></i><!-- 공개 설정되어있을때 -->
-								<a class="dropdown-toggle mr-17" href="#" role="button" id="dropdownMenuLink"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-									aria-labelledby="dropdownMenuLink">
-									<div class="dropdown-header">Dropdown Header:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">수정</a>
-									<a class="dropdown-item" onclick="updateChart('1달')">삭제</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" onclick="updateChart('조회수')">공개</a>
-									<a class="dropdown-item" onclick="updateChart('게시글')">비공개</a>
-								</div>
-							</div>
-						</div>	
-						<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
-							<div class="email-list">
-								<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
-									<div class="email-list-actions mr-30 ml-30 pt-7">
-										<label class="custom-control custom-checkbox">
-											<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
-										</label>
-									</div>
-									<div class="email-list-detail" style="display: flex;">
-										<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
-											긴긴긴긴긴 아주 긴긴긴긴긴 카테고리이이이이ㅣㅣㅣㅣ
-										</p>
-										<input class="input" type="text" value="긴긴긴긴긴 아주 긴긴긴긴긴 카테고리이이이이ㅣㅣㅣㅣ" id="none-input-2" style="display: none;">
-										<p class="ml-5">(21)</p>
-									</div>
-								</div>
-							</div>
-							<div class="dropdown no-arrow">
-								<i class="fa-solid fa-eye-slash"></i><!-- 비공개 설정되어있을때 -->
-								<a class="dropdown-toggle mr-17" href="#" role="button" id="dropdownMenuLink"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-									aria-labelledby="dropdownMenuLink">
-									<div class="dropdown-header">Dropdown Header:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">수정</a>
-									<a class="dropdown-item" onclick="updateChart('1달')">삭제</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" onclick="updateChart('조회수')">공개</a>
-									<a class="dropdown-item" onclick="updateChart('게시글')">비공개</a>
-								</div>
-							</div>
-						</div>								
+						</div>				
+						<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
+							<button type="submit" class="btn btn-sm btn-outline-primary">변경사항 저장</button>
+						</div>							
 					</div>
-					<div class="col-12 mt-55 mb-15 pr-15 pl-15" style="display: flex;justify-content: center;">
-						<button type="button" class="btn btn-sm btn-outline-primary">변경사항 저장</button>
-					</div>					
 				</div>
 			</div>
 		</div>
