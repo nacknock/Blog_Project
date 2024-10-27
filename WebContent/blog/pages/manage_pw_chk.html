@@ -165,122 +165,17 @@
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
-					<div class="sidebar-box">
-						<h3 class="heading"><i class="fa-solid fa-user mr-5 ml-5"></i>유저 정보</h3>
-						<ul class="categories ml-5">
-							<li><a href="#">회원 정보 수정</a></li>
-							<li><a href="#">비밀 번호 수정</a></li>
-							<li><a href="#">회원 탈퇴</a></li>
-						</ul>
-					</div>
-					<!-- END sidebar-box -->
 				</div>
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
-					<div class="box_blog box_visitor mb-30 pt-20" 
-					style="display: flex;justify-content: space-around;
-					background-color: rgba(0, 0, 0, 0.03);
-					border-radius: 5px;border: 1px solid rgba(0, 0, 0, 0.125);">
-						<div class="group_item">
-							<dl class="count_visitor float-l pr-15">
-								<dt>오늘 조회수</dt>
-								<dd>0</dd>
-							</dl>
-							<dl class="count_visitor float-l pr-15">
-								<dt>어제 조회수</dt>
-								<dd>0</dd>
-							</dl>
-							<dl class="count_visitor float-l pr-15">
-								<dt>누적 조회수</dt>
-								<dd>7</dd>
-							</dl>
-						</div>
-						<div class="group_item">
-							<dl class="count_visitor float-l pr-15">
-								<dt>오늘 댓글</dt>
-								<dd>0</dd>
-							</dl>
-							<dl class="count_visitor float-l pr-15">
-								<dt>어제 댓글</dt>
-								<dd>0</dd>
-							</dl>
-							<dl class="count_visitor float-l pr-15">
-								<dt>누적 댓글</dt>
-								<dd>2</dd>
-							</dl>
-						</div>
+					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
+						<h2>비밀번호 확인</h2>
 					</div>
-					<div class="card shadow mb-4">
-						<!-- Card Header - Dropdown -->
-						<div
-							class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-							<div class="d-flex flex-row align-items-center justify-content-between">
-								<h6 class="m-0 font-weight-bold text-primary" id="chart-text">조회수 추이</h6><small id="chart-small">(기준:1년)</small>
-							</div>
-							<div class="dropdown no-arrow">
-								<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-									aria-labelledby="dropdownMenuLink">
-									<div class="dropdown-header">Dropdown Header:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">1년</a>
-									<a class="dropdown-item" onclick="updateChart('1달')">1달</a>
-									<a class="dropdown-item" onclick="updateChart('1일')">1일</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" onclick="updateChart('조회수')">조회수</a>
-									<a class="dropdown-item" onclick="updateChart('게시글')">게시글</a>
-									<a class="dropdown-item" onclick="updateChart('댓글')">댓글</a>
-								</div>
-							</div>
-						</div>
-						<!-- Card Body -->
-						<div class="card-body">
-							<div class="chart-area">
-								<canvas id="myAreaChart" style="height: 300px !important;"></canvas>
-							</div>
-						</div>
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+						<input type="password" class="form-control" name="pw" id="pw" placeholder="password" required="" style="background-color: white !important;">
 					</div>
-					<div class="sidebar-box">
-						<h3 class="heading">최근 게시글</h3>
-						<div class="post-entry-sidebar">
-							<ul>
-								<li>
-									<a href="">
-										<img src="../images/img_1_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-										<div class="text">
-											<h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-											<div class="post-meta">
-												<span class="mr-2">March 15, 2018 / 댓글 0 </span>
-											</div>
-										</div>
-									</a>
-								</li>
-								<li>
-									<a href="">
-										<img src="../images/img_2_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-										<div class="text">
-											<h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-											<div class="post-meta">
-												<span class="mr-2">March 15, 2018 / 댓글 0 </span>
-											</div>
-										</div>
-									</a>
-								</li>
-								<li>
-									<a href="">
-										<img src="../images/img_3_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-										<div class="text">
-											<h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-											<div class="post-meta">
-												<span class="mr-2">March 15, 2018 / 댓글 0 </span>
-											</div>
-										</div>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
+					<div class="col-12 mt-55 mb-15 pr-15 pl-15" style="display: flex;justify-content: center;">
+						<button type="button" class="btn btn-sm btn-outline-primary">확인</button>
+					</div>					
 				</div>
 			</div>
 		</div>
@@ -411,12 +306,6 @@
     <script src="../js/navbar.js"></script>
     <script src="../js/counter.js"></script>
     <script src="../js/custom.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="../js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="../js/chart-area-demo.js"></script><!-- 사각 그래프 -->
     
   </body>
   </html>
