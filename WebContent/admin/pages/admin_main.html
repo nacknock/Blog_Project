@@ -451,12 +451,12 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                <span style="font-size: large;">댓글 수</span>
+                                                <span style="font-size: large;">문의 답변 평가</span>
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">3 (18)</div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fa-solid fa-comment-dots" style="font-size: xx-large;color:#f6c23e;"></i>
+                                            <i class="fa-solid fa-thumbs-up" style="font-size: xx-large;color:#f6c23e;"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -602,47 +602,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="text-center">
-                                        <ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-bottom:30px;">
-                                            <li class="nav-item col-md-6" role="presentation">
-                                                <button onclick="report_show()" style="width: 100%;" class="nav-link active" id="report-tab" data-bs-toggle="tab" data-bs-target="#report" type="button" role="tab" aria-controls="report" aria-selected="true"><h6 class="m-0 font-weight-bold text-primary">신고</h6></button>
-                                            </li>
-                                            <li class="nav-item col-md-6" role="presentation">
-                                                <button onclick="qna_show()" style="width: 100%;" class="nav-link" id="qna-tab" data-bs-toggle="tab" data-bs-target="#qna" type="button" role="tab" aria-controls="qna" aria-selected="false"><h6 class="m-0 font-weight-bold text-primary">문의</h6></button>
-                                            </li>
-                                        </ul>
-                                        <div class="tab-pane fade show active" id="report" role="tabpanel" aria-labelledby="report-tab">
-                                            <table class="table table-bordered" id="report-table" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Num</th>
-                                                        <th>카테고리</th>
-                                                        <th>작성일자</th>
-                                                        <th>조치여부</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr onclick="location.href='#'" style="cursor: pointer;">
-                                                        <th>1</th>
-                                                        <th>저작권 도용</th>
-                                                        <th>2000-09-18</th>
-                                                        <th>조치 완료</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>2</th>
-                                                        <th>불법프로그램 사용</th>
-                                                        <th>2001-07-11</th>
-                                                        <th>조치 안됨</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>3</th>
-                                                        <th>저작권 도용</th>
-                                                        <th>2007-10-01</th>
-                                                        <th>조치 안됨</th>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="tab-pane fade" id="qna" role="tabpanel" aria-labelledby="qna-tab" style="display: none;">
+                                        <div class="tab-pane fade show active" id="qna" role="tabpanel" aria-labelledby="qna-tab">
                                             <table class="table table-bordered" id="qna-table" width="100%" cellspacing="0">
                                                 <thead>
                                                     <tr>
@@ -655,6 +615,20 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr onclick="location.href='#'" style="cursor: pointer;">
+                                                        <th>1</th>
+                                                        <th>일반문의</th>
+                                                        <th>안돼요</th>
+                                                        <th>2000-09-18</th>
+                                                        <th>Y</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>1</th>
+                                                        <th>일반문의</th>
+                                                        <th>안돼요</th>
+                                                        <th>2000-09-18</th>
+                                                        <th>Y</th>
+                                                    </tr>
+                                                    <tr>
                                                         <th>1</th>
                                                         <th>일반문의</th>
                                                         <th>안돼요</th>
@@ -750,20 +724,6 @@
     <script src="../js/demo/chart-area-demo.js"></script><!-- 사각 그래프 -->
     <script src="../js/demo/chart-pie-demo.js"></script><!-- 원 그래프 -->
     <script src="../js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        const report_div = document.getElementById('report');
-        const qna_div = document.getElementById('qna');
-
-        function report_show(){
-            report_div.style.display = 'block';
-            qna_div.style.display = 'none';
-        }
-        function qna_show(){
-            report_div.style.display = 'none';
-            qna_div.style.display = 'block';
-        }
-    </script>
 
 </body>
 
