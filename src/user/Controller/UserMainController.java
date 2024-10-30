@@ -1,4 +1,4 @@
-package admin.Controller;
+package user.Controller;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class MainController
+ * Servlet implementation class UserMainController
  */
-@WebServlet("/admin")
-public class MainController extends HttpServlet {
+@WebServlet("/")
+public class UserMainController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MainController() {
+    public UserMainController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,7 +39,7 @@ public class MainController extends HttpServlet {
 	}
 	
 	protected void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/admin/template/admin_main.jsp").forward(request, response);
+		request.getRequestDispatcher("/blog/template/index.jsp").forward(request, response);
 	}
 
 }
