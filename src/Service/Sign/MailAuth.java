@@ -36,6 +36,8 @@ public class MailAuth implements Action {
 			if(result > 0) {
 				map.put("msg","회원가입되었습니다");
 				map.put("check","ok");
+				request.getSession().removeAttribute("authenticationKey");
+				request.getSession().removeAttribute("user");
 			}else {
 				map.put("msg", "회원가입에 실패했습니다.");
 				map.put("check", "nok");

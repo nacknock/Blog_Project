@@ -10,27 +10,26 @@ import javax.servlet.http.HttpServletResponse;
 import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
 import Service.Sign.login;
-import Service.Sign.logout;
+import Service.manage.LoadUser;
+import Service.manage.open_pw_chk;
+import Service.manage.pw_chk;
 
 /**
- * Servlet implementation class SignController
+ * Servlet implementation class ManageController
  */
-@WebServlet("/sign/*")
-public class SignController extends HttpServlet {
+@WebServlet("/manage/*")
+public class ManageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SignController() {
+    public ManageController() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		doAction(request,response);
 	}
@@ -47,32 +46,23 @@ public class SignController extends HttpServlet {
 		System.out.println(action);
 		String page = null;
 		switch (action) {
-		case "/login.do":
-			page="/blog/template/Sign/login.jsp";
+		case "/main.do":
+			//new LoadMain().command(request, response);
+			page="/blog/template/manage/main.jsp";
 			break;
-		case "/join.do":
-			page="/blog/template/Sign/join.jsp";
+		case "/user.do":
+			new LoadUser().command(request, response);
+			page="/blog/template/manage/user.jsp";
 			break;
-		case "/mailAction.do":
-			new MailSend().command(request, response);
-			page=null;
-			response.sendRedirect("/sign/mail_auth.do");
+		case "/pw_chk.do":
+			new open_pw_chk().command(request, response);
+			page="/blog/template/manage/pw_chk.jsp";
 			break;
-		case "/mail_auth.do":
-			page="/blog/template/Sign/mail_auth.jsp";
-			break;
-		case "/mail_authAction.do":
-			page=null;
-			new MailAuth().command(request, response);
-			break;
-		case "/loginAction.do":
-			page=null;
-			new login().command(request, response);
-			break;
-		case "/logout.do":
-			new logout().command(request, response);
+		case "/pw_chkAction.do":
+			new pw_chk().command(request, response);
 			break;
 		}
+		
 		if(page != null) {
 			request.getRequestDispatcher(page).forward(request, response);
 		}

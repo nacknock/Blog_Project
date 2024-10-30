@@ -15,7 +15,7 @@
 							</form>
 
 							<ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-								<li class="active"><a href="index.html">Home</a></li>
+								<li class="active"><a href="/">Home</a></li>
 								<li class="has-children">
 									<a href="category.html">Pages</a>
 									<ul class="dropdown">
@@ -42,10 +42,18 @@
 								<li><a href="category.html">Politics</a></li>
 								<li class="has-children">
 									<a>유저</a>
-									<ul class="dropdown">
-										<li><a href="/sign/login.do">Login</a></li>
-										<li><a href="/sign/join.do">join</a></li>
-									</ul>
+									<c:if test = "${not empty userid }">
+                      					<ul class="dropdown">
+											<li><a href="/sign/logout.do">Log out</a></li>
+											<li><a href="/manage/main.do">블로그 관리</a></li>
+										</ul>
+	                   				</c:if>
+									<c:if test = "${empty userid }">
+                      					<ul class="dropdown">
+											<li><a href="/sign/login.do">Login</a></li>
+											<li><a href="/sign/join.do">join</a></li>
+										</ul>
+	                   				</c:if>
 								</li>
 							</ul>
 						</div>

@@ -16,6 +16,7 @@
     <url-pattern>*.woff2</url-pattern>
     <url-pattern>*.otf</url-pattern>
     <url-pattern>*.eot</url-pattern>
+    <url-pattern>*.png</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>jsp</servlet-name>
