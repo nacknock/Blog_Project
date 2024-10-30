@@ -7,26 +7,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import DTO.ManageUserDTO;
 import Service.Action;
 import user.DAO.ManageDAO;
 
-public class LoadUser implements Action {
+public class UserDelAction implements Action {
 
 	@Override
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		request.setCharacterEncoding("utf-8");
-		boolean check = (boolean)request.getSession().getAttribute("checked");
-		if(check) {
-			String userid = (String)request.getSession().getAttribute("userid");
-			
-			ManageUserDTO dto =  ManageDAO.getInstance().loadPage(userid);
-			
-			request.setAttribute("dto", dto);
-		}else {
-			response.sendRedirect("/manage/main");
-		}
-		
+		String userid = (String)request.getSession().getAttribute("userid");
+		ManageDAO.getInstance().user_del(userid);
+		HttpSession session = request.getSession();
+		session.invalidate();//葛电 技记加己 昏力
+		response.sendRedirect("/");
 	}
 
 }

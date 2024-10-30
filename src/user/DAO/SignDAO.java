@@ -77,6 +77,9 @@ public class SignDAO {
 			if(result > 0) {
 				result = insertPostByJoin(result);
 			}
+			if(result > 0) {
+				result = insertImgByJoin(vo);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,6 +94,40 @@ public class SignDAO {
 		return result;
 	}
 
+	private int insertImgByJoin(B_userVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String query = "insert into img (img_id,img_path,user_img) values(img_seq.nextval,?,?)";
+		
+		int result = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1,"default_profile.png");
+			pstmt.setInt(2, vo.getIdx());
+			
+			result = pstmt.executeUpdate();//insert,update,delete 쿼리는 정상적으로 실행했을때 0보다 큰값을 리턴한다
+			
+			if(result > 0) {
+				result = selectJoinedBlog(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
 	private int selectJoinedIdx(String user_id) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;

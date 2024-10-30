@@ -64,6 +64,7 @@
 	<!-- nav end -->
 	<!-- nav end -->
 	<!-- nav end -->
+
 	<div class="section search-result-wrap">
 		<div class="container">
 			<div class="row posts-entry tab-content" id="myTabContent">
@@ -76,93 +77,41 @@
 				<!-- sidebar end -->
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>회원 정보 수정 </h2>
+						<h2>会員退会 </h2>
 					</div>
 					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-						<form name="update" method="post" enctype="multipart/form-data" action="/manage/user_update.do" onsubmit="return check()">
-							<div class="post-entry-sidebar" style="display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
-								<div class="email-list">
-									<div class="email-list-item email-list-item--unread">									
-										<div class="email-list-detail pb-30" style="text-align: center;">
-											<p class="msg mb-7 ml-15 pt-15 pb-15" style="color: #000;">
-												프로필 사진 변경
+						<div class="post-entry-sidebar" style="display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
+							<div class="email-list">
+								<div class="email-list-item email-list-item--unread">									
+									<div class="email-list-detail pb-30 pt-30" style="text-align: center;">
+										<p class="mb-30"><b>退会時の注意事項</b></p>
+										<ul id="" style="padding-left: 35px;">
+											<li style="margin-bottom: 15px;">退会するとブログや利用していたサービス等のアカウント情報は削除されます。</li>
+											<li>削除するアカウントに間違いないかを必ずご確認ください。特に複数アカウントをお持ちの方は、ご注意ください。</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+							<div class="post-entry-sidebar mb-15" style="display: flex;flex-direction: column;">
+								<div class="mt-15" style="display: flex;justify-content: center;">
+									<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
+										<div class="email-list-actions mr-10 ml-10 pt-7">
+											<label class="custom-control custom-checkbox">
+												<input class="custom-control-input checkboxes" type="checkbox" onchange="toggleButton()" value="1" id="one" style="width: 20px;height: 20px;">
+											</label>
+										</div>
+										<div class="email-list-detail">
+											<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
+												本ページに記載の退会時の注意事項をすべて確認し、同意しました。
 											</p>
-											<input type="hidden" name="idx" id="idx" value="${dto.idx }">
-											<input type="file" class="form-control mb-30" name="img" id="img" style="height: 38px;">
-											<input type="hidden" name="imgurl" value="/blog/images/${dto.path}">
-											<img src="/blog/images/${dto.path}" id="preview" style="width:168px;height:168px;">
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="post-entry-sidebar mb-30" style="display: flex;flex-direction: column;">
-								<div class="mt-15" style="display: flex;justify-content: center;">
-									<div>
-										<h4 style="color: #000;">ID</h4>
-									</div>
-									<div class="ml-15">
-										<input class="form-control" disabled type="text" id="user_id" name="user_id" value="${dto.user_id }" style="height: 30px; background: white !important;">
-									</div>
-								</div>
-								<div class="mt-15 ml-68" style="display: flex;justify-content: center;">
-									<div>
-										<h4 style="color: #000;">Email</h4>
-									</div>
-									<div class="ml-15">
-										<input class="form-control" type="text" id="email" name="email" value="${dto.email }" style="height: 30px; background: white !important;">
-									</div>
-									<div>
-										<button type="button" id="btn-email" class="btn btn-sm btn-primary ml-10" style="height: 30px;display: flex;align-items: center;">
-											<span>メール認証</span>
-										</button>
-									</div>
-								</div>
-								<div class="mt-15 ml-28" style="display: flex;justify-content: center;"><!-- 기본 none 블럭 -->
-									<div>
-										<h4 style="color: #000;">認証コード</h4>
-									</div>
-									<div class="ml-15">
-										<input class="form-control" type="text" id="certinumber" name="auth_num" style="height: 30px; background: white !important;">
-									</div>
-									<div>
-										<button type="button" id="email_ok" class="btn btn-sm btn-warning ml-10" style="height: 30px;display: flex;align-items: center;">
-											<span>コードを入力</span>
-										</button>
-									</div>
-								</div>
-								<div class="mt-15 mr-120" style="display: flex;justify-content: center;">
-									<div>
-										<h4 style="color: #000;">ニックネーム</h4>
-									</div>
-									<div class="ml-15">
-										<input class="form-control" type="text" id="nickname" value="${dto.nickname }" name="nickname" style="height: 30px; background: white !important;">
-									</div>
-								</div>
-								<div class="mt-15 mr-70" style="display: flex;justify-content: center;">
-									<div>
-										<h4 style="color: #000;">タイトル</h4>
-									</div>
-									<div class="ml-15">
-										<input class="form-control" type="text" name="b_title" value="${dto.b_title }" style="height: 30px; background: white !important;">
-									</div>
-								</div>
-								<div class="mt-15 mr-25" style="display: flex;justify-content: center;">
-									<div>
-										<h4 style="color: #000;">説明</h4>
-									</div>
-									<div class="ml-15">
-										<textarea class="form-control" id="one_liner" name="one_liner" style="resize: none; width: 216px; height: 120px !important; background: white !important;">
-										<c:if test="${not empty dto.one_liner }">
-											${dto.one_liner }
-										</c:if>
-										</textarea>
-									</div>
-								</div>
-							</div>
 							<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
-								<button type="submit" id="btn_submit" class="btn btn-sm btn-outline-primary">변경사항 저장</button>
-							</div>
-						</form>							
+								<button type="button" disabled id="del_btn" onclick="location.href="/manage/user_delAction.do"" class="btn btn-sm btn-outline-primary">退会する</button>
+							</div>			
 					</div>
 				</div>
 			</div>
@@ -192,6 +141,7 @@
     <script src="/blog/js/tiny-slider.js"></script>
 
     <script src="/blog/js/flatpickr.min.js"></script>
+    <script src="/blog/js/user_del.js"></script>
 
 
     <script src="/blog/js/aos.js"></script>
@@ -199,14 +149,6 @@
     <script src="/blog/js/navbar.js"></script>
     <script src="/blog/js/counter.js"></script>
     <script src="/blog/js/custom.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="/blog/js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="/blog/js/chart-area-demo.js"></script><!-- 사각 그래프 -->
-    
-    <script src="/blog/js/manage_user.js"></script>
     
   </body>
   </html>

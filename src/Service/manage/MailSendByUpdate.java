@@ -1,4 +1,4 @@
-package Service.Sign;
+package Service.manage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,22 +22,17 @@ import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
+import DTO.ManageUserDTO;
 import Service.Action;
 import VO.B_userVo;
+import VO.ImgVo;
 import util.SecurityPassword;
 
-public class MailSend implements Action {
+public class MailSendByUpdate implements Action {
 
 	@Override
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		B_userVo vo = new B_userVo();
-		String newPassword = SecurityPassword.encoding(request.getParameter("pw"));
-		vo.setUser_id(request.getParameter("userid"));
-		vo.setPw(newPassword);
-		vo.setEmail(request.getParameter("email"));
-		vo.setNickname(request.getParameter("nickname"));
-		vo.setRole(0);
 		
 		String email = request.getParameter("email");
 		
@@ -86,15 +81,23 @@ public class MailSend implements Action {
 			//메시지의 세부사항을 나타낸다
 			msg.setFrom(new InternetAddress(user,"JSLHRD"));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to_email));
-			msg.setSubject("Blogy会員登録の認証コード");
+			String subject = "Blogyの認証コード";
+			msg.setSubject(subject,"UTF-8");
 			msg.setContent(htmlContent, "text/html; charset=utf-8");
 			Transport.send(msg);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("msg","認証コードを発信しました。");
+		
+		Gson gson = new Gson();
+		String msg = gson.toJson(map); //map->json
+		
+		response.setCharacterEncoding("utf-8");
+		response.getWriter().write(msg.toString());
 
-		HttpSession session = request.getSession();
-		session.setAttribute("user", vo);
 	}
 
 }

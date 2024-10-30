@@ -5,13 +5,12 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import DTO.ManageUserDTO;
 import Service.Action;
 import user.DAO.ManageDAO;
 
-public class LoadUser implements Action {
+public class PwUpdate implements Action {
 
 	@Override
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -20,13 +19,14 @@ public class LoadUser implements Action {
 		if(check) {
 			String userid = (String)request.getSession().getAttribute("userid");
 			
-			ManageUserDTO dto =  ManageDAO.getInstance().loadPage(userid);
+			ManageUserDTO dto =  ManageDAO.getInstance().selSidebar(userid);
 			
 			request.setAttribute("dto", dto);
 		}else {
-			response.sendRedirect("/manage/main");
+			response.sendRedirect("/manage/main.do");
 		}
-		
+
+
 	}
 
 }

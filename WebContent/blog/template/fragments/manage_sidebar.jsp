@@ -5,15 +5,10 @@
 					<div class="sidebar-box">
 						<div class="mb-45">
 							<a href="/manage/pw_chk.do?page=1" style="display: flex;justify-content: center;">
-								<c:if test = "${empty dto.path }">
-								<img class="mt-15" src="/blog/images/default_profile.png" style="width: 214px;height: 214px;">
-								</c:if>
-								<c:if test = "${not empty dto.path }">
-								<img class="mt-15" src="${pageContext.request.contextPath}/upload/${dto.img_path()}" style="width: 214px;height: 214px;">
-								</c:if>
+							<img class="mt-15" src="/blog/images/${dto.path}" style="width: 214px;height: 214px;">								
 							</a>
 							<div class="mt-15" style="padding:15px; border-top: #e6e6e6 solid 1px;border-bottom: #e6e6e6 solid 1px;">
-								<h3>블로그명</h3>
+								<h3>${dto.b_title }</h3>
 								<a href="#"><h5>블로그 바로가기</h5></a>
 							</div>
 							<div style="padding:15px;border-bottom: #e6e6e6 solid 1px;">
