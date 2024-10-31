@@ -16,10 +16,14 @@ import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
 import Service.manage.PwUpdate;
 import Service.manage.PwUpdateAction;
+import Service.manage.UserDelAction;
 import Service.manage.UserUpdate;
 import Service.manage.User_Del;
 import Service.manage.open_pw_chk;
 import Service.manage.pw_chk;
+import Service.manage.q_list;
+import Service.manage.q_writeAction;
+import Service.manage.qna_write;
 
 /**
  * Servlet implementation class ManageController
@@ -92,10 +96,21 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/user_del.do":
 			new User_Del().command(request, response);
-			page="/blog/template/manage/pw_update.jsp";
+			page="/blog/template/manage/user_del.jsp";
 			break;
 		case "/user_delAction.do":
 			new UserDelAction().command(request, response);
+			break;
+		case "/qna_write.do":
+			new qna_write().command(request, response);
+			page="/blog/template/manage/qna_write.jsp";
+			break;
+		case "/q_writeAction.do":
+			new q_writeAction().command(request, response);
+			break;
+		case "/qna_list.do":
+			new q_list().command(request, response);
+			page="/blog/template/manage/qna_list.jsp";
 			break;
 		}
 		

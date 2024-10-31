@@ -4,9 +4,13 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import DTO.ManageUserDTO;
 import VO.B_userVo;
+import VO.QuestionVo;
+import util.Criteria;
 import util.DBManager;
 
 public class ManageDAO {
@@ -277,7 +281,7 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		
 		//where절의 idx로 수정할 대상 찾기
-		String sql = "delete b_user where user_id = ?";
+		String sql = "update b_user set role = -1 where user_id = ?";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
@@ -294,6 +298,176 @@ public class ManageDAO {
 				e2.printStackTrace();
 			}
 		}
+	}
+	public int setQuestionSave(QuestionVo vo) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "insert into question (q_idx,q_ctgr,q_title,q_content,a_yn,q_u_idx) values (q_seq.nextval,?,?,?,0,?)";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getQ_ctgr());
+			pstmt.setString(2, vo.getQ_title());
+			pstmt.setString(3, vo.getQ_content());
+			pstmt.setInt(4, vo.getQ_u_idx());
+			pstmt.executeUpdate();
+			result = 1;
+			
+			if(vo.getQ_img() != null) {
+				int qidx = selectQ(vo);
+				
+				String img_sql = "insert into img (img_id,img_path,q_img) values(img_seq.nextval,?,?)";
+				
+				pstmt = conn.prepareStatement(img_sql);
+				pstmt.setString(1, vo.getQ_img());
+				pstmt.setInt(2, qidx);
+				pstmt.executeUpdate();
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public List<QuestionVo> getListWithPaging(Criteria cri, String query, String type) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		if(query != "") {
+			sql = "select * from (" + 
+					"select /*+ index_desc(question q_pk) */ " + 
+					"rownum rn,q_idx,q_ctgr,q_title,q_content,question.created_at,a_yn,img.img_path,q_u_idx,answer.a_content from question " + 
+					"left join img on img.q_img = q_idx" +
+					"left join answer on answer.a_q_idx = q_idx" +
+					"where ("+query+") and rownum <= ?*? " + 
+					") where rn > (?-1)*?";
+		}else {
+			sql = "select * from (" + 
+					"select /*+ index_desc(question q_pk) */ " + 
+					"rownum rn,q_idx,q_ctgr,q_title,q_content,question.created_at,a_yn,img.img_path,q_u_idx,answer.a_content from question " + 
+					"left join img on img.q_img = q_idx" +
+					"left join answer on answer.a_q_idx = q_idx" +
+					"where rownum <= ?*? " + 
+					") where rn > (?-1)*?";
+		}
+		List<QuestionVo> list = new ArrayList<QuestionVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cri.getPageNum());
+			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, cri.getPageNum());
+			pstmt.setInt(4, cri.getAmount());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				QuestionVo vo = new QuestionVo();
+				vo.setQ_idx(rs.getInt("q_idx"));
+				vo.setQ_title(rs.getString("q_title"));
+				vo.setQ_content(rs.getString("q_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setA_yn(rs.getInt("a_yn"));
+				vo.setQ_img(rs.getString("img_path"));
+				vo.setQ_ctgr(rs.getInt("q_ctgr"));
+				vo.setA_content(rs.getString("a_content"));
+				
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	private int selectQ(QuestionVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select q_idx from question where q_u_idx = ? order by created_at desc";
+		int q_idx = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getQ_u_idx());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				q_idx = rs.getInt("q_idx");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+	
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+				if(rs != null) rs.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return q_idx;
+	}
+	public int getCount(String query) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		
+		int cnt = 0;
+		
+		if(query == "") {
+			sql = "select count(*) as cnt from question";
+		}else {
+			sql = "select count(*) as cnt from question where "+query;
+		}
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cnt;
 	}
 
 

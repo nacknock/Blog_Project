@@ -55,11 +55,11 @@
 					<div class="sidebar-box">
 						<h3 class="heading"><i class="fa-solid fa-user mr-5 ml-5"></i>유저 정보</h3>
 						<ul class="categories ml-5">
-							<li><a href="#">문의/신고</a></li>
-							<li><a href="#">문의/신고 내역</a></li>
-							<li><a href="/manage/pw_chk.do?page=1">회원 정보 수정</a></li>
-							<li><a href="/manage/pw_chk.do?page=2">비밀 번호 수정</a></li>
-							<li><a href="/manage/pw_chk.do?page=3">회원 탈퇴</a></li>
+							<li><a href="/manage/qna_write.do">お問い合わせ</a></li>
+							<li><a href="#">お問い合わせ一覧</a></li>
+							<li><a href="/manage/pw_chk.do?page=1">プロフィールの設定</a></li>
+							<li><a href="/manage/pw_chk.do?page=2">パスワードの変更</a></li>
+							<li><a href="/manage/pw_chk.do?page=3">会員退会</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->

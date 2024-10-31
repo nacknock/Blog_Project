@@ -8,6 +8,8 @@ public class QuestionVo {
 	private int a_yn;
 	private String created_at;
 	private int q_u_idx;
+	private String q_img;
+	private String a_content;
 	public int getQ_idx() {
 		return q_idx;
 	}
@@ -49,5 +51,17 @@ public class QuestionVo {
 	}
 	public void setQ_u_idx(int q_u_idx) {
 		this.q_u_idx = q_u_idx;
+	}
+	public String getQ_img() {
+		return q_img;
+	}
+	public void setQ_img(String q_img) {
+		this.q_img = q_img;
+	}
+	public String getA_content() {
+		return a_content;
+	}
+	public void setA_content(String a_content) {
+		this.a_content = a_content;
 	}
 }

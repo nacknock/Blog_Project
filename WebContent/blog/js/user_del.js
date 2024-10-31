@@ -1,6 +1,6 @@
 function toggleButton() {
             const checkbox = document.getElementById('one');
-            const button = document.getElementById('deleteButton');
+            const button = document.getElementById('del_btn');
 
             // 체크박스가 체크되었는지 확인
             if (checkbox.checked) {

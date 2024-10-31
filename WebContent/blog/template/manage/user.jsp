@@ -76,7 +76,7 @@
 				<!-- sidebar end -->
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>회원 정보 수정 </h2>
+						<h2>プロフィールの設定 </h2>
 					</div>
 					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
 						<form name="update" method="post" enctype="multipart/form-data" action="/manage/user_update.do" onsubmit="return check()">
@@ -85,7 +85,7 @@
 									<div class="email-list-item email-list-item--unread">									
 										<div class="email-list-detail pb-30" style="text-align: center;">
 											<p class="msg mb-7 ml-15 pt-15 pb-15" style="color: #000;">
-												프로필 사진 변경
+												画像を変更
 											</p>
 											<input type="hidden" name="idx" id="idx" value="${dto.idx }">
 											<input type="file" class="form-control mb-30" name="img" id="img" style="height: 38px;">
@@ -106,7 +106,7 @@
 								</div>
 								<div class="mt-15 ml-68" style="display: flex;justify-content: center;">
 									<div>
-										<h4 style="color: #000;">Email</h4>
+										<h4 style="color: #000;">メール</h4>
 									</div>
 									<div class="ml-15">
 										<input class="form-control" type="text" id="email" name="email" value="${dto.email }" style="height: 30px; background: white !important;">
@@ -160,7 +160,7 @@
 								</div>
 							</div>
 							<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
-								<button type="submit" id="btn_submit" class="btn btn-sm btn-outline-primary">변경사항 저장</button>
+								<button type="submit" id="btn_submit" class="btn btn-sm btn-outline-primary">変更を保存</button>
 							</div>
 						</form>							
 					</div>

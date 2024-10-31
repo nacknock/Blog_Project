@@ -77,41 +77,36 @@
 				<!-- sidebar end -->
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>会員退会 </h2>
+						<h2>お問い合わせ </h2>
 					</div>
 					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-						<div class="post-entry-sidebar" style="display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
-							<div class="email-list">
-								<div class="email-list-item email-list-item--unread">									
-									<div class="email-list-detail pb-30 pt-30" style="text-align: center;">
-										<p class="mb-30"><b>退会時の注意事項</b></p>
-										<ul id="" style="padding-left: 35px;">
-											<li style="margin-bottom: 15px;">退会するとブログや利用していたサービス等のアカウント情報は削除されます。</li>
-											<li>削除するアカウントに間違いないかを必ずご確認ください。特に複数アカウントをお持ちの方は、ご注意ください。</li>
-										</ul>
-									</div>
+						<form method="post" action="/manage/q_writeAction.do" enctype="multipart/form-data" name="q_form" id="q_form">
+							<div class="form-group col-md-12">
+								<div class="mt-30 mb-15" style="display: flex;justify-content: center;">
+								<input type="hidden" value="${dto.idx }" name="idx" id="idx">
+									<select id="q_ctgr" name="q_ctgr" class="form-control" style="width: 60%;height: 50%;text-align: center;background: white !important;">
+										<option value="">選択してください</option>
+										<option value="1">ログイン</option>
+										<option value="2">機能/使い方</option>
+										<option value="3">権利侵害</option>
+										<option value="4">不具合/エラー/トラブル</option>
+									</select>
 								</div>
-							</div>
-						</div>
-							<div class="post-entry-sidebar mb-15" style="display: flex;flex-direction: column;">
-								<div class="mt-15" style="display: flex;justify-content: center;">
-									<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
-										<div class="email-list-actions mr-10 ml-10 pt-7">
-											<label class="custom-control custom-checkbox">
-												<input class="custom-control-input checkboxes" type="checkbox" onchange="toggleButton()" value="1" id="one" style="width: 20px;height: 20px;">
-											</label>
-										</div>
-										<div class="email-list-detail">
-											<p class="msg mb-7 mr-85" style="white-space: nowrap;max-width: 365px;">
-												本ページに記載の退会時の注意事項をすべて確認し、同意しました。
-											</p>
-										</div>
-									</div>
+								<div>
+									<input name="q_title" id="q_title" style="border-top: none;border-left: none;border-right: none; text-align: center;" class="form-control" type="text" placeholder="タイトル">
+								</div>
+								<div class="col-12">
+									<textarea id="txt_detail" class="form-control" name="q_content" rows="15"
+									style="resize:none;background: white !important;"></textarea>
+								</div>
+								<div>
+									<input style="height: 37px;" multiple class="form-control" type="file" placeholder="title" name="imgurl" id="imgurl">
 								</div>
 							</div>
 							<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
-								<button type="button" disabled id="del_btn" onclick="location.href='/manage/user_delAction.do'" class="btn btn-sm btn-outline-primary">退会する</button>
-							</div>			
+								<button type="submit" class="btn btn-sm btn-outline-primary">この内容で送信する</button>
+							</div>	
+						</form>						
 					</div>
 				</div>
 			</div>
@@ -141,7 +136,6 @@
     <script src="/blog/js/tiny-slider.js"></script>
 
     <script src="/blog/js/flatpickr.min.js"></script>
-    <script src="/blog/js/user_del.js"></script>
 
 
     <script src="/blog/js/aos.js"></script>
