@@ -17,7 +17,7 @@
 											<span class="from">${list.created_at }</span>
 										</div>
 										<div>
-											<a href="#">
+											<a href="/manage/qna_detail.do?q_idx=${list.q_idx}">
 												<p class="from" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 565px;">
 													${list.q_title }
 												</p>

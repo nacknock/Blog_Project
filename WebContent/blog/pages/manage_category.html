@@ -168,7 +168,7 @@
 				</div>
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>카테고리 관리</h2>
+						<h2>カテゴリ管理</h2>
 					</div>
 					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
 						<div class="d-flex flex-row align-items-center justify-content-between">
@@ -177,7 +177,7 @@
 									<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
 								</label>
 							</div>
-							<h6 class="m-0 font-weight-bold text-primary" id="chart-text">일괄 적용</h6>
+							<h6 class="m-0 font-weight-bold text-primary" id="chart-text">全選択</h6>
 							<div class="dropdown no-arrow">
 								<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
 									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -185,10 +185,10 @@
 								</a>
 								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 									aria-labelledby="dropdownMenuLink">
-									<div class="dropdown-header">상태 변경:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">공개</a>
-									<a class="dropdown-item" onclick="updateChart('1달')">비공개</a>
-									<a class="dropdown-item" onclick="updateChart('1일')">삭제</a>
+									<div class="dropdown-header">アクション選択:</div>
+									<a class="dropdown-item" onclick="updateChart('1년')">公開</a>
+									<a class="dropdown-item" onclick="updateChart('1달')">非公開</a>
+									<a class="dropdown-item" onclick="updateChart('1일')">削除</a>
 								</div>
 							</div>
 						</div>
@@ -254,17 +254,35 @@
 								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 									aria-labelledby="dropdownMenuLink">
 									<div class="dropdown-header">Dropdown Header:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">수정</a>
-									<a class="dropdown-item" onclick="updateChart('1달')">삭제</a>
+									<a class="dropdown-item" onclick="updateChart('1년')">編集</a>
+									<a class="dropdown-item" onclick="updateChart('1달')">削除</a>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" onclick="updateChart('조회수')">공개</a>
-									<a class="dropdown-item" onclick="updateChart('게시글')">비공개</a>
+									<a class="dropdown-item" onclick="updateChart('조회수')">公開</a>
+									<a class="dropdown-item" onclick="updateChart('게시글')">非公開</a>
 								</div>
 							</div>
-						</div>								
+						</div>			
+						<div class="post-entry-sidebar" id="input_box" style="display: none;height: 80px;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
+							<div class="col-7" style="width: 60%;height: 100%;">
+								<input type="text" name="ctgr_name" id="ctgr_name" style="border-radius: 4px;border-color: #214252;height: 70%;width: 80%;margin-left: 50px;margin-top: 12px;">
+							</div>
+							<div class="col-5 d-flex justify-content-center">
+								<button class="btn btn-sm btn-danger" style="margin-right: 15px;" type="button" id="cancel_btn">キャンセル</button>
+								<button class="btn btn-sm btn-primary" style="width: 99.6px;" type="button" id="submit_btn">保存</button>
+							</div>
+						</div>			
+						<div class="post-entry-sidebar" id="add_box" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
+							<button type="button" id="addbtn" style="background-color: transparent;
+										border: none;color: inherit;
+										cursor: pointer;
+										width: 100%;
+										height: 100%;text-align: center;padding-top: 5px;">
+										<h3>+カテゴリを追加する</h3>
+							</button>
+						</div>				
 					</div>
 					<div class="col-12 mt-55 mb-15 pr-15 pl-15" style="display: flex;justify-content: center;">
-						<button type="button" class="btn btn-sm btn-outline-primary">변경사항 저장</button>
+						<button type="button" class="btn btn-sm btn-outline-primary">保存</button>
 					</div>					
 				</div>
 			</div>
@@ -389,6 +407,8 @@
     <script src="../js/tiny-slider.js"></script>
 
     <script src="../js/flatpickr.min.js"></script>
+
+	<script src="../js/category.js"></script>
 
 
     <script src="../js/aos.js"></script>

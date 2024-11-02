@@ -14,13 +14,20 @@ import Service.Sign.login;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
+import Service.manage.Post_save;
 import Service.manage.PwUpdate;
 import Service.manage.PwUpdateAction;
 import Service.manage.UserDelAction;
 import Service.manage.UserUpdate;
 import Service.manage.User_Del;
+import Service.manage.ctgrAdd;
+import Service.manage.ctgrDel;
+import Service.manage.ctgrModify;
+import Service.manage.ctgrPrivate;
+import Service.manage.open_post_write;
 import Service.manage.open_pw_chk;
 import Service.manage.pw_chk;
+import Service.manage.q_detail;
 import Service.manage.q_list;
 import Service.manage.q_paging;
 import Service.manage.q_writeAction;
@@ -115,6 +122,29 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/q_paging.do":
 			new q_paging().command(request, response);
+			break;
+		case "/qna_detail.do":
+			new q_detail().command(request, response);
+			page="/blog/template/manage/q_detail.jsp";
+			break;
+		case "/ctgrAdd.do":
+			new ctgrAdd().command(request, response);
+			break;
+		case "/ctgrModify.do":
+			new ctgrModify().command(request, response);
+			break;
+		case "/ctgrDel.do":
+			new ctgrDel().command(request, response);
+			break;
+		case "/ctgrPrivate.do":
+			new ctgrPrivate().command(request, response);
+			break;
+		case "/open_post_write.do":
+			new open_post_write().command(request, response);
+			page="/blog/template/manage/wirte_post.jsp";
+			break;
+		case "/post_writeAction.do":
+			new Post_save().command(request, response);
 			break;
 		}
 		

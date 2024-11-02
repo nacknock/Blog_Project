@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DTO.ManageUserDTO;
+import VO.AnswerVo;
 import VO.B_userVo;
+import VO.PostVo;
 import VO.QuestionVo;
+import VO.categoryVo;
 import util.Criteria;
 import util.DBManager;
 
@@ -60,7 +63,7 @@ public class ManageDAO {
 		ResultSet rs = null;
 		ManageUserDTO dto = new ManageUserDTO();
 		
-		String sql = "select user_id,idx,email,nickname,b.b_title,b.one_liner,img.img_path\r\n" + 
+		String sql = "select user_id,idx,email,nickname,b.b_idx,b.b_title,b.one_liner,img.img_path\r\n" + 
 				"from b_user\r\n" + 
 				"left join img\r\n" + 
 				"on img.user_img = b_user.idx\r\n" + 
@@ -76,6 +79,7 @@ public class ManageDAO {
 			
 			if(rs.next()) {
 				dto.setUser_id(rs.getString("user_id"));
+				dto.setB_idx(rs.getInt("b_idx"));
 				dto.setIdx(rs.getInt("idx"));
 				dto.setEmail(rs.getString("email"));
 				dto.setB_title(rs.getString("b_title"));
@@ -463,6 +467,393 @@ public class ManageDAO {
 		}
 		
 		return cnt;
+	}
+	public QuestionVo sel_q_detail(int q_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		QuestionVo vo = new QuestionVo();
+		String sql = "select question.*,img.img_path\r\n" + 
+				"from question\r\n" + 
+				"left join img\r\n" + 
+				"on img.q_img = q_idx\r\n" + 
+				"where q_idx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, q_idx);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo.setQ_idx(rs.getInt("q_idx"));
+				vo.setQ_content(rs.getString("q_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setQ_title(rs.getString("q_title"));
+				vo.setQ_u_idx(rs.getInt("q_u_idx"));
+				vo.setA_yn(rs.getInt("a_yn"));
+				vo.setQ_ctgr(rs.getInt("q_ctgr"));
+				vo.setQ_img(rs.getString("img_path"));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public AnswerVo sel_a_detailByQ(int q_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		AnswerVo vo = new AnswerVo();
+		String sql = "select * from answer where a_q_idx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, q_idx);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo.setA_idx(rs.getInt("a_idx"));
+				vo.setA_content(rs.getString("a_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setRaiting(rs.getInt("raiting"));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public List<categoryVo> sel_ctgr(int b_idx) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<categoryVo> list = new ArrayList<categoryVo>();
+		String sql = "select category.*,p_private,count(p_idx)\r\n" + 
+				"from category\r\n" + 
+				"left join post\r\n" + 
+				"on ctgridx = post.p_ctgr\r\n" + 
+				"where ctgr_b_idx = ?\r\n" + 
+				"group by ctgridx,ctgr_name,ctgr_b_idx , p_private";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				categoryVo vo = new categoryVo();
+				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
+				vo.setCtgr_name(rs.getString("ctgr_name"));
+				vo.setCtgridx(rs.getInt("ctgridx"));
+				list.add(vo);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	public categoryVo saveCtgr(categoryVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "insert into category (ctgridx,ctgr_name,ctgr_b_idx) values (ctgr_seq.nextval,?,?)";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getCtgr_name());
+			pstmt.setInt(2, vo.getCtgr_b_idx());
+			pstmt.executeUpdate();
+			result = 1;
+			
+			if(result == 1) {
+				
+				String sel_sql = "select ctgridx from category where ctgr_name = ? and ctgr_b_idx = ?";
+				
+				pstmt = conn.prepareStatement(sel_sql);
+				pstmt.setString(1, vo.getCtgr_name());
+				pstmt.setInt(2, vo.getCtgr_b_idx());
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) {
+					vo.setCtgridx(rs.getInt("ctgridx"));
+				}
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return vo;
+	}
+	public int ModifyCtgr(categoryVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "insert into category (ctgridx,ctgr_name,ctgr_b_idx) values (ctgr_seq.nextval,?,?)";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getCtgr_name());
+			pstmt.setInt(2, vo.getCtgr_b_idx());
+			pstmt.executeUpdate();
+			result = 1;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public categoryVo sel_one_ctgr(categoryVo vo) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "select * from category where ctgridx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getCtgr_b_idx());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo.setCtgridx(rs.getInt("ctgridx"));
+				vo.setCtgr_name(rs.getString("ctgr_name"));
+				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return vo;
+	}
+	public int DelCtgr(int ctgridx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "delete category where ctgridx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ctgridx);
+			pstmt.executeUpdate();
+			result = 1;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public int ctgrChangePri(int pri_bool, int ctgridx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//0 public 1 private
+		String sql = null;
+		if(pri_bool == 0) {
+			sql = "update post set p_private = 0 where p_ctgr = ?";
+		}else if(pri_bool == 1){
+			sql = "update post set p_private = 1 where p_ctgr = ?";
+		}else {
+			return 0;
+		}
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ctgridx);
+			pstmt.executeUpdate();
+			result = 1;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public int sel_one_p_pri_yn(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int p_pri_yn = 0;
+		
+		String sql = "select p_pri_yn from blog where b_idx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				p_pri_yn = rs.getInt("p_pri_yn");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return p_pri_yn;
+	}
+	public int savePost(PostVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "insert into post (p_idx,p_ctgr,p_title,p_content,p_private,p_b_idx) values (post_seq.nextval,?,?,?,?,?)";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getP_ctgr());
+			pstmt.setString(2, vo.getP_title());
+			pstmt.setString(3, vo.getP_content());
+			pstmt.setInt(4, vo.getP_private());
+			pstmt.setInt(5, vo.getP_b_idx());
+			pstmt.executeUpdate();
+			result = 1;
+			
+			if(vo.getImg_path() != null) {
+				int pidx = selectOnePbySave(vo);
+				
+				String img_sql = "insert into img (img_id,img_path,post_img) values(img_seq.nextval,?,?)";
+				
+				pstmt = conn.prepareStatement(img_sql);
+				pstmt.setString(1, vo.getImg_path());
+				pstmt.setInt(2, pidx);
+				pstmt.executeUpdate();
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	private int selectOnePbySave(PostVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "select p_idx from post where p_b_idx = ? and p_ctgr = ? and p_title = ? order by created_at desc";
+		int p_idx = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getP_b_idx());
+			pstmt.setInt(2, vo.getP_ctgr());
+			pstmt.setString(3, vo.getP_title());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				p_idx = rs.getInt("p_idx");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+	
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+				if(rs != null) rs.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return p_idx;
 	}
 
 
