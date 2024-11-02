@@ -33,19 +33,28 @@ public class q_paging implements Action {
 		String query_type = "";
 		String query_term = "";
 		
-		if(request.getParameter("keyword") != null) {
+		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
 			query_keyword = "and q_title like '%"+keyword+"%' ";
 		}
 		
-		if(request.getParameter("type") != null) {
+		if(request.getParameter("type") != null &&!request.getParameter("type").equals("")) {
 			type = request.getParameter("type");
-			query_type = "and a_yn = 1 ";
+			if(type.equals("yes_a")) {
+				query_type = "and a_yn = 1 ";
+			}else if(type.equals("none_a")) {
+				query_type = "and a_yn = 0 ";
+			}else {
+				query_type = "";
+			} 
 		}
 		
-		if(request.getParameter("term") != null) {
+		if(request.getParameter("term") != null &&!request.getParameter("term").equals("")) {
 			term = request.getParameter("term");
-			query_term = "order by "+term+" ";
+			if(!term.equals("desc") && !term.equals("asc")) {
+				query_term = "";
+			}
+			query_term = "order by created_at "+term+" ";
 		}
 		
 		if(request.getParameter("pageNum") != null) {
@@ -62,7 +71,23 @@ public class q_paging implements Action {
 
 		List<QuestionVo> list = ManageDAO.getInstance().getListWithPaging(cri,query_keyword,query_type,query_term);
 
-		int count = ManageDAO.getInstance().getCount(query_keyword,query_type,query_term);
+		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
+			keyword = request.getParameter("keyword");
+			query_keyword = "q_title like '%"+keyword+"%' ";
+		}else {
+			if(request.getParameter("type") != null &&!request.getParameter("type").equals("")) {
+				type = request.getParameter("type");
+				if(type.equals("yes_a")) {
+					query_type = "a_yn = 1 ";
+				}else if(type.equals("none_a")) {
+					query_type = "a_yn = 0 ";
+				}else {
+					query_type = "";
+				} 
+			}
+		}
+		
+		int count = ManageDAO.getInstance().getCount(query_keyword,query_type);
 		
 		PageVo pvo = new PageVo(cri, count);
 		

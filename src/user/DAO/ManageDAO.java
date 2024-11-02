@@ -428,7 +428,7 @@ public class ManageDAO {
 		}
 		return q_idx;
 	}
-	public int getCount(String query_keyword, String query_type, String query_term) {
+	public int getCount(String query_keyword, String query_type) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -439,13 +439,9 @@ public class ManageDAO {
 		if(query_keyword == "" && query_type == "") {
 			sql = "select count(*) as cnt from question";
 		}else {
-			sql = "select count(*) as cnt from question where "+ query_keyword + query_type;
+			sql = "select count(*) as cnt from question where "+ query_keyword +" "+ query_type;
 		}
-		
-		if(query_term != "") {
-			sql = sql + query_term;
-		}
-		
+		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);

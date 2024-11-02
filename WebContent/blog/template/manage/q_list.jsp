@@ -81,7 +81,7 @@
 					</div>
 					<div class="card-header py-3 d-flex justify-content-end" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">						
 						<div class="dropdown no-arrow" style="display: flex;align-items: center;">
-							<form name="myform" method="get" action="/manage/qna_list.do" class=""  style="display: flex;align-items: center;">
+							<form name="myform" method="get" class=""  style="display: flex;align-items: center;" onsubmit="return page_keyword(event);">
 								<input type="text" name="keyword" value="${pageMaker.cri.keyword}" class="form-control" placeholder="検索" style="margin-bottom: 0; height: 30px;">
 							</form>
 							<a class="dropdown-toggle ml-20" href="#" role="button" id="dropdownMenuLink"

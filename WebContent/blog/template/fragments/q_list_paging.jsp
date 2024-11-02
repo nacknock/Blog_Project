@@ -3,6 +3,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
+						<c:if test="${empty list}">
+							<div class="row text-start pt-5 pb-5 border-top" style="text-align: center !important;">
+								<h2><b>${pageMaker.cri.keyword}</b> に一致する情報は見つかりませんでした。</h2>
+							</div>
+						</c:if>
 						<c:forEach var="list" items="${list}">
 						<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
 							<div class="email-list">
@@ -53,18 +58,18 @@
 							<input type="hidden" id="keyword" value="${pageMaker.cri.keyword}">
 							<input type="hidden" id="term" value="${pageMaker.cri.term}">
 							<c:if test="${pageMaker.prev}">
-								<a onclick="prev_page('${page}')" href="/manage/qna_list.do?pageNum=${pageMaker.startPage-1}&amount=${pageMaker.cri.amount}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">←</a>
+								<a style="color: #FFF !important;cursor:pointer;" onclick="prev_page('${pageMaker.startPage-1}')">←</a>
 							</c:if>
 							<c:forEach var="page" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
 								<c:if test="${pageMaker.cri.pageNum == page}">
 									<span>${page}</span>
 								</c:if>
 								<c:if test="${pageMaker.cri.pageNum != page}">
-									<a onclick="page('${page}')" href="/manage/qna_list.do?pageNum=${page}&amount=${pageMaker.cri.amount}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">${page}</a>
+									<a style="cursor:pointer;color: #FFF !important;" onclick="page('${page}')">${page}</a>
 								</c:if>								
 							</c:forEach>
 							<c:if test="${pageMaker.next}">
-								<a onclick="next_page('${page}')" href="/manage/qna_list.do?pageNum=${pageMaker.endPage+1}&amount=${pageMaker.cri.amount}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">→</a>
+								<a style="cursor:pointer;color: #FFF !important;" onclick="next_page('${pageMaker.endPage+1}')">→</a>
 							</c:if>
 							</div>
 							<div class="paging">
