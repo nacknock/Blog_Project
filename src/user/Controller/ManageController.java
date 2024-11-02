@@ -22,6 +22,7 @@ import Service.manage.User_Del;
 import Service.manage.open_pw_chk;
 import Service.manage.pw_chk;
 import Service.manage.q_list;
+import Service.manage.q_paging;
 import Service.manage.q_writeAction;
 import Service.manage.qna_write;
 
@@ -110,7 +111,10 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/qna_list.do":
 			new q_list().command(request, response);
-			page="/blog/template/manage/qna_list.jsp";
+			page="/blog/template/manage/q_list.jsp";
+			break;
+		case "/q_paging.do":
+			new q_paging().command(request, response);
 			break;
 		}
 		

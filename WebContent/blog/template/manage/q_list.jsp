@@ -82,7 +82,7 @@
 					<div class="card-header py-3 d-flex justify-content-end" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">						
 						<div class="dropdown no-arrow" style="display: flex;align-items: center;">
 							<form name="myform" method="get" action="/manage/qna_list.do" class=""  style="display: flex;align-items: center;">
-								<input type="text" name="keyword" value="${pageMaker.cri.keyword}" class="form-control" placeholder="Search/blog." style="margin-bottom: 0; height: 30px;">
+								<input type="text" name="keyword" value="${pageMaker.cri.keyword}" class="form-control" placeholder="検索" style="margin-bottom: 0; height: 30px;">
 							</form>
 							<a class="dropdown-toggle ml-20" href="#" role="button" id="dropdownMenuLink"
 								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -91,69 +91,24 @@
 							<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 								aria-labelledby="dropdownMenuLink">
 								<div class="dropdown-header">表示基準:</div>
-								<a class="dropdown-item" onclick="updateChart('1년')">最新順</a>
-								<a class="dropdown-item" onclick="updateChart('1달')">古い順</a>
+								<a class="dropdown-item" onclick="page_term('desc')">最新順</a>
+								<a class="dropdown-item" onclick="page_term('asc')">古い順</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" onclick="updateChart('조회수')">全て</a>
-								<a class="dropdown-item" onclick="updateChart('게시글')">回答済み</a>
+								<a class="dropdown-item" onclick="page_type('all')">全て</a>
+								<a class="dropdown-item" onclick="page_type('yes_a')">回答済み</a>
+								<a class="dropdown-item" onclick="page_type('none_a')">未回答</a>
 							</div>
 						</div>
 					</div>
-					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-						<c:forEach var="list" items="${list}">
-						<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
-							<div class="email-list">
-								<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
-									<div class="email-list-detail ml-30">
-										<div class="mb-1">
-											<span class="from">${list.created_at }</span>
-										</div>
-										<div>
-											<a href="#">
-												<p class="from" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 565px;">
-													${list.q_title }
-												</p>
-											</a>
-										</div>
-										<c:if test="${not empty list.a_content }">
-										<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 565px;">
-											<span class="from" style="color: #306EE8;">[回答]</span>${list.a_content }
-										</p>
-										</c:if>
-									</div>
-								</div>
-							</div>
-							<div class="email-list">
-								<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
-									<div class="email-list-detail ml-30 mr-30">
-										<div class="mb-1">
-											<c:if test="${list.a_yn == 1}">
-				                                <span class="from" style="color: #306EE8;">回答済み</span>
-				                            </c:if>
-				                            <c:if test="${list.a_yn == 0}">
-				                                <span class="from" style="color: #FF0000;">未回答</span>
-				                            </c:if>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>	
-						</c:forEach>				
+					<div id="q_list_p">
+							<!-- q_list_paging start -->
+							<!-- q_list_paging start -->
+							<!-- q_list_paging start -->
+							<!-- q_list_paging end -->
+							<!-- q_list_paging end -->
+							<!-- q_list_paging end -->		
 					</div>
-					<div class="row text-start pt-5 border-top">
-						<div class="col-md-12">
-							<div class="custom-pagination">
-								<a href="#">←</a>
-								<span>1</span>
-								<a href="#">2</a>
-								<a href="#">3</a>
-								<a href="#">4</a>
-								<span>/blog.</span>
-								<a href="#">15</a>
-								<a href="#">→</a>
-							</div>
-						</div>
-					</div>					
+								
 				</div>
 			</div>
 		</div>
@@ -189,6 +144,7 @@
     <script src="/blog/js/navbar.js"></script>
     <script src="/blog/js/counter.js"></script>
     <script src="/blog/js/custom.js"></script>
+    <script src="/blog/js/q_list.js"></script>
     
   </body>
   </html>

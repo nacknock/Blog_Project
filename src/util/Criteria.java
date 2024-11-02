@@ -4,8 +4,9 @@ public class Criteria {
 	
 	private int pageNum;//페이지번호
 	private int amount;//1페이지 출력하는 레코드 개수
-	private String type;//검색 조건 title, content
+	private String type;//검색 조건 //a_yn
 	private String keyword;//검색 키워드
+	private String term;//검색 범위
 	
 	public Criteria() {
 		this(1,5);
@@ -37,6 +38,12 @@ public class Criteria {
 	}
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
+	}
+	public String getTerm() {
+		return term;
+	}
+	public void setTerm(String term) {
+		this.term = term;
 	}
 
 }

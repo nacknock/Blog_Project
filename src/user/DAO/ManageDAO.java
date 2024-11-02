@@ -341,28 +341,23 @@ public class ManageDAO {
 		}
 		return result;
 	}
-	public List<QuestionVo> getListWithPaging(Criteria cri, String query, String type) {
+	public List<QuestionVo> getListWithPaging(Criteria cri, String query_keyword, String query_type, String query_term) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		if(query != "") {
-			sql = "select * from (" + 
-					"select /*+ index_desc(question q_pk) */ " + 
-					"rownum rn,q_idx,q_ctgr,q_title,q_content,question.created_at,a_yn,img.img_path,q_u_idx,answer.a_content from question " + 
-					"left join img on img.q_img = q_idx" +
-					"left join answer on answer.a_q_idx = q_idx" +
-					"where ("+query+") and rownum <= ?*? " + 
-					") where rn > (?-1)*?";
-		}else {
-			sql = "select * from (" + 
-					"select /*+ index_desc(question q_pk) */ " + 
-					"rownum rn,q_idx,q_ctgr,q_title,q_content,question.created_at,a_yn,img.img_path,q_u_idx,answer.a_content from question " + 
-					"left join img on img.q_img = q_idx" +
-					"left join answer on answer.a_q_idx = q_idx" +
-					"where rownum <= ?*? " + 
-					") where rn > (?-1)*?";
-		}
+		String sql_top = "select * from (\r\n" + 
+				"select /*+ index_desc(question q_pk) */\r\n" + 
+				"rownum rn,q_idx,q_ctgr,q_title,img.img_path,q_content,question.created_at,a_yn,q_u_idx,answer.a_content from question \r\n" + 
+				"left join img on img.q_img = q_idx\r\n" + 
+				"left join answer on answer.a_q_idx = q_idx ";
+
+		String sql_middle = "where rownum <= ?*? " + query_keyword + query_type + query_term;
+		
+		String sql_bot = " ) where rn > (?-1)*? ";
+		
+		sql = sql_top + sql_middle + sql_bot;
+		
 		List<QuestionVo> list = new ArrayList<QuestionVo>();
 		
 		try {
@@ -433,7 +428,7 @@ public class ManageDAO {
 		}
 		return q_idx;
 	}
-	public int getCount(String query) {
+	public int getCount(String query_keyword, String query_type, String query_term) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -441,10 +436,14 @@ public class ManageDAO {
 		
 		int cnt = 0;
 		
-		if(query == "") {
+		if(query_keyword == "" && query_type == "") {
 			sql = "select count(*) as cnt from question";
 		}else {
-			sql = "select count(*) as cnt from question where "+query;
+			sql = "select count(*) as cnt from question where "+ query_keyword + query_type;
+		}
+		
+		if(query_term != "") {
+			sql = sql + query_term;
 		}
 		
 		try {
