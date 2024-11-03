@@ -14,6 +14,7 @@ import Service.Sign.login;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
+import Service.manage.Pchange_pri;
 import Service.manage.Post_save;
 import Service.manage.PwUpdate;
 import Service.manage.PwUpdateAction;
@@ -25,14 +26,20 @@ import Service.manage.ctgrDel;
 import Service.manage.ctgrModify;
 import Service.manage.ctgrPrivate;
 import Service.manage.openP_manage;
+import Service.manage.open_post_modify;
 import Service.manage.open_post_write;
 import Service.manage.open_pw_chk;
+import Service.manage.open_reply_manage;
+import Service.manage.postModifyAction;
+import Service.manage.post_del;
+import Service.manage.post_paging;
 import Service.manage.pw_chk;
 import Service.manage.q_detail;
 import Service.manage.q_list;
 import Service.manage.q_paging;
 import Service.manage.q_writeAction;
 import Service.manage.qna_write;
+import Service.manage.reply_paging;
 
 /**
  * Servlet implementation class ManageController
@@ -153,6 +160,29 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/post_paging.do":
 			new post_paging().command(request, response);
+			break;
+		case "/openP_modify.do":
+			new open_post_modify().command(request, response);
+			page="/blog/template/manage/post_modify.jsp";
+			break;
+		case "/postModifyAction.do":
+			new postModifyAction().command(request, response);
+			break;
+		case "/del_post.do":
+			new post_del().command(request, response);
+			break;
+		case "/Pchange_pri.do":
+			new Pchange_pri().command(request, response);
+			break;
+		case "/Bchange_pri.do":
+			new postModifyAction().command(request, response);
+			break;
+		case "/open_reply_manage.do":
+			new open_reply_manage().command(request, response);
+			page="/blog/template/manage/reply_manage.jsp";
+			break;
+		case "/reply_paging.do":
+			new reply_paging().command(request, response);
 			break;
 		}
 		

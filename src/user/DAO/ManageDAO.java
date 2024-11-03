@@ -400,7 +400,7 @@ public class ManageDAO {
 		
 		return list;
 	}
-	private int selectQ(QuestionVo vo) {
+	public int selectQ(QuestionVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -907,7 +907,7 @@ public class ManageDAO {
 		String sql = null;
 		String sql_top = "select * from (\r\n" + 
 				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_ctgr,p_title,p_content,created_at,modifited_at,hit,p_b_idx,p_private \r\n" + 
+				"rownum rn,p_idx,p_ctgr,p_title,p_content,created_at,modified_at,hit,p_b_idx,p_private \r\n" + 
 				"from post\r\n";
 
 		String sql_middle = "where rownum <= ?*? and p_b_idx = ? " + query_keyword + query_type + query_term;
@@ -967,7 +967,290 @@ public class ManageDAO {
 		if(query_keyword == "") {
 			sql = "select count(*) as cnt from post where p_b_idx = ? ";
 		}else {
-			sql = "select count(*) as cnt from question where p_b_idx = ? "+ query_keyword;
+			sql = "select count(*) as cnt from post where p_b_idx = ? "+ query_keyword;
+		}
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
+	public PostVo sel_post_one(int pidx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PostVo vo = new PostVo();
+		String sql = "select post.*,img.img_path "
+				+ "from post "
+				+ "left join img "
+				+ "on post_img = pidx "
+				+ "where p_idx = ?";
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pidx);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setHit(rs.getInt("hit"));
+				vo.setImg_path(rs.getString("img_path"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public int PostModifyAction(PostVo vo, boolean imgChange) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String sql = "update post set p_title = ?,p_content = ?,modified_at = ?,p_ctgr = ? where p_idx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getP_title());
+			pstmt.setString(2, vo.getP_content());
+			pstmt.setString(3, "");
+			pstmt.setInt(4, vo.getP_ctgr());
+			pstmt.setInt(5, vo.getP_idx());
+			pstmt.executeUpdate();
+			
+			if(imgChange) {
+				String img_sql = "update img set img_path = ? where post_img = ?";
+				
+					pstmt = conn.prepareStatement(img_sql);
+					pstmt.setString(1, vo.getImg_path());
+					pstmt.setInt(2, vo.getP_idx());
+					pstmt.executeUpdate();
+					result = 1;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+		
+	}
+	public int DelPost(int p_idx, String path) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//where절의 idx로 수정할 대상 찾기
+		String img_sql = "delete img where post_img = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(img_sql);
+			pstmt.setInt(1, p_idx);
+			pstmt.executeUpdate();
+			
+			String sql = "delete post where p_idx = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, p_idx);
+			pstmt.executeUpdate();
+			
+			File img = new File(path);
+			
+			if(img != null) {
+				img.delete();
+			}
+			result = 1;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public int PChangePri(int pri_bool, int p_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//0 public 1 private
+		String sql = null;
+		if(pri_bool == 0) {
+			sql = "update post set p_private = 0 where p_idx = ?";
+		}else if(pri_bool == 1){
+			sql = "update post set p_private = 1 where p_idx = ?";
+		}else {
+			return 0;
+		}
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, p_idx);
+			pstmt.executeUpdate();
+			result = 1;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public int BChangePri(int pri_bool, int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		
+		//0 public 1 private
+		String sql = null;
+		if(pri_bool == 0) {
+			sql = "update blog set p_pri_yn = 0 where b_idx = ?";
+		}else if(pri_bool == 1){
+			sql = "update post set p_pri_yn = 1 where b_idx = ?";
+		}else {
+			return 0;
+		}
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			pstmt.executeUpdate();
+			result = 1;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public List<PostVo> getListWithPagingR_Manage(Criteria cri, String query_keyword, String query_type, String query_term, int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String sql_top = "select * from (\r\n" + 
+				"select /*+ index_desc(b_reply b_reply_pk) */\r\n" + 
+				"rownum rn,r_idx,r_content,re.created_at,re.modified_at,r_u_idx,r_p_idx,r_grade,r_parent,post.p_idx,post.p_title \r\n" + 
+				"from b_reply re \r\n"
+				+ " left join post "
+				+ " on post.p_idx = re.r_p_idx";
+
+		String sql_middle = "where rownum <= ?*? and r_p_idx = (select p_idx from post where p_b_idx = ?) " + query_keyword + query_type + query_term;
+		
+		String sql_bot = " ) ) where rn > (?-1)*? ";
+		
+		sql = sql_top + sql_middle + sql_bot;
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cri.getPageNum());
+			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, b_idx);
+			pstmt.setInt(4, cri.getPageNum());
+			pstmt.setInt(5, cri.getAmount());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("p_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setModified_at(rs.getString("modifited_at"));
+				vo.setHit(rs.getInt("hit"));
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	public int getCountR_Manage(String query_keyword, int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		
+		int cnt = 0;
+		
+		if(query_keyword == "") {
+			sql = "select count(*) as cnt from b_reply where r_p_idx = (select p_idx from post where p_b_idx = ?) ";
+		}else {
+			sql = "select count(*) as cnt from b_reply where r_p_idx = (select p_idx from post where p_b_idx = ?) "+ query_keyword;
 		}
 		//System.out.println(sql);
 		try {

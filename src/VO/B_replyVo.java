@@ -5,8 +5,8 @@ public class B_replyVo {
 	private String r_content;
 	private String created_at;
 	private String modified_at;
-	private int r_u_idx;
-	private int r_p_idx;
+	private B_userVo r_u_idx;
+	private PostVo r_p_idx;
 	private int r_grade;
 	private int r_parent;
 	public int getR_idx() {
@@ -33,16 +33,16 @@ public class B_replyVo {
 	public void setModified_at(String modified_at) {
 		this.modified_at = modified_at;
 	}
-	public int getR_u_idx() {
+	public B_userVo getR_u_idx() {
 		return r_u_idx;
 	}
-	public void setR_u_idx(int r_u_idx) {
+	public void setR_u_idx(B_userVo r_u_idx) {
 		this.r_u_idx = r_u_idx;
 	}
-	public int getR_p_idx() {
+	public PostVo getR_p_idx() {
 		return r_p_idx;
 	}
-	public void setR_p_idx(int r_p_idx) {
+	public void setR_p_idx(PostVo r_p_idx) {
 		this.r_p_idx = r_p_idx;
 	}
 	public int getR_grade() {

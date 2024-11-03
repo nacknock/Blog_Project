@@ -1,12 +1,7 @@
 package VO;
 
 public class PostVo {
-	public String getImg_path() {
-		return img_path;
-	}
-	public void setImg_path(String img_path) {
-		this.img_path = img_path;
-	}
+	
 	private int p_idx;
 	private String p_title;
 	private String p_content;
@@ -17,6 +12,12 @@ public class PostVo {
 	private int p_b_idx;
 	private int p_ctgr;
 	private String img_path;
+	public String getImg_path() {
+		return img_path;
+	}
+	public void setImg_path(String img_path) {
+		this.img_path = img_path;
+	}
 	public int getP_idx() {
 		return p_idx;
 	}
