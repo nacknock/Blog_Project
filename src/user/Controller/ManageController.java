@@ -24,6 +24,7 @@ import Service.manage.ctgrAdd;
 import Service.manage.ctgrDel;
 import Service.manage.ctgrModify;
 import Service.manage.ctgrPrivate;
+import Service.manage.openP_manage;
 import Service.manage.open_post_write;
 import Service.manage.open_pw_chk;
 import Service.manage.pw_chk;
@@ -145,6 +146,13 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/post_writeAction.do":
 			new Post_save().command(request, response);
+			break;
+		case "/openP_manage.do":
+			new openP_manage().command(request, response);
+			page="/blog/template/manage/post_manage.jsp";
+			break;
+		case "/post_paging.do":
+			new post_paging().command(request, response);
 			break;
 		}
 		

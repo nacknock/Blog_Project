@@ -345,7 +345,7 @@ public class ManageDAO {
 		}
 		return result;
 	}
-	public List<QuestionVo> getListWithPaging(Criteria cri, String query_keyword, String query_type, String query_term) {
+	public List<QuestionVo> getListWithPagingQnA(Criteria cri, String query_keyword, String query_type, String query_term) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -432,7 +432,7 @@ public class ManageDAO {
 		}
 		return q_idx;
 	}
-	public int getCount(String query_keyword, String query_type) {
+	public int getCountQnA(String query_keyword, String query_type) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -855,6 +855,142 @@ public class ManageDAO {
 		}
 		return p_idx;
 	}
+	public List<PostVo> sel_post(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		PostVo vo = new PostVo();
+		
+		String sql = "select * from post where b_idx = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("p_content"));
+				vo.setHit(rs.getInt("hit"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setModified_at(rs.getString("modified_at"));
+				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				vo.setP_private(rs.getInt("p_private"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+	
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+				if(rs != null) rs.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
 
+	public List<PostVo> getListWithPagingP_Manage(Criteria cri, String query_keyword, String query_type, String query_term, int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String sql_top = "select * from (\r\n" + 
+				"select /*+ index_desc(post post_pk) */\r\n" + 
+				"rownum rn,p_idx,p_ctgr,p_title,p_content,created_at,modifited_at,hit,p_b_idx,p_private \r\n" + 
+				"from post\r\n";
 
+		String sql_middle = "where rownum <= ?*? and p_b_idx = ? " + query_keyword + query_type + query_term;
+		
+		String sql_bot = " ) ) where rn > (?-1)*? ";
+		
+		sql = sql_top + sql_middle + sql_bot;
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cri.getPageNum());
+			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, b_idx);
+			pstmt.setInt(4, cri.getPageNum());
+			pstmt.setInt(5, cri.getAmount());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("p_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setModified_at(rs.getString("modifited_at"));
+				vo.setHit(rs.getInt("hit"));
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	public int getCountP_Manage(String query_keyword, int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		
+		int cnt = 0;
+		
+		if(query_keyword == "") {
+			sql = "select count(*) as cnt from post where p_b_idx = ? ";
+		}else {
+			sql = "select count(*) as cnt from question where p_b_idx = ? "+ query_keyword;
+		}
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
 }

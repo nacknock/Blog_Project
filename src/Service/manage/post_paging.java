@@ -12,22 +12,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import DTO.ManageUserDTO;
 import Service.Action;
+import VO.PostVo;
 import VO.QuestionVo;
 import user.DAO.ManageDAO;
 import util.Criteria;
 import util.PageVo;
 
-public class q_paging implements Action {
+public class post_paging implements Action {
 
 	@Override
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
+		int b_idx = Integer.parseInt((String)request.getParameter("b_idx"));
+		
 		int pageNum = 1;
 		int amount = 10;
 		
 		String term = "";//기간
-		String type = "";//답변된것만
+		String type = "";//조회수 updown
 		String keyword = "";
 		String query_keyword = "";
 		String query_type = "";
@@ -35,15 +38,15 @@ public class q_paging implements Action {
 		
 		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
-			query_keyword = "and q_title like '%"+keyword+"%' ";
+			query_keyword = "and p_title like '%"+keyword+"%' ";
 		}
 		
 		if(request.getParameter("type") != null &&!request.getParameter("type").equals("")) {
 			type = request.getParameter("type");
-			if(type.equals("yes_a")) {
-				query_type = "and a_yn = 1 ";
-			}else if(type.equals("none_a")) {
-				query_type = "and a_yn = 0 ";
+			if(type.equals("up")) {
+				query_type = "order_by hit asc ";
+			}else if(type.equals("down")) {
+				query_type = "order_by hit desc ";
 			}else {
 				query_type = "";
 			} 
@@ -53,8 +56,13 @@ public class q_paging implements Action {
 			term = request.getParameter("term");
 			if(!term.equals("desc") && !term.equals("asc")) {
 				query_term = "";
+			}else {
+				if(!query_type.equals("")) {
+					query_term = " ,created_at "+term+" ";
+				}else {
+					query_term = "order by created_at "+term+" ";
+				}
 			}
-			query_term = "order by created_at "+term+" ";
 		}
 		
 		if(request.getParameter("pageNum") != null) {
@@ -69,25 +77,14 @@ public class q_paging implements Action {
 		cri.setType(type);
 		cri.setKeyword(keyword);
 
-		List<QuestionVo> list = ManageDAO.getInstance().getListWithPagingQnA(cri,query_keyword,query_type,query_term);
+		List<PostVo> list = ManageDAO.getInstance().getListWithPagingP_Manage(cri,query_keyword,query_type,query_term,b_idx);
 
 		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
-			query_keyword = "q_title like '%"+keyword+"%' ";
-		}else {
-			if(request.getParameter("type") != null &&!request.getParameter("type").equals("")) {
-				type = request.getParameter("type");
-				if(type.equals("yes_a")) {
-					query_type = "a_yn = 1 ";
-				}else if(type.equals("none_a")) {
-					query_type = "a_yn = 0 ";
-				}else {
-					query_type = "";
-				} 
-			}
+			query_keyword = "p_title like '%"+keyword+"%' ";
 		}
 		
-		int count = ManageDAO.getInstance().getCountQnA(query_keyword,query_type);
+		int count = ManageDAO.getInstance().getCountP_Manage(query_keyword,b_idx);
 		
 		PageVo pvo = new PageVo(cri, count);
 		
@@ -102,7 +99,7 @@ public class q_paging implements Action {
 	    PrintWriter printWriter = new PrintWriter(stringWriter);
 	    request.setAttribute("writer", printWriter); // PrintWriter를 속성으로 설정
 	    
-	    request.getRequestDispatcher("/blog/template/fragments/q_list_paging.jsp").include(request, response);
+	    request.getRequestDispatcher("/blog/template/fragments/p_manage_paging.jsp").include(request, response);
 	    
 	    response.getWriter().write(stringWriter.toString());
 
