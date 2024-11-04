@@ -39,6 +39,7 @@ import Service.manage.q_list;
 import Service.manage.q_paging;
 import Service.manage.q_writeAction;
 import Service.manage.qna_write;
+import Service.manage.reply_del;
 import Service.manage.reply_paging;
 
 /**
@@ -183,6 +184,9 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/reply_paging.do":
 			new reply_paging().command(request, response);
+			break;
+		case "/reply_del.do":
+			new reply_del().command(request, response);
 			break;
 		}
 		

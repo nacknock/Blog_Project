@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Service.blog.reply_update;
+
 /**
  * Servlet implementation class UserMainController
  */
@@ -39,7 +41,22 @@ public class UserMainController extends HttpServlet {
 	}
 	
 	protected void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/blog/template/index.jsp").forward(request, response);
+		
+		String action = request.getPathInfo();
+		System.out.println(action);
+		String page = null;
+		switch (action) {
+		case "/reply_update.do":
+			new reply_update().command(request, response);
+			break;
+		}
+		
+		if(page != null) {
+			request.getRequestDispatcher(page).forward(request, response);
+		}else {
+			request.getRequestDispatcher("/blog/template/index.jsp").forward(request, response);
+		}
+		
 	}
 
 }

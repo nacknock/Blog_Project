@@ -1276,4 +1276,31 @@ public class ManageDAO {
 		
 		return cnt;
 	}
+	public int reply_del_Action(int r_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "delete b_reply where r_idx = ?";
+		
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, r_idx);
+			pstmt.executeUpdate();
+			
+			result = 1;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
 }
