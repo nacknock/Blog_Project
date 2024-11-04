@@ -126,4 +126,75 @@ public class BlogDAO {
 		
 		return result;
 	}
+	public B_userVo getUser(String userid) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		B_userVo vo = new B_userVo();
+		String sql = "select * from user where user_id = ?";
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo.setIdx(rs.getInt("idx"));
+				vo.setUser_id(rs.getString("user_id"));
+				vo.setNickname(rs.getString("nickname"));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public int reply_write(B_replyVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		if(vo.getR_parent() == 0) {
+			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade) values (b_reply_seq.nextval,?,?,?,?)";
+		}else {
+			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade,r_parent) values (b_reply_seq.nextval,?,?,?,?,?)";
+		}
+		int result = 0;
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getR_content());
+			pstmt.setInt(2, vo.getR_u_idx().getIdx());
+			pstmt.setInt(3, vo.getR_p_idx().getP_idx());
+			pstmt.setInt(4, vo.getR_grade());
+			if(vo.getR_parent() != 0) {
+				pstmt.setInt(5, vo.getR_parent());
+			}
+			pstmt.executeUpdate();
+			
+			result = 1;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 }

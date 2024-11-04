@@ -12,6 +12,7 @@ import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
 import Service.Sign.login;
 import Service.blog.reply_update;
+import Service.blog.reply_writeAciton;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
@@ -45,7 +46,7 @@ import Service.manage.reply_paging;
 /**
  * Servlet implementation class ManageController
  */
-@WebServlet("/*")
+@WebServlet("/b/*")
 @MultipartConfig(
 		fileSizeThreshold = 1024*1024*2, //2MB이상일 때 임시 디스크에 저장
 		maxFileSize = 1024*1024*20, // 최대 파일 크기 20MB로 변경
@@ -81,6 +82,9 @@ public class BlogController extends HttpServlet {
 		switch (action) {
 		case "/reply_update.do":
 			new reply_update().command(request, response);
+			break;
+		case "/reply_write.do":
+			new reply_writeAciton().command(request, response);
 			break;
 		}
 		
