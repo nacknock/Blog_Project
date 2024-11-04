@@ -8,7 +8,7 @@ public class B_replyVo {
 	private B_userVo r_u_idx;
 	private PostVo r_p_idx;
 	private int r_grade;
-	private int r_parent;
+	private B_userVo r_parent;
 	public int getR_idx() {
 		return r_idx;
 	}
@@ -51,10 +51,10 @@ public class B_replyVo {
 	public void setR_grade(int r_grade) {
 		this.r_grade = r_grade;
 	}
-	public int getR_parent() {
+	public B_userVo getR_parent() {
 		return r_parent;
 	}
-	public void setR_parent(int r_parent) {
+	public void setR_parent(B_userVo r_parent) {
 		this.r_parent = r_parent;
 	}
 	

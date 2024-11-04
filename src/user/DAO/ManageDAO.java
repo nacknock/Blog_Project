@@ -10,6 +10,7 @@ import java.util.List;
 import DTO.ManageUserDTO;
 import VO.AnswerVo;
 import VO.B_userVo;
+import VO.BlogVo;
 import VO.PostVo;
 import VO.QuestionVo;
 import VO.categoryVo;
@@ -23,40 +24,6 @@ public class ManageDAO {
 	public static ManageDAO getInstance() {
 		return instance;
 	}
-//	public  getMemberId(String id) {
-//	
-//	Connection conn = null;
-//	PreparedStatement pstmt = null;
-//	ResultSet rs = null;
-//	
-//	String sql = "select * from member where id = ?";
-//	int result = 0;
-//	
-//	try {
-//		conn = DB_Conn.getInst().conn();
-//		pstmt = conn.prepareStatement(sql);
-//		pstmt.setString(1, id);
-//		rs = pstmt.executeQuery();
-//		
-//		if(rs.next()) {
-//			result = 1;
-//		}else {
-//			result = -1;
-//		}
-//	} catch (Exception e) {
-//		e.printStackTrace();
-//	} finally {
-//		try {
-//
-//			if(pstmt != null) pstmt.close();
-//			if(conn != null) conn.close();
-//			if(rs != null) rs.close();
-//		} catch (Exception e2) {
-//			e2.printStackTrace();
-//		}
-//	}
-//	return result;
-//}
 	public ManageUserDTO loadPage(String userid) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -78,14 +45,14 @@ public class ManageDAO {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				dto.setUser_id(rs.getString("user_id"));
-				dto.setB_idx(rs.getInt("b_idx"));
-				dto.setIdx(rs.getInt("idx"));
-				dto.setEmail(rs.getString("email"));
-				dto.setB_title(rs.getString("b_title"));
-				dto.setNickname(rs.getString("nickname"));
-				dto.setOne_liner(rs.getString("one_liner"));
-				dto.setPath(rs.getString("img_path"));
+				dto.getUser().setUser_id(rs.getString("user_id"));
+				dto.getBlog().setB_idx(rs.getInt("b_idx"));
+				dto.getUser().setIdx(rs.getInt("idx"));
+				dto.getUser().setEmail(rs.getString("email"));
+				dto.getBlog().setB_title(rs.getString("b_title"));
+				dto.getUser().setNickname(rs.getString("nickname"));
+				dto.getBlog().setOne_liner(rs.getString("one_liner"));
+				dto.getUser().setImg_path(rs.getString("img_path"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,31 +81,31 @@ public class ManageDAO {
 				try {
 					conn = DBManager.getInstance().getConnection();
 					pstmt = conn.prepareStatement(sql);
-					pstmt.setString(1, dto.getNickname());
-					pstmt.setString(2, dto.getEmail());
-					pstmt.setInt(3, dto.getIdx());
+					pstmt.setString(1, dto.getUser().getNickname());
+					pstmt.setString(2, dto.getUser().getEmail());
+					pstmt.setInt(3, dto.getUser().getIdx());
 					pstmt.executeUpdate();
 					
 					String b_sql = "update blog set one_liner = ?,b_title = ? where b_u_idx = ?";
 					
-					if(dto.getOne_liner() == null) {
-						dto.setOne_liner("");
+					if(dto.getBlog().getOne_liner() == null) {
+						dto.getBlog().setOne_liner("");
 					}
-					if(dto.getB_title() == null || dto.getB_title().equals("")) {
-						dto.setB_title(dto.getUser_id()+"ªÎ«Ö«í«°");
+					if(dto.getBlog().getB_title() == null || dto.getBlog().getB_title().equals("")) {
+						dto.getBlog().setB_title(dto.getUser().getUser_id()+"ªÎ«Ö«í«°");
 					}
 					try {
 						pstmt = conn.prepareStatement(b_sql);
-						pstmt.setString(1, dto.getOne_liner());
-						pstmt.setString(2, dto.getB_title());
-						pstmt.setInt(3, dto.getIdx());
+						pstmt.setString(1, dto.getBlog().getOne_liner());
+						pstmt.setString(2, dto.getBlog().getB_title());
+						pstmt.setInt(3, dto.getUser().getIdx());
 						pstmt.executeUpdate();
 						
 						String img_sql = "update img set img_path = ? where user_img = ?";
 						try {
 							pstmt = conn.prepareStatement(img_sql);
-							pstmt.setString(1,dto.getPath());
-							pstmt.setInt(2, dto.getIdx());
+							pstmt.setString(1,dto.getUser().getImg_path());
+							pstmt.setInt(2, dto.getUser().getIdx());
 							pstmt.executeUpdate();
 							
 						}catch (Exception e) {
@@ -193,10 +160,10 @@ public class ManageDAO {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				dto.setIdx(rs.getInt("idx"));
-				dto.setB_idx(rs.getInt("b_idx"));
-				dto.setB_title(rs.getString("b_title"));
-				dto.setPath(rs.getString("img_path"));
+				dto.getUser().setIdx(rs.getInt("idx"));
+				dto.getBlog().setB_idx(rs.getInt("b_idx"));
+				dto.getBlog().setB_title(rs.getString("b_title"));
+				dto.getUser().setImg_path(rs.getString("img_path"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -675,6 +642,7 @@ public class ManageDAO {
 				vo.setCtgridx(rs.getInt("ctgridx"));
 				vo.setCtgr_name(rs.getString("ctgr_name"));
 				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
+				vo.setCtgr_private(rs.getInt("ctgr_private"));
 			}
 			
 		}catch(Exception e) {
@@ -724,9 +692,9 @@ public class ManageDAO {
 		//0 public 1 private
 		String sql = null;
 		if(pri_bool == 0) {
-			sql = "update post set p_private = 0 where p_ctgr = ?";
+			sql = "update category set ctgr_private = 0 where ctgridx = ?";
 		}else if(pri_bool == 1){
-			sql = "update post set p_private = 1 where p_ctgr = ?";
+			sql = "update category set ctgr_private = 1 where ctgridx = ?";
 		}else {
 			return 0;
 		}
@@ -1303,4 +1271,5 @@ public class ManageDAO {
 		}
 		return result;
 	}
+	
 }

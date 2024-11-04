@@ -23,8 +23,8 @@ public class ctgrModify implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
-		int ctgridx = Integer.parseInt((String) request.getAttribute("ctgridx"));
-		String ctgr_name = (String) request.getAttribute("ctgr_name");
+		int ctgridx = Integer.parseInt(request.getParameter("ctgridx"));
+		String ctgr_name = request.getParameter("ctgr_name");
 		
 		categoryVo vo = new categoryVo();
 		

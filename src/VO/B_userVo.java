@@ -1,6 +1,12 @@
 package VO;
 
 public class B_userVo {
+	public String getImg_path() {
+		return img_path;
+	}
+	public void setImg_path(String img_path) {
+		this.img_path = img_path;
+	}
 	private int idx;
 	private String user_id;
 	private String pw;
@@ -9,6 +15,7 @@ public class B_userVo {
 	private int role;
 	private String created_at;
 	private String modified_at;
+	private String img_path;
 	public int getIdx() {
 		return idx;
 	}

@@ -5,10 +5,10 @@
 					<div class="sidebar-box">
 						<div class="mb-45">
 							<a href="/manage/pw_chk.do?page=1" style="display: flex;justify-content: center;">
-							<img class="mt-15" src="/blog/images/${dto.path}" style="width: 214px;height: 214px;">								
+							<img class="mt-15" src="/blog/images/${dto.user.img_path}" style="width: 214px;height: 214px;">								
 							</a>
 							<div class="mt-15" style="padding:15px; border-top: #e6e6e6 solid 1px;border-bottom: #e6e6e6 solid 1px;">
-								<h3>${dto.b_title }</h3>
+								<h3>${dto.blog.b_title }</h3>
 								<a href="#"><h5>블로그 바로가기</h5></a>
 							</div>
 							<div style="padding:15px;border-bottom: #e6e6e6 solid 1px;">
@@ -45,12 +45,12 @@
 						</ul>
 					</div>
 					<!-- END sidebar-box -->
-					<div class="sidebar-box">
+					<!--<div class="sidebar-box">
 						<h3 class="heading"><i class="fa-solid fa-palette mr-5 ml-5"></i>디자인</h3>
 						<ul class="categories ml-5">
 							<li><a href="#">디자인 관리</a></li>
 						</ul>
-					</div>
+					</div>-->
 					<!-- END sidebar-box -->
 					<div class="sidebar-box">
 						<h3 class="heading"><i class="fa-solid fa-user mr-5 ml-5"></i>유저 정보</h3>

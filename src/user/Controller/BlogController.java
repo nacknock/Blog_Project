@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
 import Service.Sign.login;
+import Service.blog.getDetail;
+import Service.blog.getReplyList;
+import Service.blog.getlist;
 import Service.blog.reply_update;
 import Service.blog.reply_writeAciton;
 import Service.manage.CertiCheck;
@@ -86,6 +89,18 @@ public class BlogController extends HttpServlet {
 		case "/reply_write.do":
 			new reply_writeAciton().command(request, response);
 			break;
+		case "/list.do":
+			new getlist().command(request, response);
+			page = "/blog/template/list.jsp";
+			break;
+		case "/detail.do":
+			new getDetail().command(request, response);
+			page = "/blog/template/detail.jsp";
+			break;
+		case "/reply_list.do":
+			new getReplyList().command(request, response);
+			break;
+			
 		}
 		
 		if(page != null) {

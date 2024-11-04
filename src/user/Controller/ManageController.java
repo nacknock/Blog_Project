@@ -26,6 +26,7 @@ import Service.manage.ctgrDel;
 import Service.manage.ctgrModify;
 import Service.manage.ctgrPrivate;
 import Service.manage.openP_manage;
+import Service.manage.open_design_manage;
 import Service.manage.open_post_modify;
 import Service.manage.open_post_write;
 import Service.manage.open_pw_chk;
@@ -187,6 +188,10 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/reply_del.do":
 			new reply_del().command(request, response);
+			break;
+		case "/open_design_manage.do":
+			new open_design_manage().command(request, response);
+			page="/blog/template/manage/design_manage.jsp";
 			break;
 		}
 		

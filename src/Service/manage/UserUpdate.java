@@ -12,6 +12,8 @@ import javax.servlet.http.Part;
 
 import DTO.ManageUserDTO;
 import Service.Action;
+import VO.B_userVo;
+import VO.BlogVo;
 import user.DAO.ManageDAO;
 
 public class UserUpdate implements Action {
@@ -62,13 +64,19 @@ public class UserUpdate implements Action {
 		String one_liner = request.getParameter("one_liner");
 		String b_title = request.getParameter("b_title");
 		
-		dto.setIdx(idx);
-		dto.setUser_id(user_id);
-		dto.setNickname(nickname);
-		dto.setEmail(email);
-		dto.setOne_liner(one_liner);
-		dto.setPath(realFile);
-		dto.setB_title(b_title);
+		B_userVo u_vo = new B_userVo();
+		BlogVo b_vo = new BlogVo();
+		
+		u_vo.setIdx(idx);
+		u_vo.setUser_id(user_id);
+		u_vo.setNickname(nickname);
+		u_vo.setEmail(email);
+		b_vo.setOne_liner(one_liner);
+		u_vo.setImg_path(realFile);
+		b_vo.setB_title(b_title);
+		
+		dto.setUser(u_vo);
+		dto.setBlog(b_vo);
 		
 		//path+"\\"+request.getParameter("imgurl").substring(8) = 원래 이미지 url
 		//용도는 파일 수정했을 시 원래 파일 삭제용

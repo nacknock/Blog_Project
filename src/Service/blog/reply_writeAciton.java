@@ -34,13 +34,11 @@ public class reply_writeAciton implements Action {
 
 		int r_grade = 0;
 		
-		int r_parent = 0;
+		B_userVo r_parent = new B_userVo();
 		
 		if(request.getParameter("r_parent") != null && !request.getParameter("r_parent").equals("")) {
-			r_parent = Integer.parseInt(request.getParameter("r_parent"));
+			r_parent.setIdx(Integer.parseInt(request.getParameter("r_parent")));
 			r_grade = 1;
-		}else {
-			r_parent = 0;
 		}
 		
 		B_replyVo vo = new B_replyVo();
