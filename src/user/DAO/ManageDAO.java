@@ -750,6 +750,7 @@ public class ManageDAO {
 	public int savePost(PostVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		int result = 0;
 		
 		//where절의 idx로 수정할 대상 찾기
@@ -776,6 +777,14 @@ public class ManageDAO {
 				pstmt.setInt(2, pidx);
 				pstmt.executeUpdate();
 			}
+			
+			sql = "select p_idx from post where p_ctgr = ? and p_title = ? and p_content = ? and p_private = ? and p_b_idx = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, vo.getP_ctgr());
+			pstmt.setString(2, vo.getP_title());
+			pstmt.setString(3, vo.getP_content());
+			pstmt.setInt(4, vo.getP_private());
+			pstmt.setInt(5, vo.getP_b_idx());
 			
 		}catch(Exception e) {
 			e.printStackTrace();

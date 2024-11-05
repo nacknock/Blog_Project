@@ -53,11 +53,13 @@ String savepath = "/blog/images";
 			image.write(realPath); //첨부파일 업로드
 		}
 		
-		int ctgridx = Integer.parseInt((String) request.getAttribute("ctgridx"));
-		int b_idx = Integer.parseInt((String) request.getAttribute("b_idx"));
-		String p_title = (String) request.getAttribute("p_title");
-		String p_content = (String) request.getAttribute("p_content");
-		int p_private = Integer.parseInt((String) request.getAttribute("p_private"));
+		int ctgridx = Integer.parseInt(request.getParameter("ctgridx"));
+		int b_idx = Integer.parseInt( request.getParameter("b_idx"));
+		String p_title =  request.getParameter("p_title");
+		String p_content =  request.getParameter("p_content");
+		int p_private = Integer.parseInt( request.getParameter("p_private"));
+		
+		String[] tags = request.getParameterValues("tags");
 		
 		PostVo vo = new PostVo();
 		
