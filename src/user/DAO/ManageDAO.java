@@ -1271,5 +1271,77 @@ public class ManageDAO {
 		}
 		return result;
 	}
+	public int SearchResultCountB(String keyword_blog) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		
+		int cnt = 0;
+		
+		if(keyword_blog == "") {
+			sql = "select count(*) as cnt from blog";
+		}else {
+			sql = "select count(*) as cnt from blog where "+ keyword_blog;
+		}
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
+	public int SearchResultCountP(String keyword_post) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		
+		int cnt = 0;
+		
+		if(keyword_post == "") {
+			sql = "select count(*) as cnt from post";
+		}else {
+			sql = "select count(*) as cnt from post where "+ keyword_post;
+		}
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
 	
 }

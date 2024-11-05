@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
 import Service.Sign.login;
+import Service.Sign.login_check;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
@@ -81,115 +82,147 @@ public class ManageController extends HttpServlet {
 		String page = null;
 		switch (action) {
 		case "/main.do":
-			//new LoadMain().command(request, response);
+			new login_check().command(request, response);
 			page="/blog/template/manage/main.jsp";
 			break;
 		case "/user.do":
+			new login_check().command(request, response);
 			new LoadUser().command(request, response);
 			page="/blog/template/manage/user.jsp";
 			break;
 		case "/pw_chk.do":
+			new login_check().command(request, response);
 			new open_pw_chk().command(request, response);
 			page="/blog/template/manage/pw_chk.jsp";
 			break;
 		case "/pw_chkAction.do":
+			new login_check().command(request, response);
 			new pw_chk().command(request, response);
 			break;
 		case "/emailsend.do":
+			new login_check().command(request, response);
 			new MailSendByUpdate().command(request, response);
 			break;
 		case "/certiCheck.do":
+			new login_check().command(request, response);
 			new CertiCheck().command(request, response);
 			break;
 		case "/user_update.do":
+			new login_check().command(request, response);
 			new UserUpdate().command(request, response);
 			page="/blog/template/manage/main.jsp";
 			break;
 		case "/pw_update.do":
+			new login_check().command(request, response);
 			new PwUpdate().command(request, response);
 			page="/blog/template/manage/pw_update.jsp";
 			break;
 		case "/pw_updateAction.do":
+			new login_check().command(request, response);
 			new PwUpdateAction().command(request, response);
 			break;
 		case "/user_del.do":
+			new login_check().command(request, response);
 			new User_Del().command(request, response);
 			page="/blog/template/manage/user_del.jsp";
 			break;
 		case "/user_delAction.do":
+			new login_check().command(request, response);
 			new UserDelAction().command(request, response);
 			break;
 		case "/qna_write.do":
+			new login_check().command(request, response);
 			new qna_write().command(request, response);
 			page="/blog/template/manage/qna_write.jsp";
 			break;
 		case "/q_writeAction.do":
+			new login_check().command(request, response);
 			new q_writeAction().command(request, response);
 			break;
 		case "/qna_list.do":
+			new login_check().command(request, response);
 			new q_list().command(request, response);
 			page="/blog/template/manage/q_list.jsp";
 			break;
 		case "/q_paging.do":
+			new login_check().command(request, response);
 			new q_paging().command(request, response);
 			break;
 		case "/qna_detail.do":
+			new login_check().command(request, response);
 			new q_detail().command(request, response);
 			page="/blog/template/manage/q_detail.jsp";
 			break;
 		case "/ctgrAdd.do":
+			new login_check().command(request, response);
 			new ctgrAdd().command(request, response);
 			break;
 		case "/ctgrModify.do":
+			new login_check().command(request, response);
 			new ctgrModify().command(request, response);
 			break;
 		case "/ctgrDel.do":
+			new login_check().command(request, response);
 			new ctgrDel().command(request, response);
 			break;
 		case "/ctgrPrivate.do":
+			new login_check().command(request, response);
 			new ctgrPrivate().command(request, response);
 			break;
 		case "/open_post_write.do":
+			new login_check().command(request, response);
 			new open_post_write().command(request, response);
 			page="/blog/template/manage/wirte_post.jsp";
 			break;
 		case "/post_writeAction.do":
+			new login_check().command(request, response);
 			new Post_save().command(request, response);
 			break;
 		case "/openP_manage.do":
+			new login_check().command(request, response);
 			new openP_manage().command(request, response);
 			page="/blog/template/manage/post_manage.jsp";
 			break;
 		case "/post_paging.do":
+			new login_check().command(request, response);
 			new post_paging().command(request, response);
 			break;
 		case "/openP_modify.do":
+			new login_check().command(request, response);
 			new open_post_modify().command(request, response);
 			page="/blog/template/manage/post_modify.jsp";
 			break;
 		case "/postModifyAction.do":
+			new login_check().command(request, response);
 			new postModifyAction().command(request, response);
 			break;
 		case "/del_post.do":
+			new login_check().command(request, response);
 			new post_del().command(request, response);
 			break;
 		case "/Pchange_pri.do":
+			new login_check().command(request, response);
 			new Pchange_pri().command(request, response);
 			break;
 		case "/Bchange_pri.do":
+			new login_check().command(request, response);
 			new postModifyAction().command(request, response);
 			break;
 		case "/open_reply_manage.do":
+			new login_check().command(request, response);
 			new open_reply_manage().command(request, response);
 			page="/blog/template/manage/reply_manage.jsp";
 			break;
 		case "/reply_paging.do":
+			new login_check().command(request, response);
 			new reply_paging().command(request, response);
 			break;
 		case "/reply_del.do":
+			new login_check().command(request, response);
 			new reply_del().command(request, response);
 			break;
 		case "/open_design_manage.do":
+			new login_check().command(request, response);
 			new open_design_manage().command(request, response);
 			page="/blog/template/manage/design_manage.jsp";
 			break;

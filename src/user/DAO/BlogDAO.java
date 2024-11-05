@@ -13,6 +13,7 @@ import DTO.ManageUserDTO;
 import VO.AnswerVo;
 import VO.B_replyVo;
 import VO.B_userVo;
+import VO.BlogVo;
 import VO.PostVo;
 import VO.QuestionVo;
 import VO.categoryVo;
@@ -180,7 +181,7 @@ public class BlogDAO {
 			pstmt.setInt(3, vo.getR_p_idx().getP_idx());
 			pstmt.setInt(4, vo.getR_grade());
 			if(vo.getR_parent() != null) {
-				pstmt.setInt(5, vo.getR_parent().getIdx());
+				pstmt.setInt(5, vo.getR_parent().getR_idx());
 			}
 			pstmt.executeUpdate();
 			
@@ -496,16 +497,34 @@ public class BlogDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = null;
-		String sql_top = "select * from (\r\n" + 
-				"select /*+ index_desc(reply reply_pk) */\r\n" + 
-				"rownum rn,r_idx,r_content,reply.created_at,r_u_idx,r_p_idx,r_grade,r_parent,b_user.nickname,b_user.user_id from reply \r\n" +
-				"left join post on post.p_idx = r_p_idx " +
-				"left join b_user on b_user.idx = r_u_idx ";
-
-		String sql_middle = "where rownum <= ?*? and post.p_idx = ? ";
-		
-		String sql_bot = " ) where rn > (?-1)*? ";
+		String sql = " SELECT * " + 
+				"FROM ( " + 
+				"    SELECT /*+ index_desc(reply b_reply_pk) */ " + 
+				"           ROWNUM rn, reply.r_idx, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
+				"           reply.r_parent, " + 
+				"           loguser.nickname, loguser.user_id, " + 
+				"           parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
+				"    FROM ( " + 
+				"        SELECT reply.r_idx, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
+				"               reply.r_parent, " + 
+				"               loguser.nickname, loguser.user_id, " + 
+				"               parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
+				"        FROM b_reply reply " + 
+				"        LEFT JOIN post ON post.p_idx = reply.r_p_idx " + 
+				"        LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
+				"        LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent " + 
+				"        LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
+				"        WHERE post.p_idx = ? " + 
+				"        ORDER BY CASE WHEN reply.r_parent IS NULL THEN 0 ELSE 1 END,   " + 
+				"            reply.created_at DESC " + 
+				"    ) reply " + 
+				"    LEFT JOIN post ON post.p_idx = reply.r_p_idx " + 
+				"    LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
+				"    LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent " + 
+				"    LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
+				"    WHERE ROWNUM <= ?*?  " + 
+				") " + 
+				"WHERE rn > (?-1)*? ";
 		
 		List<B_replyVo> list = new ArrayList<B_replyVo>();
 		
@@ -514,17 +533,19 @@ public class BlogDAO {
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, cri.getPageNum());
-			pstmt.setInt(2, cri.getAmount());
-			pstmt.setInt(3, p_idx);
+			pstmt.setInt(1, p_idx);
+			pstmt.setInt(2, cri.getPageNum());
+			pstmt.setInt(3, cri.getAmount());
 			pstmt.setInt(4, cri.getPageNum());
 			pstmt.setInt(5, cri.getAmount());
-			pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				B_replyVo vo = new B_replyVo();
 				B_userVo u_vo = new B_userVo();
 				PostVo p_vo = new PostVo();
+				B_replyVo parent_vo = new B_replyVo();
+				B_userVo parn_u_vo = new B_userVo();
 				vo.setR_idx(rs.getInt("r_idx"));
 				vo.setR_content(rs.getString("r_content"));
 				vo.setCreated_at(rs.getString("created_at"));
@@ -535,7 +556,11 @@ public class BlogDAO {
 				p_vo.setP_idx(rs.getInt("r_p_idx"));
 				vo.setR_p_idx(p_vo);
 				vo.setR_grade(rs.getInt("r_grade"));
-				vo.setR_parent(rs.getString("r_parent"));
+				parent_vo.setR_idx(rs.getInt("r_parent"));
+				parn_u_vo.setIdx(rs.getInt("parnidx"));
+				parn_u_vo.setNickname(rs.getString("parnnick"));
+				parent_vo.setR_u_idx(parn_u_vo);
+				vo.setR_parent(parent_vo);
 				
 				
 				list.add(vo);
@@ -569,7 +594,7 @@ public class BlogDAO {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, p_idx);
-			pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				cnt = rs.getInt("cnt");
@@ -586,5 +611,132 @@ public class BlogDAO {
 			}
 		}
 		return cnt;
+	}
+	public void upHit(int p_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = null;
+		sql = "update post set hit = hit+1 where p_idx = ?";	
+		
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, p_idx);
+			pstmt.executeUpdate();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+	public List<BlogVo> SearchResultB(Criteria cri, String keyword_blog) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String sql_top = "select * from (\r\n" + 
+				"select /*+ index_desc(blog blog_pk) */\r\n" + 
+				"rownum rn,b_idx,one_liner,b_title,created_at,img.img_path from blog "
+				+ "left join img on img.user_img = blog.b_u_idx ";
+
+		String sql_middle = " where rownum <= ?*? "+ keyword_blog + " ";
+		
+		String sql_bot = " ) where rn > (?-1)*? ";
+		
+		sql = sql_top + sql_middle + sql_bot;
+		
+		List<BlogVo> list = new ArrayList<BlogVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cri.getPageNum());
+			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, cri.getPageNum());
+			pstmt.setInt(4, cri.getAmount());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BlogVo vo = new BlogVo();
+				vo.setB_idx(rs.getInt("b_idx"));
+				vo.setB_title(rs.getString("b_title"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setOne_liner(rs.getString("one_liner"));
+				vo.setImg_path(rs.getString("img_path"));
+				
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	public List<PostVo> SearchResultP(Criteria cri, String keyword_post) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String sql_top = "select * from (\r\n" + 
+				"select /*+ index_desc(post post_pk) */\r\n" + 
+				"rownum rn,p_idx,p_title,created_at,img.img_path from post "
+				+ "left join img on img.post_img = post.p_idx ";
+
+		String sql_middle = " where rownum <= ?*? "+ keyword_post + " and p_private = 0 ";
+		
+		String sql_bot = " ) where rn > (?-1)*? ";
+		
+		sql = sql_top + sql_middle + sql_bot;
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cri.getPageNum());
+			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, cri.getPageNum());
+			pstmt.setInt(4, cri.getAmount());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setImg_path(rs.getString("img_path"));
+				vo.setP_content(rs.getString("p_content"));
+				
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
 	}
 }

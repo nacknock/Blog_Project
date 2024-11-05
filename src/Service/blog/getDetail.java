@@ -34,6 +34,8 @@ public class getDetail implements Action {
 		
 		int p_idx = Integer.parseInt(request.getParameter("p_idx"));
 		
+		BlogDAO.getInstance().upHit(p_idx);
+		
 		ManageUserDTO dto =  BlogDAO.getInstance().loadPageByBlog(idx);
 		
 		request.setAttribute("dto", dto);

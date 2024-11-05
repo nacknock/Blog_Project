@@ -1,6 +1,12 @@
 package VO;
 
 public class BlogVo {
+	public String getImg_path() {
+		return img_path;
+	}
+	public void setImg_path(String img_path) {
+		this.img_path = img_path;
+	}
 	private int b_idx;
 	private String one_liner;
 	private String b_title;
@@ -8,6 +14,7 @@ public class BlogVo {
 	private String header_clr;
 	private String nav_clr;
 	private String body_clr;
+	private String img_path;
 	private int b_u_idx;
 	public int getB_idx() {
 		return b_idx;

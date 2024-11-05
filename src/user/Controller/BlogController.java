@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
 import Service.Sign.login;
+import Service.Sign.login_check;
 import Service.blog.getDetail;
 import Service.blog.getReplyList;
 import Service.blog.getlist;
 import Service.blog.reply_update;
 import Service.blog.reply_writeAciton;
+import Service.blog.search_result;
+import Service.blog.search_result_blog;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
@@ -84,9 +87,11 @@ public class BlogController extends HttpServlet {
 		String page = null;
 		switch (action) {
 		case "/reply_update.do":
+			new login_check().command(request, response);
 			new reply_update().command(request, response);
 			break;
 		case "/reply_write.do":
+			new login_check().command(request, response);
 			new reply_writeAciton().command(request, response);
 			break;
 		case "/list.do":
@@ -99,6 +104,12 @@ public class BlogController extends HttpServlet {
 			break;
 		case "/reply_list.do":
 			new getReplyList().command(request, response);
+			break;
+		case "/search_result.do":
+			new search_result().command(request, response);
+			break;
+		case "/search_result_blog.do":
+			new search_result_blog().command(request, response);
 			break;
 			
 		}
