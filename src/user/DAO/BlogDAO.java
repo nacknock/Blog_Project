@@ -739,4 +739,55 @@ public class BlogDAO {
 		
 		return list;
 	}
+	public List<PostVo> SearchResultBlogP(Criteria cri, String keyword_post) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		String sql_top = "select * from (\r\n" + 
+				"select /*+ index_desc(post post_pk) */\r\n" + 
+				"rownum rn,p_idx,p_title,created_at,img.img_path from post "
+				+ "left join img on img.post_img = post.p_idx ";
+
+		String sql_middle = " where rownum <= ?*? "+ keyword_post + " and p_private = 0 ";
+		
+		String sql_bot = " ) where rn > (?-1)*? ";
+		
+		sql = sql_top + sql_middle + sql_bot;
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cri.getPageNum());
+			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, cri.getPageNum());
+			pstmt.setInt(4, cri.getAmount());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setImg_path(rs.getString("img_path"));
+				vo.setP_content(rs.getString("p_content"));
+				
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
 }

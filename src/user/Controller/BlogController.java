@@ -108,9 +108,6 @@ public class BlogController extends HttpServlet {
 		case "/search_result.do":
 			new search_result().command(request, response);
 			break;
-		case "/search_result_blog.do":
-			new search_result_blog().command(request, response);
-			break;
 			
 		}
 		

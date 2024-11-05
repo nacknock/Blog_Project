@@ -43,12 +43,17 @@
 	<!-- Editor -->
     <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
+    <!-- select박스 직접입력 추가용 selectize -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/selectize/dist/css/selectize.default.css">
 
 	<style>
 		.ck {
         height: 500px; /* 높이 설정 */
         width: 100%;   /* 너비 설정 */
     	}
+		.item {
+			background: #214252 !important;
+		}
 	</style>
 
 	<title>Blogy &mdash; Free Bootstrap 5 Website Template by Untree.co</title>
@@ -206,6 +211,13 @@
 							<div>
 								<input style="height: 37px;" multiple class="form-control" type="file" placeholder="title" name="p_img" id="p_img">
 							</div>
+							<div style="display: flex;padding: 30px 10px;">
+								<label class="mr-15 pt-7" for="tagSelect">#ハッシュタグ</label>
+								<div style="width: 80%;">
+									<select class="js-example-basic-multiple" multiple="multiple" name="sendto" id="tagSelect"><!-- sendto배열로 db에 넘긴 후 바꿈-->
+									</select>
+								</div>
+							</div>
 						</div>
 						<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
 							<button type="submit" class="btn btn-sm btn-outline-primary">작성 완료</button>
@@ -332,6 +344,8 @@
     <script src="../js/bootstrap.bundle.min.js"></script>
 	<script src="../js/bootstrap.bundle.js"></script>
     <script src="../js/tiny-slider.js"></script>
+    <!-- select박스 직접입력 추가용 selectize || 항상 jquery보다 뒤에 위치해야함 -->
+    <script src="https://cdn.jsdelivr.net/npm/selectize/dist/js/standalone/selectize.min.js"></script>
 
     <script src="../js/flatpickr.min.js"></script>
 
@@ -355,6 +369,16 @@
 			.catch(error => {
 				console.error(error);
 			});
+		$(document).ready(function() {
+
+			$('#tagSelect').selectize({
+				create: function(input) {
+					return { value: input, text: input };
+					
+				},
+				placeholder: '#'
+			});
+		});
 	</script>
     
   </body>

@@ -1343,5 +1343,42 @@ public class ManageDAO {
 		
 		return cnt;
 	}
+	public int SearchResultBlogCountP(String keyword_post, int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		
+		int cnt = 0;
+		
+		if(keyword_post == "") {
+			sql = "select count(*) as cnt from post where p_b_idx = ?";
+		}else {
+			sql = "select count(*) as cnt from post where p_b_idx = ? and "+ keyword_post;
+		}
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt = rs.getInt("cnt");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}
 	
 }
