@@ -108,8 +108,8 @@
 								<h3>まだカテゴリを作ってありません。</h3>
 							</div>
 						</c:if>
-						<c:forEach var="list" items="${list}">
 						<div id="for-box">
+						<c:forEach var="list" items="${list}">
 							<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
 								<div class="email-list">
 									<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
@@ -144,8 +144,8 @@
 									</div>
 								</div>
 							</div>
-						</div>
 						</c:forEach>
+						</div>
 						<div>
 							<div class="post-entry-sidebar" id="input_box" style="display: none;height: 80px;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
 								<div class="col-7" style="width: 60%;height: 100%;">

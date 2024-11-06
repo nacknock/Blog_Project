@@ -28,7 +28,6 @@ $("#submit_btn").on("click",function(){
                 b_idx:$("#b_idx").val(),
                 ctgr_name:$("#ctgr_name").val(),
             },
-            dataType:"json",
             success:function(data){
                 $('#for-box').append(data); // 서버에서 받은 HTML을 추가
                 $('#input_box').style.display = 'none';
