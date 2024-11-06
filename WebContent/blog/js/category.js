@@ -109,3 +109,26 @@ function upAction(button){
         }
     })
 }
+
+function del(button){
+    const parentDiv = $(button).closest('.post-entry-sidebar');
+    const ctgridx = $(button).closest('.post-entry-sidebar').find('.ctgridx');
+    $.ajax({
+        type:"post",
+        url:"/manage/ctgrDel.do",
+        data:{
+            ctgridx:ctgridx.val(),
+        },
+        dataType : "json",
+        success:function(result){
+            if(result.check === "ok"){
+                parentDiv.remove();
+            }else{
+                alert("通信エーラが発生しました。");
+            }
+            
+        },error:function(){
+            alert("通信エーラが発生しました。");
+        }
+    })
+}

@@ -138,9 +138,9 @@
 									</a>
 									<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 										aria-labelledby="dropdownMenuLink">
-										<div class="dropdown-header">Dropdown Header:</div>
+										<div class="dropdown-header">オプション:</div>
 										<a class="dropdown-item" onclick="update(this)">編集</a>
-										<a class="dropdown-item" onclick="updateChart('1달')">削除</a>
+										<a class="dropdown-item" onclick="del(this)">削除</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item" onclick="updateChart('조회수')">公開</a>
 										<a class="dropdown-item" onclick="updateChart('게시글')">非公開</a>

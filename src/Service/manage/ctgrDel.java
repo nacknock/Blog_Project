@@ -19,7 +19,7 @@ public class ctgrDel implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
-		int ctgridx = Integer.parseInt((String) request.getAttribute("ctgridx"));
+		int ctgridx = Integer.parseInt(request.getParameter("ctgridx"));
 		
 		int result = ManageDAO.getInstance().DelCtgr(ctgridx);
 
