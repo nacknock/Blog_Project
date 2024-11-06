@@ -71,7 +71,9 @@ String savepath = "/blog/images";
 		vo.setImg_path(realFile);
 		
 		int result = ManageDAO.getInstance().savePost(vo);
-		ManageDAO.getInstance().saveTag(result,tags);
+		if(tags != null) {
+			ManageDAO.getInstance().saveTag(result,tags);
+		}
 
 		response.sendRedirect("/blog/post_detail.do?p_idx="+vo.getP_idx());
 

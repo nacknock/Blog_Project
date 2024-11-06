@@ -161,7 +161,7 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/open_post_write.do":			
 			new open_post_write().command(request, response);
-			page="/blog/template/manage/wirte_post.jsp";
+			page="/blog/template/manage/write_post.jsp";
 			break;
 		case "/post_writeAction.do":			
 			new Post_save().command(request, response);

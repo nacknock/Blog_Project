@@ -12,7 +12,7 @@
 								<a href="#"><h5>블로그 바로가기</h5></a>
 							</div>
 							<div style="padding:15px;border-bottom: #e6e6e6 solid 1px;">
-								<a href="single.html" class="btn btn-sm btn-outline-primary" style="width: 80%;">글쓰기</a>
+								<a href="/manage/open_post_write.do" class="btn btn-sm btn-outline-primary" style="width: 80%;">ブログを書く</a>
 							</div>
 						</div>
 						<div class="post-entry-sidebar" style="border-bottom:#e6e6e6 solid 1px;">
@@ -21,7 +21,7 @@
 									<a href="">
 										<div class="text" style="width: 200px;">
 											<i class="fa-solid fa-house float-l mr-5 ml-5"></i>
-											<h4>블로그 관리 홈</h4>
+											<h4>ブログ管理トップ</h4>
 										</div>
 									</a>
 								</li>

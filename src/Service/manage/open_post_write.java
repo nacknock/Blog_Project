@@ -26,6 +26,8 @@ public class open_post_write implements Action {
 		
 		int p_pri_yn = ManageDAO.getInstance().sel_one_p_pri_yn(dto.getBlog().getB_idx());
 		
+		request.setAttribute("p_pri_yn", p_pri_yn);
+		
 		List<categoryVo> list = ManageDAO.getInstance().sel_ctgr(dto.getBlog().getB_idx());
 		
 		request.setAttribute("ctgr_list", list);

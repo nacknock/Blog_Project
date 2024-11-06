@@ -79,7 +79,7 @@
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
 						<h2>カテゴリ管理</h2>
 					</div>
-					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
+					<!-- <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
 						<div class="d-flex flex-row align-items-center justify-content-between">
 							<div class="email-list-actions mr-30 ml-15 pt-7">
 								<label class="custom-control custom-checkbox">
@@ -101,7 +101,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
 						<c:if test="${empty list}">
 							<div div class="post-entry-sidebar" id="none-div" style=" height: 80px;display: flex;align-items: center;justify-content:center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
