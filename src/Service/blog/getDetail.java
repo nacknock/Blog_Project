@@ -16,6 +16,7 @@ import Service.Action;
 import VO.B_replyVo;
 import VO.PostVo;
 import VO.QuestionVo;
+import VO.TagVo;
 import VO.categoryVo;
 import user.DAO.BlogDAO;
 import user.DAO.ManageDAO;
@@ -53,6 +54,10 @@ public class getDetail implements Action {
 		List<categoryVo> ctgr_list = BlogDAO.getInstance().getCtgrListByBlog(my,dto);
 		
 		request.setAttribute("ctgr_list", ctgr_list);
+		
+		List<TagVo> taglist = ManageDAO.getInstance().sel_tags(vo.getP_idx());
+		
+		request.setAttribute("taglist", taglist);
 		
 		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(dto);
 		

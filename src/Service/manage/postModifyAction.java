@@ -81,6 +81,13 @@ public class postModifyAction implements Action {
 		//imgChange 파일을 수정했는지 여부 체크 true는 새 파일 등록, false는 파일 교체 없음
 		int result = ManageDAO.getInstance().PostModifyAction(vo,imgChange);
 		
+		String[] tags = request.getParameterValues("tags");
+		String[] tag_ids = request.getParameterValues("tag_ids");
+		
+		if(result > 0) {
+			result = ManageDAO.getInstance().tagModifyAction(tags,tag_ids,p_idx);
+		}
+		
 		Gson gson = new Gson();
 		Map<String, String> map = new HashMap<String, String>();
 		

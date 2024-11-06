@@ -5,7 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import DTO.ManageUserDTO;
 import VO.AnswerVo;
@@ -13,6 +17,7 @@ import VO.B_userVo;
 import VO.BlogVo;
 import VO.PostVo;
 import VO.QuestionVo;
+import VO.TagVo;
 import VO.categoryVo;
 import util.Criteria;
 import util.DBManager;
@@ -1422,6 +1427,144 @@ public class ManageDAO {
 			}
 		}
 		
+	}
+	public List<TagVo> sel_tags(int pidx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<TagVo> list = new ArrayList<TagVo>();
+		String sql = "select * from tag where tag_p_id = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pidx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				TagVo vo = new TagVo();
+				vo.setTag_id(rs.getInt("tag_id"));
+				vo.setTag_name(rs.getString("tag_name"));
+				vo.setTag_p_id(rs.getInt("tag_p_id"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+	public int tagModifyAction(String[] tags,String[] tag_ids,int p_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "update tag set tag_name = ? where tag_id = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			for(int i = 0;i > tags.length;i++) {
+				pstmt.setString(1, tags[i]);
+				pstmt.setInt(2, Integer.parseInt(tag_ids[i]));
+				pstmt.executeQuery();
+			}
+			result = 1;
+			
+			int[] tag_ids_all = selTagIdByP(p_idx);
+			
+			result = tagDelByModify(tag_ids,tag_ids_all);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+	}
+	private int tagDelByModify(String[] tag_ids, int[] tag_ids_all) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "delete tag_id from tag where tag_id = ?";
+		
+		int[] tag_ids_int = Arrays.stream(tag_ids).mapToInt(Integer::parseInt).toArray();
+		int result = 0;
+		
+		HashSet<Integer> tagIdsSet = new HashSet<>();
+        for (int id : tag_ids_int) {
+            tagIdsSet.add(id);
+        }
+        
+        int[] missingTags = Arrays.stream(tag_ids_all)
+                .filter(id -> !tagIdsSet.contains(id)) // tag_ids에 없는 값 필터링
+                .toArray(); // 결과를 int[]로 변환
+		
+		
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			for(int tag_id : missingTags) {
+				pstmt.setInt(1, tag_id);
+				rs = pstmt.executeQuery();
+			}
+			result = 1;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+		
+	}
+	private int[] selTagIdByP(int p_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select tag_id from tag where tag_p_id = ?";
+		int tag_ids[] = new int[100];
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, p_idx);
+			rs = pstmt.executeQuery();
+			
+			int i = 0;
+			while(rs.next()) {
+				tag_ids[i] = rs.getInt("tag_id");
+				i++;
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return tag_ids;
 	}
 	
 }
