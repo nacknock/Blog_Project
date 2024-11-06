@@ -639,13 +639,13 @@ public class ManageDAO {
 		int result = 0;
 		
 		//where절의 idx로 수정할 대상 찾기
-		String sql = "insert into category (ctgridx,ctgr_name,ctgr_b_idx) values (ctgr_seq.nextval,?,?)";
+		String sql = "update category set ctgr_name = ? where ctgridx = ?";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getCtgr_name());
-			pstmt.setInt(2, vo.getCtgr_b_idx());
+			pstmt.setInt(2, vo.getCtgridx());
 			pstmt.executeUpdate();
 			result = 1;
 			

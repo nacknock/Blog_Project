@@ -19,6 +19,7 @@ public class login_check implements Action {
 		if(login_userid == null) {
 			response.sendRedirect("/sign/login.do");
 		}
+		
 
 	}
 

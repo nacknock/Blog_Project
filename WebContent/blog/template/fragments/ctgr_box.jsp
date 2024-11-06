@@ -15,8 +15,8 @@
 					${vo.ctgr_name }
 				</p>
 				<input class="input none-input" type="text" value="${vo.ctgr_name }" style="display: none;">
-				<button class="btn btn-sm btn-danger can-btn" style="display:none;margin-right: 15px;" type="button">キャンセル</button>
-				<button class="btn btn-sm btn-primary sub-btn" style="display:none;width: 99.6px;" type="button">保存</button>
+				<button class="btn btn-sm btn-danger can-btn" style="display:none;margin-right: 15px;" type="button" onclick="up_cancel(this)">キャンセル</button>
+				<button class="btn btn-sm btn-primary sub-btn" style="display:none;width: 99.6px;" type="button" onclick="upAction(this)">保存</button>
 				<p class="ml-5 cnt-p">(${vo.ctgr_p_cnt })</p>
 			</div>
 		</div>
