@@ -11,11 +11,13 @@
 				</label>
 			</div>
 			<div class="email-list-detail" style="display: flex;">
-				<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
+				<p class="msg mb-7 ctgr_name" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
 					${vo.ctgr_name }
 				</p>
-				<input class="input" type="text" value="${vo.ctgr_name }" id="none-input-1" style="display: none;">
-				<p class="ml-5">(${vo.ctgr_p_cnt })</p>
+				<input class="input none-input" type="text" value="${vo.ctgr_name }" style="display: none;">
+				<button class="btn btn-sm btn-danger can-btn" style="display:none;margin-right: 15px;" type="button">キャンセル</button>
+				<button class="btn btn-sm btn-primary sub-btn" style="display:none;width: 99.6px;" type="button">保存</button>
+				<p class="ml-5 cnt-p">(${vo.ctgr_p_cnt })</p>
 			</div>
 		</div>
 	</div>
@@ -28,7 +30,7 @@
 		<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 			aria-labelledby="dropdownMenuLink">
 			<div class="dropdown-header">Dropdown Header:</div>
-			<a class="dropdown-item" onclick="updateChart('1년')">編集</a>
+			<a class="dropdown-item" onclick="update(this)">編集</a>
 			<a class="dropdown-item" onclick="updateChart('1달')">削除</a>
 			<div class="dropdown-divider"></div>
 			<a class="dropdown-item" onclick="updateChart('조회수')">公開</a>

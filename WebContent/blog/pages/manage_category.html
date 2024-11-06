@@ -234,13 +234,15 @@
 									<div class="email-list-actions mr-30 ml-30 pt-7">
 										<label class="custom-control custom-checkbox">
 											<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
+											<button class="btn btn-sm btn-danger" style="display:none;margin-right: 15px;" type="button" id="up_cancel_btn">キャンセル</button>
+											<button class="btn btn-sm btn-primary" style="display:none;width: 99.6px;" type="button" id="up_submit_btn">保存</button>
 										</label>
 									</div>
 									<div class="email-list-detail" style="display: flex;">
 										<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
 											긴긴긴긴긴 아주 긴긴긴긴긴 카테고리이이이이ㅣㅣㅣㅣ
 										</p>
-										<input class="input" type="text" value="긴긴긴긴긴 아주 긴긴긴긴긴 카테고리이이이이ㅣㅣㅣㅣ" id="none-input-2" style="display: none;">
+										<input class="input none-input" type="text" value="긴긴긴긴긴 아주 긴긴긴긴긴 카테고리이이이이ㅣㅣㅣㅣ" id="none-input-2" style="display: none;">
 										<p class="ml-5">(21)</p>
 									</div>
 								</div>
@@ -254,7 +256,7 @@
 								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 									aria-labelledby="dropdownMenuLink">
 									<div class="dropdown-header">Dropdown Header:</div>
-									<a class="dropdown-item" onclick="updateChart('1년')">編集</a>
+									<a class="dropdown-item" onclick="update()">編集</a>
 									<a class="dropdown-item" onclick="updateChart('1달')">削除</a>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" onclick="updateChart('조회수')">公開</a>
