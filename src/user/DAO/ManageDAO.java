@@ -34,14 +34,16 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ManageUserDTO dto = new ManageUserDTO();
+		B_userVo uvo = new B_userVo();
+		BlogVo bvo = new BlogVo();
 		
 		String sql = "select user_id,idx,email,nickname,b.b_idx,b.b_title,b.one_liner,img.img_path\r\n" + 
-				"from b_user\r\n" + 
-				"left join img\r\n" + 
-				"on img.user_img = b_user.idx\r\n" + 
-				"left join blog b\r\n" + 
-				"on b.b_u_idx = b_user.idx\r\n" + 
-				"where b_user.user_id = ?";
+				" from b_user \r\n" + 
+				" left join img \r\n" + 
+				" on img.user_img = b_user.idx \r\n" + 
+				" left join blog b \r\n" + 
+				" on b.b_u_idx = b_user.idx \r\n" + 
+				" where b_user.user_id = ?";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
@@ -50,14 +52,16 @@ public class ManageDAO {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				dto.getUser().setUser_id(rs.getString("user_id"));
-				dto.getBlog().setB_idx(rs.getInt("b_idx"));
-				dto.getUser().setIdx(rs.getInt("idx"));
-				dto.getUser().setEmail(rs.getString("email"));
-				dto.getBlog().setB_title(rs.getString("b_title"));
-				dto.getUser().setNickname(rs.getString("nickname"));
-				dto.getBlog().setOne_liner(rs.getString("one_liner"));
-				dto.getUser().setImg_path(rs.getString("img_path"));
+				uvo.setUser_id(rs.getString("user_id"));
+				bvo.setB_idx(rs.getInt("b_idx"));
+				uvo.setIdx(rs.getInt("idx"));
+				uvo.setEmail(rs.getString("email"));
+				bvo.setB_title(rs.getString("b_title"));
+				uvo.setNickname(rs.getString("nickname"));
+				bvo.setOne_liner(rs.getString("one_liner"));
+				uvo.setImg_path(rs.getString("img_path"));
+				dto.setUser(uvo);
+				dto.setBlog(bvo);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -322,18 +326,45 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		String sql_top = "select * from (\r\n" + 
-				"select /*+ index_desc(question q_pk) */\r\n" + 
-				"rownum rn,q_idx,q_ctgr,q_title,img.img_path,q_content,question.created_at,a_yn,q_u_idx,answer.a_content from question \r\n" + 
-				"left join img on img.q_img = q_idx\r\n" + 
-				"left join answer on answer.a_q_idx = q_idx ";
+		
+		String sql_top = "SELECT * FROM (\r\n" + 
+				"    SELECT /*+ index_desc(question q_pk) */\r\n" + 
+				"        q_idx,\r\n" + 
+				"        q_ctgr,\r\n" + 
+				"        q_title,\r\n" + 
+				"        img.img_path,\r\n" + 
+				"        q_content,\r\n" + 
+				"        question.created_at,\r\n" + 
+				"        a_yn,\r\n" + 
+				"        q_u_idx,\r\n" + 
+				"        answer.a_content,\r\n" + 
+				"        ROWNUM AS rn\r\n" + 
+				"    FROM (\r\n" + 
+				"        SELECT \r\n" + 
+				"            q_idx,\r\n" + 
+				"            q_ctgr,\r\n" + 
+				"            q_title,\r\n" + 
+				"            img.img_path,\r\n" + 
+				"            q_content,\r\n" + 
+				"            question.created_at,\r\n" + 
+				"            a_yn,\r\n" + 
+				"            q_u_idx,\r\n" + 
+				"            answer.a_content\r\n" + 
+				"        FROM question \r\n" + 
+				"        LEFT JOIN img ON img.q_img = q_idx\r\n" + 
+				"        LEFT JOIN answer ON answer.a_q_idx = q_idx \r\n" + 
+				        query_term + 
+				"    ) question";
 
-		String sql_middle = "where rownum <= ?*? " + query_keyword + query_type + query_term;
+		String sql_middle = "\r\n" + 
+				"    LEFT JOIN img ON img.q_img = q_idx\r\n" + 
+				"    LEFT JOIN answer ON answer.a_q_idx = q_idx "
+				+ "where rownum <= ?*? " + query_keyword + query_type ;
 		
 		String sql_bot = " ) where rn > (?-1)*? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
-		
+		//System.out.println(sql);
 		List<QuestionVo> list = new ArrayList<QuestionVo>();
 		
 		try {
@@ -522,12 +553,12 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<categoryVo> list = new ArrayList<categoryVo>();
-		String sql = "select category.*,p_private,count(p_idx)\r\n" + 
+		String sql = "select ctgridx,ctgr_name,ctgr_b_idx,ctgr_private,count(p_idx) as ctgr_p_cnt\r\n" + 
 				"from category\r\n" + 
 				"left join post\r\n" + 
 				"on ctgridx = post.p_ctgr\r\n" + 
 				"where ctgr_b_idx = ?\r\n" + 
-				"group by ctgridx,ctgr_name,ctgr_b_idx , p_private";
+				"group by ctgridx,ctgr_name,ctgr_b_idx , ctgr_private";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
@@ -540,6 +571,8 @@ public class ManageDAO {
 				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
 				vo.setCtgr_name(rs.getString("ctgr_name"));
 				vo.setCtgridx(rs.getInt("ctgridx"));
+				vo.setCtgr_private(rs.getInt("ctgr_private"));
+				vo.setCtgr_p_cnt(rs.getInt("ctgr_p_cnt"));
 				list.add(vo);
 				
 			}

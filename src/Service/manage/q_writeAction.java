@@ -47,6 +47,7 @@ public class q_writeAction implements Action {
 			image.write(realPath); //첨부파일 업로드
 		}
 		String q_title = request.getParameter("q_title");
+		System.out.println(request.getParameter("q_title")+" : test");
 		String q_content = request.getParameter("q_content");
 		int q_u_idx = Integer.parseInt(request.getParameter("idx"));
 		int q_ctgr = Integer.parseInt(request.getParameter("q_ctgr"));

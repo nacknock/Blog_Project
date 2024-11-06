@@ -19,8 +19,8 @@ public class ctgrAdd implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
-		int b_idx = Integer.parseInt((String) request.getAttribute("b_idx"));
-		String ctgr_name = (String) request.getAttribute("ctgr_name");
+		int b_idx = Integer.parseInt(request.getParameter("b_idx"));
+		String ctgr_name = request.getParameter("ctgr_name");
 		
 		categoryVo vo = new categoryVo();
 		

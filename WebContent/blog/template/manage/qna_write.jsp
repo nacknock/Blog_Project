@@ -83,7 +83,7 @@
 						<form method="post" action="/manage/q_writeAction.do" enctype="multipart/form-data" name="q_form" id="q_form">
 							<div class="form-group col-md-12">
 								<div class="mt-30 mb-15" style="display: flex;justify-content: center;">
-								<input type="hidden" value="${dto.idx }" name="idx" id="idx">
+								<input type="hidden" value="${dto.user.idx }" name="idx" id="idx">
 									<select id="q_ctgr" name="q_ctgr" class="form-control" style="width: 60%;height: 50%;text-align: center;background: white !important;">
 										<option value="">選択してください</option>
 										<option value="1">ログイン</option>

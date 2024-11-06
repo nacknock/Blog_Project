@@ -26,6 +26,7 @@ import Service.manage.ctgrAdd;
 import Service.manage.ctgrDel;
 import Service.manage.ctgrModify;
 import Service.manage.ctgrPrivate;
+import Service.manage.openCtgr;
 import Service.manage.openP_manage;
 import Service.manage.open_design_manage;
 import Service.manage.open_post_modify;
@@ -152,6 +153,11 @@ public class ManageController extends HttpServlet {
 			new login_check().command(request, response);
 			new q_detail().command(request, response);
 			page="/blog/template/manage/q_detail.jsp";
+			break;
+		case "/ctgr_manage.do":
+			new login_check().command(request, response);
+			new openCtgr().command(request, response);
+			page="/blog/template/manage/ctgr_manage.jsp";
 			break;
 		case "/ctgrAdd.do":
 			new login_check().command(request, response);

@@ -31,7 +31,7 @@ public class q_paging implements Action {
 		String keyword = "";
 		String query_keyword = "";
 		String query_type = "";
-		String query_term = "";
+		String query_term = "order by created_at desc";
 		
 		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
@@ -52,7 +52,7 @@ public class q_paging implements Action {
 		if(request.getParameter("term") != null &&!request.getParameter("term").equals("")) {
 			term = request.getParameter("term");
 			if(!term.equals("desc") && !term.equals("asc")) {
-				query_term = "";
+				query_term = "order by created_at desc ";
 			}
 			query_term = "order by created_at "+term+" ";
 		}

@@ -34,7 +34,7 @@
 						<h3 class="heading"><i class="fa-solid fa-newspaper mr-5 ml-5"></i>콘텐츠</h3>
 						<ul class="categories ml-5">
 							<li><a href="#">글 관리</a></li>
-							<li><a href="#">카테고리 관리</a></li>
+							<li><a href="/manage/ctgr_manage.do">カテゴリ管理</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->

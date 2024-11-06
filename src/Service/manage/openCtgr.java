@@ -24,6 +24,8 @@ public class openCtgr implements Action {
 		
 		request.setAttribute("dto", dto);
 		
+		System.out.println(dto.getBlog().getB_idx()+" : check");
+		
 		List<categoryVo> list = ManageDAO.getInstance().sel_ctgr(dto.getBlog().getB_idx());
 		
 		request.setAttribute("list", list);

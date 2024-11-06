@@ -3,7 +3,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-						<c:if test="${empty list}">
+						<c:if test="${empty list && empty keyword}">
+							<div class="row text-start pt-5 pb-5 border-top" style="text-align: center !important;">
+								<h2>作成したお問い合わせがありません。</h2>
+							</div>
+						</c:if>
+						<c:if test="${empty list && not empty keyword}">
 							<div class="row text-start pt-5 pb-5 border-top" style="text-align: center !important;">
 								<h2><b>${pageMaker.cri.keyword}</b> に一致する情報は見つかりませんでした。</h2>
 							</div>
