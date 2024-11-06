@@ -785,6 +785,11 @@ public class ManageDAO {
 			pstmt.setString(3, vo.getP_content());
 			pstmt.setInt(4, vo.getP_private());
 			pstmt.setInt(5, vo.getP_b_idx());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt("p_idx");
+			}
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -1388,6 +1393,35 @@ public class ManageDAO {
 		}
 		
 		return cnt;
+	}
+	public void saveTag(int p_idx, String[] tags) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		String sql = "insert into tag (tag_id,tag_name,tag_p_id) values (tag_seq.nextval,?,?)";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			for(String tag_name : tags) {
+				pstmt.setString(1,tag_name );
+				pstmt.setInt(2, p_idx);
+				pstmt.executeUpdate();
+			}
+			result = 1;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
 	}
 	
 }

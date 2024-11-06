@@ -50,7 +50,7 @@ public class search_result_blog implements Action {
 		cri.setType(type);
 		cri.setKeyword(keyword);
 
-		List<PostVo> post_list = BlogDAO.getInstance().SearchResultP(cri,keyword_post);
+		List<PostVo> post_list = BlogDAO.getInstance().SearchResultBlogP(cri,keyword_post);
 
 		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
