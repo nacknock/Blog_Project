@@ -19,8 +19,8 @@ public class ctgrPrivate implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 
-		int pri_bool = Integer.parseInt((String) request.getAttribute("pri_bool")); // 0은 공개로 돌리기,1은 비공개로 돌리기
-		int ctgridx = Integer.parseInt((String) request.getAttribute("ctgridx"));
+		int pri_bool = Integer.parseInt(request.getParameter("pri_bool")); // 0은 공개로 돌리기,1은 비공개로 돌리기
+		int ctgridx = Integer.parseInt(request.getParameter("ctgridx"));
 		
 		int result = ManageDAO.getInstance().ctgrChangePri(pri_bool,ctgridx);
 		

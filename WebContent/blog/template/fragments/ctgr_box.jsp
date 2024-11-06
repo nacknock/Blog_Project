@@ -22,7 +22,7 @@
 		</div>
 	</div>
 	<div class="dropdown no-arrow">
-		<i class="fa-solid fa-eye"></i><!-- 공개 설정되어있을때 -->
+		<i class="fa-solid fa-eye pri-i"></i><!-- 공개 설정되어있을때 -->
 		<a class="dropdown-toggle mr-17" href="#" role="button" id="dropdownMenuLink"
 			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -33,8 +33,13 @@
 			<a class="dropdown-item" onclick="update(this)">編集</a>
 			<a class="dropdown-item" onclick="del(this)">削除</a>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" onclick="updateChart('조회수')">公開</a>
-			<a class="dropdown-item" onclick="updateChart('게시글')">非公開</a>
+			<input type="hidden" value="${vo.ctgr_private}" class="private">
+			<c:if test="${list.ctgr_private eq 1}">
+			<a class="dropdown-item pri-a" onclick="chngePriv(this)">公開</a>
+			</c:if>
+			<c:if test="${list.ctgr_private eq 0}">
+			<a class="dropdown-item pri-a" onclick="chngePriv(this)">非公開</a>
+			</c:if>
 		</div>
 	</div>
 </div>

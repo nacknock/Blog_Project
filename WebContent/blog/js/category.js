@@ -113,6 +113,7 @@ function upAction(button){
 function del(button){
     const parentDiv = $(button).closest('.post-entry-sidebar');
     const ctgridx = $(button).closest('.post-entry-sidebar').find('.ctgridx');
+    const cnt_p = $(button).closest('.post-entry-sidebar').find('.cnt-p');
     $.ajax({
         type:"post",
         url:"/manage/ctgrDel.do",
@@ -123,6 +124,48 @@ function del(button){
         success:function(result){
             if(result.check === "ok"){
                 parentDiv.remove();
+            }else{
+                alert("通信エーラが発生しました。");
+            }
+            
+        },error:function(){
+            alert("通信エーラが発生しました。");
+        }
+    })
+}
+
+function chngePriv(button){
+    const icon = $(button).closest('.post-entry-sidebar').find('.pri-i');
+    const private = $(button).closest('.post-entry-sidebar').find('.private');
+    const ctgridx = $(button).closest('.post-entry-sidebar').find('.ctgridx');
+    const pri_a = $(button).closest('.post-entry-sidebar').find('.pri-a');
+    let pri_bool_val = 0;
+    if(private.val() === '0'){
+        pri_bool_val = 1;
+    }else if(private.val() === '1'){
+        pri_bool_val = 0;
+    }
+    $.ajax({
+        type:"post",
+        url:"/manage/ctgrPrivate.do",
+        data:{
+            pri_bool:pri_bool_val,
+            ctgridx:ctgridx.val(),
+        },
+        dataType : "json",
+        success:function(result){
+            if(result.check === "ok"){
+                if(pri_bool_val == 0){
+                    icon.removeClass();
+                    icon.addClass('fa-solid fa-eye pri-i');
+                    pri_a.text('非公開');
+                    private.val(0);
+                }else if(pri_bool_val == 1){
+                    icon.removeClass();
+                    icon.addClass('fa-solid fa-eye-slash pri-i');
+                    pri_a.text('公開');
+                    private.val(1);
+                }
             }else{
                 alert("通信エーラが発生しました。");
             }
