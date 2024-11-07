@@ -128,9 +128,15 @@
 										<p class="msg mb-7 ml-15 float-l" style="color: #000;">
 											記事を投稿する際の初期設定は
 										</p>
-										<select class="float-l mr-15 ml-15">
-											<option>非公開</option>
-											<option>公開</option>
+										<select class="float-l mr-15 ml-15" id="p_pri_yn">
+										<c:if test="${dto.blog.p_pri_yn eq 0 }">
+											<option value="0">公開</option>
+											<option value="1">非公開</option>
+										</c:if>
+										<c:if test="${dto.blog.p_pri_yn eq 1 }">
+											<option value="1">非公開</option>
+											<option value="0">公開</option>
+										</c:if>
 										</select>
 										<p>に設定します。</p>
 									</div>
@@ -138,7 +144,7 @@
 							</div>
 						</div>				
 						<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
-							<button type="submit" class="btn btn-sm btn-outline-primary">保存</button>
+							<button type="button" class="btn btn-sm btn-outline-primary" onclick="chngeB_priv(${dto.blog.b_idx })">保存</button>
 						</div>							
 					</div>
 				</div>

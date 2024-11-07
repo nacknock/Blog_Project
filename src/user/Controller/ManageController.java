@@ -12,6 +12,7 @@ import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
 import Service.Sign.login;
 import Service.Sign.login_check;
+import Service.manage.Bchange_pri;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
@@ -188,7 +189,7 @@ public class ManageController extends HttpServlet {
 			new Pchange_pri().command(request, response);
 			break;
 		case "/Bchange_pri.do":			
-			new postModifyAction().command(request, response);
+			new Bchange_pri().command(request, response);
 			break;
 		case "/open_reply_manage.do":			
 			new open_reply_manage().command(request, response);

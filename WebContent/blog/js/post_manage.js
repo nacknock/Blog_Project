@@ -157,7 +157,6 @@ function page_keyword(event) {
 }
 
 function del(button){
-    const parentDiv = $(button).closest('.post-entry-sidebar');
     const pidx = $(button).closest('.post-entry-sidebar').find('.pidx');
     $.ajax({
         type:"post",
@@ -174,6 +173,70 @@ function del(button){
         success: function(data) {
             $('#p-paging').empty();
             $('#p-paging').append(data); // 서버에서 받은 HTML을 추가
+        },error:function(){
+            alert("通信エーラが発生しました。");
+        }
+    })
+}
+
+function chngePriv(button){
+    const icon = $(button).closest('.post-entry-sidebar').find('.pri-i');
+    const private = $(button).closest('.post-entry-sidebar').find('.private');
+    const pidx = $(button).closest('.post-entry-sidebar').find('.pidx');
+    const pri_a = $(button).closest('.post-entry-sidebar').find('.pri-a');
+    let pri_bool_val = 0;
+    if(private.val() === '0'){
+        pri_bool_val = 1;
+    }else if(private.val() === '1'){
+        pri_bool_val = 0;
+    }
+    $.ajax({
+        type:"post",
+        url:"/manage/Pchange_pri.do",
+        data:{
+            pri_bool:pri_bool_val,
+            p_idx:pidx.val(),
+        },
+        dataType : "json",
+        success:function(result){
+            if(result.check === "ok"){
+                if(pri_bool_val == 0){
+                    icon.removeClass();
+                    icon.addClass('fa-solid fa-eye pri-i');
+                    pri_a.text('非公開');
+                    private.val(0);
+                }else if(pri_bool_val == 1){
+                    icon.removeClass();
+                    icon.addClass('fa-solid fa-eye-slash pri-i');
+                    pri_a.text('公開');
+                    private.val(1);
+                }
+            }else{
+                alert("通信エーラが発生しました。");
+            }
+            
+        },error:function(){
+            alert("通信エーラが発生しました。");
+        }
+    })
+}
+
+function chngeB_priv(b_idx){
+    $.ajax({
+        type:"post",
+        url:"/manage/Bchange_pri.do",
+        data:{
+            pri_bool:$('#p_pri_yn').val(),
+            b_idx:b_idx,
+        },
+        dataType : "json",
+        success:function(result){
+            if(result.check === "ok"){
+                alert("設定を保存しました。");
+            }else{
+                alert("通信エーラが発生しました。");
+            }
+            
         },error:function(){
             alert("通信エーラが発生しました。");
         }

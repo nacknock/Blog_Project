@@ -52,8 +52,13 @@
 				<a class="dropdown-item" href="/manage/openP_modify.do">編集</a>
 				<a class="dropdown-item" onclick="del(this)">削除</a>
 				<div class="dropdown-divider"></div>
-				<a class="dropdown-item" onclick="chngePriv(this)">公開</a>
-				<a class="dropdown-item" onclick="chngePriv(this)">非公開</a>
+				<input type="hidden" value="${list.p_private}" class="private">
+				<c:if test="${list.p_private eq 1}">
+				<a class="dropdown-item pri-a" onclick="chngePriv(this)">公開</a>
+				</c:if>
+				<c:if test="${list.p_private eq 0}">
+				<a class="dropdown-item pri-a" onclick="chngePriv(this)">非公開</a>
+				</c:if>
 			</div>
 		</div>
 	</div>

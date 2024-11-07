@@ -19,8 +19,11 @@ public class Bchange_pri implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 
-		int pri_bool = Integer.parseInt((String) request.getAttribute("pri_bool")); // 0은 공개로 돌리기,1은 비공개로 돌리기
-		int b_idx = Integer.parseInt((String) request.getAttribute("b_idx"));
+		int pri_bool = Integer.parseInt(request.getParameter("pri_bool")); // 0은 공개로 돌리기,1은 비공개로 돌리기
+		int b_idx = Integer.parseInt(request.getParameter("b_idx"));
+		
+		System.out.println(pri_bool+" : pri_bool");
+		System.out.println(b_idx+" : b_idx");
 		
 		int result = ManageDAO.getInstance().BChangePri(pri_bool,b_idx);
 		

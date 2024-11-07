@@ -37,7 +37,7 @@ public class ManageDAO {
 		B_userVo uvo = new B_userVo();
 		BlogVo bvo = new BlogVo();
 		
-		String sql = "select user_id,idx,email,nickname,b.b_idx,b.b_title,b.one_liner,img.img_path\r\n" + 
+		String sql = "select user_id,idx,email,nickname,b.b_idx,b.b_title,b.one_liner,b.p_pri_yn,img.img_path\r\n" + 
 				" from b_user \r\n" + 
 				" left join img \r\n" + 
 				" on img.user_img = b_user.idx \r\n" + 
@@ -59,6 +59,7 @@ public class ManageDAO {
 				bvo.setB_title(rs.getString("b_title"));
 				uvo.setNickname(rs.getString("nickname"));
 				bvo.setOne_liner(rs.getString("one_liner"));
+				bvo.setP_pri_yn(rs.getInt("p_pri_yn"));
 				uvo.setImg_path(rs.getString("img_path"));
 				dto.setUser(uvo);
 				dto.setBlog(bvo);
@@ -1224,7 +1225,7 @@ public class ManageDAO {
 		if(pri_bool == 0) {
 			sql = "update blog set p_pri_yn = 0 where b_idx = ?";
 		}else if(pri_bool == 1){
-			sql = "update post set p_pri_yn = 1 where b_idx = ?";
+			sql = "update blog set p_pri_yn = 1 where b_idx = ?";
 		}else {
 			return 0;
 		}

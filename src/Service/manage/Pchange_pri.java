@@ -19,8 +19,8 @@ public class Pchange_pri implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 
-		int pri_bool = Integer.parseInt((String) request.getAttribute("pri_bool")); // 0은 공개로 돌리기,1은 비공개로 돌리기
-		int p_idx = Integer.parseInt((String) request.getAttribute("p_idx"));
+		int pri_bool = Integer.parseInt(request.getParameter("pri_bool")); // 0은 공개로 돌리기,1은 비공개로 돌리기
+		int p_idx = Integer.parseInt(request.getParameter("p_idx"));
 		
 		int result = ManageDAO.getInstance().PChangePri(pri_bool,p_idx);
 		
