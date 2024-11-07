@@ -9,8 +9,8 @@ public class PostVo {
 	private String created_at;
 	private String modified_at;
 	private int hit;
-	private int p_b_idx;
-	private int p_ctgr;
+	private BlogVo p_b_idx;
+	private categoryVo p_ctgr;
 	private String img_path;
 	public String getImg_path() {
 		return img_path;
@@ -60,16 +60,16 @@ public class PostVo {
 	public void setHit(int hit) {
 		this.hit = hit;
 	}
-	public int getP_b_idx() {
+	public BlogVo getP_b_idx() {
 		return p_b_idx;
 	}
-	public void setP_b_idx(int p_b_idx) {
+	public void setP_b_idx(BlogVo p_b_idx) {
 		this.p_b_idx = p_b_idx;
 	}
-	public int getP_ctgr() {
+	public categoryVo getP_ctgr() {
 		return p_ctgr;
 	}
-	public void setP_ctgr(int p_ctgr) {
+	public void setP_ctgr(categoryVo p_ctgr) {
 		this.p_ctgr = p_ctgr;
 	}
 }

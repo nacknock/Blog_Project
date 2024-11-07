@@ -68,12 +68,14 @@ public class postModifyAction implements Action {
 		int p_ctgr = Integer.parseInt(request.getParameter("p_ctgr"));
 		
 		PostVo vo = new PostVo();
+		categoryVo cvo = new categoryVo();
 		
 		vo.setP_idx(p_idx);
 		vo.setP_title(p_title);
 		vo.setP_content(p_content);
 		vo.setP_private(p_private);
-		vo.setP_ctgr(p_ctgr);
+		cvo.setCtgridx(p_ctgr);
+		vo.setP_ctgr(cvo);
 		vo.setImg_path(realFile);
 		
 		//path+"\\"+request.getParameter("imgurl").substring(8) = 원래 이미지 url

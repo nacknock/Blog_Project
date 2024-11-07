@@ -797,11 +797,11 @@ public class ManageDAO {
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, vo.getP_ctgr());
+			pstmt.setInt(1, vo.getP_ctgr().getCtgridx());
 			pstmt.setString(2, vo.getP_title());
 			pstmt.setString(3, vo.getP_content());
 			pstmt.setInt(4, vo.getP_private());
-			pstmt.setInt(5, vo.getP_b_idx());
+			pstmt.setInt(5, vo.getP_b_idx().getB_idx());
 			pstmt.executeUpdate();
 			result = 1;
 			
@@ -818,11 +818,11 @@ public class ManageDAO {
 			
 			sql = "select p_idx from post where p_ctgr = ? and p_title = ? and p_content = ? and p_private = ? and p_b_idx = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, vo.getP_ctgr());
+			pstmt.setInt(1, vo.getP_ctgr().getCtgridx());
 			pstmt.setString(2, vo.getP_title());
 			pstmt.setString(3, vo.getP_content());
 			pstmt.setInt(4, vo.getP_private());
-			pstmt.setInt(5, vo.getP_b_idx());
+			pstmt.setInt(5, vo.getP_b_idx().getB_idx());
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -852,8 +852,8 @@ public class ManageDAO {
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, vo.getP_b_idx());
-			pstmt.setInt(2, vo.getP_ctgr());
+			pstmt.setInt(1, vo.getP_b_idx().getB_idx());
+			pstmt.setInt(2, vo.getP_ctgr().getCtgridx());
 			pstmt.setString(3, vo.getP_title());
 			rs = pstmt.executeQuery();
 			
@@ -882,9 +882,14 @@ public class ManageDAO {
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
-		PostVo vo = new PostVo();
 		
-		String sql = "select * from post where b_idx = ?";
+		String sql = "select post.*,ctgr.*,b.* \r\n" + 
+				"				from post \r\n" + 
+				"			left join category ctgr \r\n" + 
+				"			on ctgr.ctgridx = post.p_ctgr \r\n" + 
+				"			left join blog b \r\n" + 
+				"			on b.b_idx = post.p_b_idx \r\n" + 
+				"			where b.b_idx = ?";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
@@ -893,14 +898,20 @@ public class ManageDAO {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
+				PostVo vo = new PostVo();
+				BlogVo bvo = new BlogVo();
+				categoryVo cvo = new categoryVo();
 				vo.setP_idx(rs.getInt("p_idx"));
 				vo.setP_title(rs.getString("p_title"));
 				vo.setP_content(rs.getString("p_content"));
 				vo.setHit(rs.getInt("hit"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setModified_at(rs.getString("modified_at"));
-				vo.setP_b_idx(rs.getInt("p_b_idx"));
-				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				bvo.setB_idx(rs.getInt("b_idx"));
+				bvo.setP_pri_yn(rs.getInt("p_pri_yn"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
+				cvo.setCtgr_private(rs.getInt("ctgr_private"));
 				vo.setP_private(rs.getInt("p_private"));
 				list.add(vo);
 			}
@@ -927,8 +938,12 @@ public class ManageDAO {
 		String sql = null;
 		String sql_top = "select * from (\r\n" + 
 				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_ctgr,p_title,p_content,created_at,modified_at,hit,p_b_idx,p_private \r\n" + 
-				"from post\r\n";
+				"rownum rn,p_idx,p_ctgr,p_title,p_content,created_at,modified_at,hit,p_b_idx,p_private,ctgr.*,b.* \r\n" + 
+				"from post\r\n"
+				+ "			left join category ctgr \r\n" + 
+				"			on ctgr.ctgridx = post.p_ctgr \r\n" + 
+				"			left join blog b \r\n" + 
+				"			on b.b_idx = post.p_b_idx \r\n";
 
 		String sql_middle = "where rownum <= ?*? and p_b_idx = ? " + query_keyword + query_type + query_term;
 		
@@ -950,15 +965,22 @@ public class ManageDAO {
 			
 			while(rs.next()) {
 				PostVo vo = new PostVo();
+				BlogVo bvo = new BlogVo();
+				categoryVo cvo = new categoryVo();
 				vo.setP_idx(rs.getInt("p_idx"));
-				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
+				cvo.setCtgr_private(rs.getInt("ctgr_private"));
+				vo.setP_ctgr(cvo);
 				vo.setP_title(rs.getString("p_title"));
 				vo.setP_content(rs.getString("p_content"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setModified_at(rs.getString("modifited_at"));
 				vo.setHit(rs.getInt("hit"));
 				vo.setP_private(rs.getInt("p_private"));
-				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				bvo.setB_idx(rs.getInt("b_idx"));
+				bvo.setP_pri_yn(rs.getInt("p_pri_yn"));
+				vo.setP_b_idx(bvo);
 				
 				list.add(vo);
 			}
@@ -1066,7 +1088,7 @@ public class ManageDAO {
 			pstmt.setString(1, vo.getP_title());
 			pstmt.setString(2, vo.getP_content());
 			pstmt.setString(3, "");
-			pstmt.setInt(4, vo.getP_ctgr());
+			pstmt.setInt(4, vo.getP_ctgr().getCtgridx());
 			pstmt.setInt(5, vo.getP_idx());
 			pstmt.executeUpdate();
 			
@@ -1234,14 +1256,12 @@ public class ManageDAO {
 			while(rs.next()) {
 				PostVo vo = new PostVo();
 				vo.setP_idx(rs.getInt("p_idx"));
-				vo.setP_ctgr(rs.getInt("p_ctgr"));
 				vo.setP_title(rs.getString("p_title"));
 				vo.setP_content(rs.getString("p_content"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setModified_at(rs.getString("modifited_at"));
 				vo.setHit(rs.getInt("hit"));
 				vo.setP_private(rs.getInt("p_private"));
-				vo.setP_b_idx(rs.getInt("p_b_idx"));
 				
 				list.add(vo);
 			}

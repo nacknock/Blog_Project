@@ -15,6 +15,7 @@ import javax.servlet.http.Part;
 import com.google.gson.Gson;
 
 import Service.Action;
+import VO.BlogVo;
 import VO.PostVo;
 import VO.categoryVo;
 import user.DAO.ManageDAO;
@@ -62,12 +63,16 @@ String savepath = "/blog/images";
 		String[] tags = request.getParameterValues("tags");
 		
 		PostVo vo = new PostVo();
+		categoryVo ct_vo = new categoryVo();
+		BlogVo b_vo = new BlogVo();
 		
 		vo.setP_title(p_title);
-		vo.setP_ctgr(ctgridx);
+		ct_vo.setCtgridx(ctgridx);
+		vo.setP_ctgr(ct_vo);
 		vo.setP_content(p_content);
 		vo.setP_private(p_private);
-		vo.setP_b_idx(b_idx);
+		b_vo.setB_idx(b_idx);
+		vo.setP_b_idx(b_vo);
 		vo.setImg_path(realFile);
 		
 		int result = ManageDAO.getInstance().savePost(vo);

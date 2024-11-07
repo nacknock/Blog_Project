@@ -276,14 +276,19 @@ public class BlogDAO {
 			
 			while(rs.next()) {
 				PostVo vo = new PostVo();
+				categoryVo cvo = new categoryVo();
+				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
-				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				vo.setP_ctgr(cvo);
 				vo.setP_private(rs.getInt("p_private"));
 				vo.setP_title(rs.getString("p_title"));
 				vo.setImg_path(rs.getString("img_path"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setHit(rs.getInt("hit"));
-				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				bvo.setP_pri_yn(rs.getInt("p_pri_yn"));
+				vo.setP_b_idx(bvo);
 				
 				list.add(vo);
 			}
@@ -422,14 +427,18 @@ public class BlogDAO {
 			
 			if(rs.next()) {
 				PostVo vo = new PostVo();
+				categoryVo cvo = new categoryVo();
+				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
-				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				vo.setP_ctgr(cvo);
 				vo.setP_private(rs.getInt("p_private"));
 				vo.setP_title(rs.getString("p_title"));
 				vo.setImg_path(rs.getString("img_path"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setHit(rs.getInt("hit"));
-				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				vo.setP_b_idx(bvo);
 				list.add(vo);
 			}
 			
@@ -467,18 +476,22 @@ public class BlogDAO {
 			pstmt.executeQuery();
 			
 			if(rs.next()) {
+				categoryVo cvo = new categoryVo();
+				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
-				vo.setP_ctgr(rs.getInt("p_ctgr"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
 				vo.setP_private(rs.getInt("p_private"));
 				vo.setP_title(rs.getString("p_title"));
 				vo.setP_content(rs.getString("p_content"));
 				vo.setImg_path(rs.getString("img_path"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setHit(rs.getInt("hit"));
-				vo.setP_b_idx(rs.getInt("p_b_idx"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				vo.setP_b_idx(bvo);
 				if(rs.getInt("ctgr_private") != 0) {
-					vo.setP_private(rs.getInt("ctgr_private"));
+					cvo.setCtgr_private(rs.getInt("ctgr_private"));
 				}
+				vo.setP_ctgr(cvo);
 			}
 			
 		} catch (Exception e) {

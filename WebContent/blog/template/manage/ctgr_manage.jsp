@@ -114,9 +114,9 @@
 								<div class="email-list">
 									<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
 										<div class="email-list-actions mr-30 ml-30 pt-7">
-											<label class="custom-control custom-checkbox">
+											<!-- <label class="custom-control custom-checkbox">
 												<input class="custom-control-input checkboxes" type="checkbox" value="1" id="one" style="width: 20px;height: 20px;">
-											</label>
+											</label> -->
 										</div>
 										<div class="email-list-detail" style="display: flex;">
 											<input type="hidden" value="${list.ctgridx }" name="ctgridx" class="ctgridx">

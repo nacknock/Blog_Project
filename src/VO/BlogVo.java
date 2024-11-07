@@ -1,6 +1,12 @@
 package VO;
 
 public class BlogVo {
+	public int getP_pri_yn() {
+		return p_pri_yn;
+	}
+	public void setP_pri_yn(int p_pri_yn) {
+		this.p_pri_yn = p_pri_yn;
+	}
 	public String getImg_path() {
 		return img_path;
 	}
@@ -16,6 +22,7 @@ public class BlogVo {
 	private String body_clr;
 	private String img_path;
 	private int b_u_idx;
+	private int p_pri_yn;
 	public int getB_idx() {
 		return b_idx;
 	}
