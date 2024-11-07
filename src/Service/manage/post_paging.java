@@ -24,7 +24,7 @@ public class post_paging implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
-		int b_idx = Integer.parseInt((String)request.getParameter("b_idx"));
+		int b_idx = Integer.parseInt(request.getParameter("b_idx"));
 		
 		int pageNum = 1;
 		int amount = 10;
@@ -44,9 +44,9 @@ public class post_paging implements Action {
 		if(request.getParameter("type") != null &&!request.getParameter("type").equals("")) {
 			type = request.getParameter("type");
 			if(type.equals("up")) {
-				query_type = "order_by hit asc ";
+				query_type = "order by hit asc ";
 			}else if(type.equals("down")) {
-				query_type = "order_by hit desc ";
+				query_type = "order by hit desc ";
 			}else {
 				query_type = "";
 			} 

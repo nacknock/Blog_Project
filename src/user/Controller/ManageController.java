@@ -182,6 +182,7 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/del_post.do":			
 			new post_del().command(request, response);
+			new post_paging().command(request, response);
 			break;
 		case "/Pchange_pri.do":			
 			new Pchange_pri().command(request, response);

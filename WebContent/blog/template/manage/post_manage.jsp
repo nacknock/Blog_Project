@@ -72,6 +72,7 @@
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
 						<h2>記事の管理 <small id="cnt-text"></small></h2>
+						<input type="hidden" value="${ dto.blog.b_idx}" id="b_idx" name="b_idx">
 					</div>
 					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);">
 						<div class="d-flex flex-row align-items-center justify-content-between">

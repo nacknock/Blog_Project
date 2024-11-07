@@ -4,11 +4,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-	<c:if test="${empty list && empty keyword}">
-	<div class="post-entry-sidebar" id="empty-page" style="text-align:center; height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
+	<input type="hidden" name="count" id="count" value="${count}">
+	<c:if test="${empty list && empty pageMaker.cri.keyword}">
+	<div class="post-entry-sidebar" id="empty-page" style=" height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
 		<h2>投稿した記事がありません。</h2>
 	</div>	
 	</c:if>
+	<c:if test="${empty list && not empty pageMaker.cri.keyword}">
+	<div class="post-entry-sidebar" id="empty-page" style=" height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: center;">
+		<h2><b>${pageMaker.cri.keyword}</b> に一致する情報は見つかりませんでした。</h2>
+	</div>	
+	</c:if>
+	<c:forEach var="list" items="${list }">
 	<div class="post-entry-sidebar" style="height: 80px;display: flex;align-items: center;border-bottom: 1px solid rgba(0, 0, 0, 0.125);justify-content: space-between;">
 		<div class="email-list">
 			<div class="email-list-item email-list-item--unread" style="display: flex;align-items: center;">
@@ -28,22 +35,29 @@
 			</div>
 		</div>
 		<div class="dropdown no-arrow">
-			<i class="fa-solid fa-eye"></i><!-- 공개 설정되어있을때 -->
+			<c:if test="${list.p_private eq 0}">
+			<i class="fa-solid fa-eye pri-i"></i><!-- 공개 설정되어있을때 -->
+			</c:if>
+			<c:if test="${list.p_private eq 1}">
+			<i class="fa-solid fa-eye-slash pri-i"></i>
+			</c:if>
 			<a class="dropdown-toggle mr-17" href="#" role="button" id="dropdownMenuLink"
 				data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
 			</a>
 			<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
 				aria-labelledby="dropdownMenuLink">
-				<div class="dropdown-header">설정:</div>
-				<a class="dropdown-item" onclick="updateChart('1년')">수정</a>
-				<a class="dropdown-item" onclick="updateChart('1달')">삭제</a>
+				<input type="hidden" name="pidx" class="pidx" value="${list.p_idx }">
+				<div class="dropdown-header">オプション:</div>
+				<a class="dropdown-item" href="/manage/openP_modify.do">編集</a>
+				<a class="dropdown-item" onclick="del(this)">削除</a>
 				<div class="dropdown-divider"></div>
-				<a class="dropdown-item" onclick="updateChart('조회수')">공개</a>
-				<a class="dropdown-item" onclick="updateChart('게시글')">비공개</a>
+				<a class="dropdown-item" onclick="chngePriv(this)">公開</a>
+				<a class="dropdown-item" onclick="chngePriv(this)">非公開</a>
 			</div>
 		</div>
-	</div>									
+	</div>
+	</c:forEach>								
 </div>
 <div class="row text-start pt-5 border-top">
 	<div class="col-md-12">
@@ -59,7 +73,7 @@
 		</c:if>
 		<c:forEach var="page" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
 			<c:if test="${pageMaker.cri.pageNum == page}">
-				<span>${page}</span>
+				<span id="nowpage">${page}</span>
 			</c:if>
 			<c:if test="${pageMaker.cri.pageNum != page}">
 				<a style="cursor:pointer;color: #FFF !important;" onclick="page('${page}')">${page}</a>

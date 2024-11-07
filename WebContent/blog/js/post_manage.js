@@ -2,8 +2,12 @@ $(document).ready(function() {
     $.ajax({
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
+        data:{
+            b_idx:$('#b_idx').val(),
+        },
         success: function(data) {
             $('#p-paging').append(data); // 서버에서 받은 HTML을 추가
+            $('#cnt-text').text('('+$('#count').val()+')');
         },
         error: function() {
             alert('通信エーラが発生しました。');
@@ -18,6 +22,7 @@ function prev_page(page) {
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
         data:{
+            b_idx:$('#b_idx').val(),
             pageNum:page,
             amount:$('#amount').val(),
             type:$('#type').val(),
@@ -40,6 +45,7 @@ function page(page) {
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
         data:{
+            b_idx:$('#b_idx').val(),
             pageNum:page,
             amount:$('#amount').val(),
             type:$('#type').val(),
@@ -63,6 +69,7 @@ function next_page(page) {
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
         data:{
+            b_idx:$('#b_idx').val(),
             pageNum:page,
             amount:$('#amount').val(),
             type:$('#type').val(),
@@ -85,6 +92,7 @@ function page_term(term_val) {
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
         data:{
+            b_idx:$('#b_idx').val(),
             amount:$('#amount').val(),
             type:$('#type').val(),
             keyword:$('#keyword').val(),
@@ -106,6 +114,7 @@ function page_type(type_val) {
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
         data:{
+            b_idx:$('#b_idx').val(),
             amount:$('#amount').val(),
             type:type_val,
             keyword:$('#keyword').val(),
@@ -130,6 +139,7 @@ function page_keyword(event) {
         url: '/manage/post_paging.do', // Ajax 요청 URL
         type: 'GET',
         data:{
+            b_idx:$('#b_idx').val(),
             amount:$('#amount').val(),
             type:$('#type').val(),
             keyword:keyword_val,
@@ -144,4 +154,28 @@ function page_keyword(event) {
         }
     });
     return false;
+}
+
+function del(button){
+    const parentDiv = $(button).closest('.post-entry-sidebar');
+    const pidx = $(button).closest('.post-entry-sidebar').find('.pidx');
+    $.ajax({
+        type:"post",
+        url:"/manage/del_post.do",
+        data:{
+            p_idx:pidx.val(),
+            pageNum:$('#nowpage').text(),
+            b_idx:$('#b_idx').val(),
+            amount:$('#amount').val(),
+            type:$('#type').val(),
+            keyword:$('#keyword').val(),
+            term:$('#term').val(),
+        },
+        success: function(data) {
+            $('#p-paging').empty();
+            $('#p-paging').append(data); // 서버에서 받은 HTML을 추가
+        },error:function(){
+            alert("通信エーラが発生しました。");
+        }
+    })
 }

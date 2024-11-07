@@ -22,6 +22,7 @@ public class openP_manage implements Action {
 		ManageUserDTO dto =  ManageDAO.getInstance().loadPage(userid);
 		
 		request.setAttribute("dto", dto);
+		request.setAttribute("b_idxBypaging", dto.getBlog().getB_idx());
 
 	}
 

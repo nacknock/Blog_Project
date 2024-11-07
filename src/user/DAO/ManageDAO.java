@@ -936,29 +936,62 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		String sql_top = "select * from (\r\n" + 
-				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_ctgr,p_title,p_content,created_at,modified_at,hit,p_b_idx,p_private,ctgr.*,b.* \r\n" + 
-				"from post\r\n"
-				+ "			left join category ctgr \r\n" + 
-				"			on ctgr.ctgridx = post.p_ctgr \r\n" + 
-				"			left join blog b \r\n" + 
-				"			on b.b_idx = post.p_b_idx \r\n";
+		String query_default = " ";
+		if(query_type.equals("") && query_term.equals("")) {
+			query_default = " order by post.created_at desc ";
+		}
+		String sql_top = "SELECT * FROM (\r\n" + 
+				"    SELECT \r\n" + 
+				"        /*+ index_desc(post post_pk) */ \r\n" + 
+				"        ROWNUM rn, \r\n" + 
+				"        p_idx, \r\n" + 
+				"        p_ctgr, \r\n" + 
+				"        p_title, \r\n" + 
+				"        p_content, \r\n" + 
+				"        post.created_at, \r\n" + 
+				"        post.modified_at, \r\n" + 
+				"        hit, \r\n" + 
+				"        p_b_idx, \r\n" + 
+				"        p_private, \r\n" + 
+				"        ctgr.*, \r\n" + 
+				"        b.b_idx \r\n" + 
+				"    FROM (\r\n" + 
+				"        SELECT \r\n" + 
+				"            p_idx, \r\n" + 
+				"            p_ctgr, \r\n" + 
+				"            p_title, \r\n" + 
+				"            p_content, \r\n" + 
+				"            post.created_at, \r\n" + 
+				"            post.modified_at, \r\n" + 
+				"            hit, \r\n" + 
+				"            p_b_idx, \r\n" + 
+				"            p_private, \r\n" + 
+				"            ctgr.*, \r\n" + 
+				"            b.b_idx \r\n" + 
+				"        FROM post \r\n" + 
+				"        LEFT JOIN category ctgr ON ctgr.ctgridx = post.p_ctgr \r\n" + 
+				"        LEFT JOIN blog b ON b.b_idx = post.p_b_idx \r\n" + 
+				"        WHERE post.p_b_idx = ? \r\n" + query_keyword + query_type + query_term + query_default +
+				"    ) post  " +
+				"      LEFT JOIN category ctgr ON ctgr.ctgridx = post.p_ctgr " + 
+				"      LEFT JOIN blog b ON b.b_idx = post.p_b_idx " ;
 
-		String sql_middle = "where rownum <= ?*? and p_b_idx = ? " + query_keyword + query_type + query_term;
+		String sql_middle = "where rownum <= ?*?";
 		
-		String sql_bot = " ) ) where rn > (?-1)*? ";
+		String sql_bot = " ) where rn > (?-1)*? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
+		
+		System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, cri.getPageNum());
-			pstmt.setInt(2, cri.getAmount());
-			pstmt.setInt(3, b_idx);
+			pstmt.setInt(1, b_idx);
+			pstmt.setInt(2, cri.getPageNum());
+			pstmt.setInt(3, cri.getAmount());
 			pstmt.setInt(4, cri.getPageNum());
 			pstmt.setInt(5, cri.getAmount());
 			rs = pstmt.executeQuery();
@@ -970,16 +1003,14 @@ public class ManageDAO {
 				vo.setP_idx(rs.getInt("p_idx"));
 				cvo.setCtgridx(rs.getInt("p_ctgr"));
 				cvo.setCtgr_name(rs.getString("ctgr_name"));
-				cvo.setCtgr_private(rs.getInt("ctgr_private"));
 				vo.setP_ctgr(cvo);
 				vo.setP_title(rs.getString("p_title"));
 				vo.setP_content(rs.getString("p_content"));
 				vo.setCreated_at(rs.getString("created_at"));
-				vo.setModified_at(rs.getString("modifited_at"));
+				vo.setModified_at(rs.getString("modified_at"));
 				vo.setHit(rs.getInt("hit"));
 				vo.setP_private(rs.getInt("p_private"));
 				bvo.setB_idx(rs.getInt("b_idx"));
-				bvo.setP_pri_yn(rs.getInt("p_pri_yn"));
 				vo.setP_b_idx(bvo);
 				
 				list.add(vo);
@@ -1009,9 +1040,9 @@ public class ManageDAO {
 		if(query_keyword == "") {
 			sql = "select count(*) as cnt from post where p_b_idx = ? ";
 		}else {
-			sql = "select count(*) as cnt from post where p_b_idx = ? "+ query_keyword;
+			sql = "select count(*) as cnt from post where p_b_idx = ? and "+ query_keyword;
 		}
-		//System.out.println(sql);
+		System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -1115,7 +1146,7 @@ public class ManageDAO {
 		return result;
 		
 	}
-	public int DelPost(int p_idx, String path) {
+	public int DelPost(int p_idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
@@ -1135,11 +1166,6 @@ public class ManageDAO {
 			pstmt.setInt(1, p_idx);
 			pstmt.executeUpdate();
 			
-			File img = new File(path);
-			
-			if(img != null) {
-				img.delete();
-			}
 			result = 1;
 			
 		}catch(Exception e) {
