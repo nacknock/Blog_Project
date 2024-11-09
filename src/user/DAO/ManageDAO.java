@@ -13,6 +13,7 @@ import java.util.Map;
 
 import DTO.ManageUserDTO;
 import VO.AnswerVo;
+import VO.B_replyVo;
 import VO.B_userVo;
 import VO.BlogVo;
 import VO.PostVo;
@@ -1250,45 +1251,100 @@ public class ManageDAO {
 		return result;
 	}
 	
-	public List<PostVo> getListWithPagingR_Manage(Criteria cri, String query_keyword, String query_type, String query_term, int b_idx) {
+	public List<B_replyVo> getListWithPagingR_Manage(Criteria cri, String query_keyword, String query_term, int idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		String sql_top = "select * from (\r\n" + 
-				"select /*+ index_desc(b_reply b_reply_pk) */\r\n" + 
-				"rownum rn,r_idx,r_content,re.created_at,re.modified_at,r_u_idx,r_p_idx,r_grade,r_parent,post.p_idx,post.p_title \r\n" + 
-				"from b_reply re \r\n"
-				+ " left join post "
-				+ " on post.p_idx = re.r_p_idx";
+		String sql_top = "SELECT * FROM (\r\n" + 
+				"    SELECT \r\n" + 
+				"        /*+ index_desc(b_reply b_reply_pk) */ \r\n" + 
+				"        ROWNUM rn, \r\n" + 
+				"        r.r_idx, \r\n" + 
+				"        r.r_content, \r\n" + 
+				"        r.created_at, \r\n" + 
+				"        r.modified_at, \r\n" + 
+				"        r.r_u_idx, \r\n" + 
+				"        r.r_p_idx, \r\n" + 
+				"        r.r_grade, \r\n" + 
+				"        r.r_parent, \r\n" + 
+				"        myuser.user_id AS my_user_id, \r\n" + 
+				"        myuser.nickname AS my_nickname, \r\n" + 
+				"        p.p_title, \r\n" + 
+				"        parentU.user_id AS parent_user_id, \r\n" + 
+				"        parentU.nickname AS parent_nickname\r\n" + 
+				"    FROM (\r\n" + 
+				"        SELECT \r\n" + 
+				"        r.r_idx, \r\n" + 
+				"        r.r_content, \r\n" + 
+				"        r.created_at, \r\n" + 
+				"        r.modified_at, \r\n" + 
+				"        r.r_u_idx, \r\n" + 
+				"        r.r_p_idx, \r\n" + 
+				"        r.r_grade, \r\n" + 
+				"        r.r_parent, \r\n" + 
+				"        myuser.user_id AS my_user_id, \r\n" + 
+				"        myuser.nickname AS my_nickname, \r\n" + 
+				"        p.p_title, \r\n" + 
+				"        parentU.user_id AS parent_user_id, \r\n" + 
+				"        parentU.nickname AS parent_nickname\r\n" + 
+				"        FROM b_reply r\r\n" + 
+				"        LEFT JOIN b_user myuser ON myuser.idx = r.r_u_idx \r\n" + 
+				"        LEFT JOIN b_reply parent_re ON parent_re.r_idx = r.r_parent \r\n" + 
+				"        LEFT JOIN b_user parentU ON parentU.idx = parent_re.r_u_idx \r\n" + 
+				"        LEFT JOIN post p ON p.p_idx = r.r_p_idx \r\n" + 
+				"        WHERE r.r_u_idx = ?     " + query_keyword + " " + query_term + " " +
+				") r          " +
+				"		 LEFT JOIN b_user myuser ON myuser.idx = r.r_u_idx \r\n" + 
+				"        LEFT JOIN b_reply parent_re ON parent_re.r_idx = r.r_parent \r\n" + 
+				"        LEFT JOIN b_user parentU ON parentU.idx = parent_re.r_u_idx \r\n" + 
+				"        LEFT JOIN post p ON p.p_idx = r.r_p_idx "  ;
 
-		String sql_middle = "where rownum <= ?*? and r_p_idx = (select p_idx from post where p_b_idx = ?) " + query_keyword + query_type + query_term;
+		String sql_middle = "where rownum <= ?*? ";
 		
-		String sql_bot = " ) ) where rn > (?-1)*? ";
+		String sql_bot = " ) where rn > (?-1)*? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
 		
-		List<PostVo> list = new ArrayList<PostVo>();
+		System.out.println(sql);
+		
+		List<B_replyVo> list = new ArrayList<B_replyVo>();
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, cri.getPageNum());
-			pstmt.setInt(2, cri.getAmount());
-			pstmt.setInt(3, b_idx);
+			pstmt.setInt(1, idx);
+			pstmt.setInt(2, cri.getPageNum());
+			pstmt.setInt(3, cri.getAmount());
 			pstmt.setInt(4, cri.getPageNum());
 			pstmt.setInt(5, cri.getAmount());
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				PostVo vo = new PostVo();
-				vo.setP_idx(rs.getInt("p_idx"));
-				vo.setP_title(rs.getString("p_title"));
-				vo.setP_content(rs.getString("p_content"));
+				B_replyVo vo = new B_replyVo();
+				B_replyVo parentvo = new B_replyVo();
+				B_userVo parent_uvo = new B_userVo();
+				B_userVo uvo = new B_userVo();
+				PostVo pvo = new PostVo();
+				
+				vo.setR_idx(rs.getInt("r_idx"));
+				vo.setR_content(rs.getString("r_content"));
 				vo.setCreated_at(rs.getString("created_at"));
-				vo.setModified_at(rs.getString("modifited_at"));
-				vo.setHit(rs.getInt("hit"));
-				vo.setP_private(rs.getInt("p_private"));
+				vo.setModified_at(rs.getString("modified_at"));
+				vo.setR_grade(rs.getInt("r_grade"));
+				uvo.setIdx(rs.getInt("r_u_idx"));
+				uvo.setUser_id(rs.getString("my_user_id"));
+				uvo.setNickname(rs.getString("my_nickname"));
+				vo.setR_u_idx(uvo);
+				pvo.setP_idx(rs.getInt("r_p_idx"));
+				pvo.setP_title(rs.getString("p_title"));
+				pvo.setP_idx(rs.getInt("r_p_idx"));
+				vo.setR_p_idx(pvo);
+				parentvo.setR_idx(rs.getInt("r_parent"));
+				parent_uvo.setUser_id(rs.getString("parent_user_id"));
+				parent_uvo.setNickname(rs.getString("parent_nickname"));
+				vo.setR_parent(parentvo);
+				
 				
 				list.add(vo);
 			}
@@ -1306,7 +1362,8 @@ public class ManageDAO {
 		
 		return list;
 	}
-	public int getCountR_Manage(String query_keyword, int b_idx) {
+	
+	public int getCountR_Manage(String query_keyword, int idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1315,15 +1372,15 @@ public class ManageDAO {
 		int cnt = 0;
 		
 		if(query_keyword == "") {
-			sql = "select count(*) as cnt from b_reply where r_p_idx = (select p_idx from post where p_b_idx = ?) ";
+			sql = "select count(*) as cnt from b_reply where r_u_idx = ? ";
 		}else {
-			sql = "select count(*) as cnt from b_reply where r_p_idx = (select p_idx from post where p_b_idx = ?) "+ query_keyword;
+			sql = "select count(*) as cnt from b_reply where r_u_idx = ? "+ query_keyword;
 		}
 		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, b_idx);
+			pstmt.setInt(1, idx);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -1347,13 +1404,14 @@ public class ManageDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = "delete b_reply where r_idx = ?";
+		String sql = "delete b_reply where r_idx = ? or r_parent = ?";
 		
 		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, r_idx);
+			pstmt.setInt(2, r_idx);
 			pstmt.executeUpdate();
 			
 			result = 1;

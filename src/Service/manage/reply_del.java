@@ -29,23 +29,7 @@ public class reply_del implements Action {
 			result = -1;
 		}
 		
-		result = ManageDAO.getInstance().reply_del_Action(r_idx);
-		
-		Gson gson = new Gson();
-		Map<String, String> map = new HashMap<String, String>();
-		
-		if(result > 0) {
-			map.put("check", "ok");
-		}else if(result == -1){
-			map.put("check", "nok_user");
-		}else {
-			map.put("check","nok");
-		}
-		
-		response.setCharacterEncoding("utf-8");
-		
-		String json = gson.toJson(map);
-		response.getWriter().write(json.toString());
+		ManageDAO.getInstance().reply_del_Action(r_idx);
 
 	}
 

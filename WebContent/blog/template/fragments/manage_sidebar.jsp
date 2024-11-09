@@ -41,7 +41,7 @@
 					<div class="sidebar-box">
 						<h3 class="heading"><i class="fa-solid fa-newspaper mr-5 ml-5"></i>コメント</h3>
 						<ul class="categories ml-5">
-							<li><a href="#">コメントの管理</a></li>
+							<li><a href="/manage/open_reply_manage.do">コメントの管理</a></li>
 						</ul>
 					</div>
 					<!-- END sidebar-box -->

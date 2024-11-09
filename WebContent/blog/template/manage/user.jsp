@@ -87,10 +87,10 @@
 											<p class="msg mb-7 ml-15 pt-15 pb-15" style="color: #000;">
 												画像を変更
 											</p>
-											<input type="hidden" name="idx" id="idx" value="${dto.idx }">
+											<input type="hidden" name="idx" id="idx" value="${dto.user.idx }">
 											<input type="file" class="form-control mb-30" name="img" id="img" style="height: 38px;">
-											<input type="hidden" name="imgurl" value="/blog/images/${dto.path}">
-											<img src="/blog/images/${dto.path}" id="preview" style="width:168px;height:168px;">
+											<input type="hidden" name="imgurl" value="/blog/images/${dto.user.img_path}">
+											<img src="/blog/images/${dto.user.img_path}" id="preview" style="width:168px;height:168px;">
 										</div>
 									</div>
 								</div>
@@ -101,7 +101,7 @@
 										<h4 style="color: #000;">ID</h4>
 									</div>
 									<div class="ml-15">
-										<input class="form-control" disabled type="text" id="user_id" name="user_id" value="${dto.user_id }" style="height: 30px; background: white !important;">
+										<input class="form-control" disabled type="text" id="user_id" name="user_id" value="${dto.user.user_id }" style="height: 30px; background: white !important;">
 									</div>
 								</div>
 								<div class="mt-15 ml-68" style="display: flex;justify-content: center;">
@@ -109,7 +109,7 @@
 										<h4 style="color: #000;">メール</h4>
 									</div>
 									<div class="ml-15">
-										<input class="form-control" type="text" id="email" name="email" value="${dto.email }" style="height: 30px; background: white !important;">
+										<input class="form-control" type="text" id="email" name="email" value="${dto.user.email }" style="height: 30px; background: white !important;">
 									</div>
 									<div>
 										<button type="button" id="btn-email" class="btn btn-sm btn-primary ml-10" style="height: 30px;display: flex;align-items: center;">
@@ -135,7 +135,7 @@
 										<h4 style="color: #000;">ニックネーム</h4>
 									</div>
 									<div class="ml-15">
-										<input class="form-control" type="text" id="nickname" value="${dto.nickname }" name="nickname" style="height: 30px; background: white !important;">
+										<input class="form-control" type="text" id="nickname" value="${dto.user.nickname }" name="nickname" style="height: 30px; background: white !important;">
 									</div>
 								</div>
 								<div class="mt-15 mr-70" style="display: flex;justify-content: center;">
@@ -143,7 +143,7 @@
 										<h4 style="color: #000;">タイトル</h4>
 									</div>
 									<div class="ml-15">
-										<input class="form-control" type="text" name="b_title" value="${dto.b_title }" style="height: 30px; background: white !important;">
+										<input class="form-control" type="text" name="b_title" value="${dto.blog.b_title }" style="height: 30px; background: white !important;">
 									</div>
 								</div>
 								<div class="mt-15 mr-25" style="display: flex;justify-content: center;">
@@ -152,8 +152,8 @@
 									</div>
 									<div class="ml-15">
 										<textarea class="form-control" id="one_liner" name="one_liner" style="resize: none; width: 216px; height: 120px !important; background: white !important;">
-										<c:if test="${not empty dto.one_liner }">
-											${dto.one_liner }
+										<c:if test="${not empty dto.blog.one_liner }">
+											${dto.blog.one_liner }
 										</c:if>
 										</textarea>
 									</div>

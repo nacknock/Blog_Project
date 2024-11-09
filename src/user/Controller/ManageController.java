@@ -14,6 +14,7 @@ import Service.Sign.login;
 import Service.Sign.login_check;
 import Service.manage.Bchange_pri;
 import Service.manage.CertiCheck;
+import Service.manage.LoadMain;
 import Service.manage.LoadUser;
 import Service.manage.MailSendByUpdate;
 import Service.manage.Pchange_pri;
@@ -89,6 +90,7 @@ public class ManageController extends HttpServlet {
 	    }
 		switch (action) {
 		case "/main.do":
+			new LoadMain().command(request, response);
 			page="/blog/template/manage/main.jsp";
 			break;
 		case "/user.do":
@@ -200,6 +202,7 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/reply_del.do":			
 			new reply_del().command(request, response);
+			new reply_paging().command(request, response);
 			break;
 		case "/open_design_manage.do":			
 			new open_design_manage().command(request, response);

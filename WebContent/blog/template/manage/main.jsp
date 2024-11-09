@@ -82,29 +82,29 @@
 					border-radius: 5px;border: 1px solid rgba(0, 0, 0, 0.125);">
 						<div class="group_item">
 							<dl class="count_visitor float-l pr-15">
-								<dt>오늘 조회수</dt>
+								<dt>今日のアクセス数</dt>
 								<dd>0</dd>
 							</dl>
 							<dl class="count_visitor float-l pr-15">
-								<dt>어제 조회수</dt>
+								<dt>昨日のアクセス数</dt>
 								<dd>0</dd>
 							</dl>
 							<dl class="count_visitor float-l pr-15">
-								<dt>누적 조회수</dt>
+								<dt>総アクセス数</dt>
 								<dd>7</dd>
 							</dl>
 						</div>
 						<div class="group_item">
 							<dl class="count_visitor float-l pr-15">
-								<dt>오늘 댓글</dt>
+								<dt>今日のコメント数</dt>
 								<dd>0</dd>
 							</dl>
 							<dl class="count_visitor float-l pr-15">
-								<dt>어제 댓글</dt>
+								<dt>昨日のコメント数</dt>
 								<dd>0</dd>
 							</dl>
 							<dl class="count_visitor float-l pr-15">
-								<dt>누적 댓글</dt>
+								<dt>総コメント数</dt>
 								<dd>2</dd>
 							</dl>
 						</div>
@@ -114,7 +114,7 @@
 						<div
 							class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 							<div class="d-flex flex-row align-items-center justify-content-between">
-								<h6 class="m-0 font-weight-bold text-primary" id="chart-text">조회수 추이</h6><small id="chart-small">(기준:1년)</small>
+								<h6 class="m-0 font-weight-bold text-primary" id="chart-text">アクセス解析</h6><small id="chart-small">(基準：1年)</small>
 							</div>
 							<div class="dropdown no-arrow">
 								<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -142,8 +142,9 @@
 						</div>
 					</div>
 					<div class="sidebar-box">
-						<h3 class="heading">최근 게시글</h3>
+						<h3 class="heading">最近投稿した記事</h3>
 						<div class="post-entry-sidebar">
+						<h2>最近投稿した記事はありませんでした</h2>
 							<ul>
 								<li>
 									<a href="">
