@@ -60,7 +60,7 @@ public class getReplyList implements Action {
 		
 		request.setAttribute("pageMaker", pvo);
 		
-		request.setAttribute("list", list);
+		request.setAttribute("re_list", list);
 		
 		request.setAttribute("count", count);
 		

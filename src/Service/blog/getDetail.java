@@ -33,7 +33,7 @@ public class getDetail implements Action {
 		
 		int idx = Integer.parseInt(request.getParameter("blog"));
 		
-		int p_idx = Integer.parseInt(request.getParameter("p_idx"));
+		int p_idx = Integer.parseInt(request.getParameter("p"));
 		
 		BlogDAO.getInstance().upHit(p_idx);
 		
@@ -55,13 +55,17 @@ public class getDetail implements Action {
 		
 		request.setAttribute("ctgr_list", ctgr_list);
 		
-		List<TagVo> taglist = ManageDAO.getInstance().sel_tags(vo.getP_idx());
+		List<TagVo> Ptaglist = ManageDAO.getInstance().sel_tags(vo.getP_idx());
 		
-		request.setAttribute("taglist", taglist);
+		request.setAttribute("Ptaglist", Ptaglist);
 		
 		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(dto);
 		
 		request.setAttribute("top3list", top3list);
+		
+		List<TagVo> taglist = BlogDAO.getInstance().getTagList(dto);
+		
+		request.setAttribute("taglist", taglist);
 
 	}
 

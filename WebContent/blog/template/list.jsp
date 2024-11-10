@@ -78,9 +78,19 @@
     <div class="container">
       <div class="row posts-entry">
         <div class="col-lg-8">
+        <c:if test="${empty list && empty pageMaker.cri.keyword}">
+        <div class="blog-entry d-flex justify-content-center mt-105" style="text-align: center;">
+        <h1>このブログにはまだ投稿がありません。</h1>
+        </div>
+        </c:if>
+        <c:if test="${empty list && not empty pageMaker.cri.keyword}">
+        <div class="blog-entry d-flex justify-content-center mt-105" style="text-align: center;">
+        <h1><b>${pageMaker.cri.keyword}</b> に一致する情報は見つかりませんでした。</h1>
+        </div>
+        </c:if>
       	<c:forEach var="list" items="${list }">
           <div class="blog-entry d-flex blog-entry-search-item">
-            <a href="single.html" class="img-link me-4">
+            <a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="img-link me-4">
             <c:if test="${empty list.img_path }">
               <img src="/blog/images/post_not_image.jpg" alt="Image" class="img-fluid">
             </c:if>
@@ -90,12 +100,15 @@
             </a>
             <div>
               <span class="date">${list.created_at } &bullet; <a href="#">${list.p_ctgr.ctgr_name }</a></span>
-              <h2><a href="single.html">${list.p_title }</a></h2>
+              <c:if test="${list.p_private eq 1 || list.p_ctgr.ctgr_private eq 1}">
+				<i class="fa-solid fa-eye-slash pri-i"></i>
+			  </c:if>
+              <h2><a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}">${list.p_title }</a></h2>
               <p style=" display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;
               overflow: hidden;text-overflow: ellipsis;max-width: 301px;">
               	${list.p_content}
               </p>
-              <p><a href="single.html" class="btn btn-sm btn-outline-primary">Read More</a></p>
+              <p><a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="btn btn-sm btn-outline-primary">続きを読む</a></p>
             </div>
           </div>
 		</c:forEach>
@@ -124,8 +137,9 @@
         </div>
         <div class="col-md-12 col-lg-4 sidebar">
           <div class="sidebar-box search-form-wrap">
-            <form action="#" class="sidebar-search-form">
-              <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
+            <form method="get" action="/b/list.do" class="sidebar-search-form">
+              <input type="text" class="form-control" id="s" name="keyword" placeholder="このブログを検索する"　value="${pageMaker.cri.keyword}">
+              <input type="hidden" name="blog" value="${dto.blog.b_idx }">
             </form>
           </div>
           <!-- END sidebar-box -->
@@ -147,7 +161,7 @@
               <ul>
       			<c:forEach var="top3list" items="${top3list }">
                 <li>
-                  <a href="">
+                  <a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${top3list.p_idx}">
                     <c:if test="${empty top3list.img_path }">
 		              <img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
 		            </c:if>
@@ -182,7 +196,7 @@
             <h3 class="heading">ハッシュタグ</h3>
             <ul class="tags">
             <c:forEach var="taglist" items="${taglist }">
-              <li><a href="#">${taglist.tag_name }</a></li>
+              <li><a href="#">#${taglist.tag_name }</a></li>
             </c:forEach>
             </ul>
           </div>
@@ -191,7 +205,7 @@
     </div>
   </div>
 
-  <!-- footer start -->
+  	<!-- footer start -->
 	<!-- footer start -->
 	<!-- footer start -->
 	<%@ include file="fragments/footer.jsp"%>

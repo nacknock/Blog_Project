@@ -260,7 +260,7 @@ public class BlogDAO {
 		String sql = null;
 		String sql_top = "select * from (\r\n" + 
 				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_ctgr,p_private,p_title,p_content,category.ctgr_name,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
+				"rownum rn,p_idx,p_ctgr,p_private,p_title,p_content,category.ctgr_name,category.ctgr_private,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
 				"left join img on img.post_img = p_idx\r\n" + 
 				"left join blog on post.p_b_idx = blog.b_idx " +
 				"left join category on category.ctgridx = post.p_ctgr ";
@@ -291,6 +291,7 @@ public class BlogDAO {
 				vo.setP_idx(rs.getInt("p_idx"));
 				cvo.setCtgridx(rs.getInt("p_ctgr"));
 				cvo.setCtgr_name(rs.getString("ctgr_name"));
+				cvo.setCtgr_private(rs.getInt("ctgr_private"));
 				vo.setP_ctgr(cvo);
 				vo.setP_private(rs.getInt("p_private"));
 				vo.setP_title(rs.getString("p_title"));
@@ -475,7 +476,7 @@ public class BlogDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select pidx,p_title,p_content,post.created_at,p_ctgr,p_b_idx,hit,p_private,category.ctgr_private,img.img_path "
+		String sql = "select p_idx,p_title,p_content,post.created_at,p_ctgr,p_b_idx,hit,p_private,category.ctgr_name,category.ctgr_private,img.img_path "
 				+ "from post "
 				+ "left join img "
 				+ "on img.post_img = post.p_idx "
@@ -490,13 +491,14 @@ public class BlogDAO {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, p_idx);
-			pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				categoryVo cvo = new categoryVo();
 				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
 				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
 				vo.setP_private(rs.getInt("p_private"));
 				vo.setP_title(rs.getString("p_title"));
 				vo.setP_content(rs.getString("p_content"));
@@ -532,18 +534,19 @@ public class BlogDAO {
 				"    SELECT /*+ index_desc(reply b_reply_pk) */ " + 
 				"           ROWNUM rn, reply.r_idx, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
 				"           reply.r_parent, " + 
-				"           loguser.nickname, loguser.user_id, " + 
+				"           loguser.nickname, loguser.user_id,img.img_path, " + 
 				"           parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
 				"    FROM ( " + 
 				"        SELECT reply.r_idx, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
 				"               reply.r_parent, " + 
-				"               loguser.nickname, loguser.user_id, " + 
+				"               loguser.nickname, loguser.user_id,img.img_path, " + 
 				"               parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
 				"        FROM b_reply reply " + 
 				"        LEFT JOIN post ON post.p_idx = reply.r_p_idx " + 
 				"        LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
 				"        LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent " + 
 				"        LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
+				"        LEFT JOIN img ON img.user_img = loguser.idx " + 
 				"        WHERE post.p_idx = ? " + 
 				"        ORDER BY CASE WHEN reply.r_parent IS NULL THEN 0 ELSE 1 END,   " + 
 				"            reply.created_at DESC " + 
@@ -552,6 +555,7 @@ public class BlogDAO {
 				"    LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
 				"    LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent " + 
 				"    LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
+				"        LEFT JOIN img ON img.user_img = loguser.idx " + 
 				"    WHERE ROWNUM <= ?*?  " + 
 				") " + 
 				"WHERE rn > (?-1)*? ";
@@ -559,7 +563,7 @@ public class BlogDAO {
 		List<B_replyVo> list = new ArrayList<B_replyVo>();
 		
 		
-		//System.out.println(sql);
+		System.out.println(sql+"@@@@@@@@@@reply");
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -570,7 +574,7 @@ public class BlogDAO {
 			pstmt.setInt(5, cri.getAmount());
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				B_replyVo vo = new B_replyVo();
 				B_userVo u_vo = new B_userVo();
 				PostVo p_vo = new PostVo();
@@ -582,6 +586,7 @@ public class BlogDAO {
 				u_vo.setIdx(rs.getInt("r_u_idx"));
 				u_vo.setNickname(rs.getString("nickname"));
 				u_vo.setUser_id(rs.getString("user_id"));
+				u_vo.setImg_path(rs.getString("img_path"));
 				vo.setR_u_idx(u_vo);
 				p_vo.setP_idx(rs.getInt("r_p_idx"));
 				vo.setR_p_idx(p_vo);
@@ -614,9 +619,9 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		int cnt = 0;
-		sql = " select count(*) as cnt from reply "
+		sql = " select count(*) as cnt from b_reply "
 				+ " left join post "
-				+ " on post.p_idx = reply.r_p_idx "
+				+ " on post.p_idx = b_reply.r_p_idx "
 				+ " where r_p_idx = ? ";	
 		
 		//System.out.println(sql);
@@ -818,6 +823,45 @@ public class BlogDAO {
 			}
 		}
 		
+		return list;
+	}
+	public List<TagVo> getTagList(ManageUserDTO dto){
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		List<TagVo> list = new ArrayList<TagVo>();
+			sql = " select tag.* "
+					+ "from tag "
+					+ "left join post "
+					+ "on tag_p_id = post.p_idx "
+					+ "where post.p_b_idx = ? ";
+		
+		System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getBlog().getB_idx());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				TagVo vo = new TagVo();
+				vo.setTag_id(rs.getInt("tag_id"));
+				vo.setTag_name(rs.getString("tag_name"));
+				vo.setTag_p_id(rs.getInt("tag_p_id"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
 		return list;
 	}
 	public List<TagVo> getTagList(String my, ManageUserDTO dto) {
