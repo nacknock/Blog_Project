@@ -16,6 +16,7 @@ import VO.B_userVo;
 import VO.BlogVo;
 import VO.PostVo;
 import VO.QuestionVo;
+import VO.TagVo;
 import VO.categoryVo;
 import util.Criteria;
 import util.DBManager;
@@ -212,8 +213,9 @@ public class BlogDAO {
 				"on img.user_img = b_user.idx\r\n" + 
 				"left join blog b\r\n" + 
 				"on b.b_u_idx = b_user.idx\r\n" + 
-				"where b_user.idx = ?";
+				"where b_idx = ?";
 		
+		System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -221,15 +223,22 @@ public class BlogDAO {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				dto.getUser().setUser_id(rs.getString("user_id"));
-				dto.getBlog().setB_idx(rs.getInt("b_idx"));
-				dto.getUser().setIdx(rs.getInt("idx"));
-				dto.getUser().setEmail(rs.getString("email"));
-				dto.getBlog().setB_title(rs.getString("b_title"));
-				dto.getUser().setNickname(rs.getString("nickname"));
-				dto.getBlog().setOne_liner(rs.getString("one_liner"));
-				dto.getUser().setImg_path(rs.getString("img_path"));
+				BlogVo bvo = new BlogVo();
+				B_userVo uvo = new B_userVo();
+				uvo.setUser_id(rs.getString("user_id"));
+				bvo.setB_idx(rs.getInt("b_idx"));
+				System.out.println(rs.getInt("b_idx")+" : b_idx");
+				uvo.setIdx(rs.getInt("idx"));
+				uvo.setEmail(rs.getString("email"));
+				bvo.setB_title(rs.getString("b_title"));
+				uvo.setNickname(rs.getString("nickname"));
+				bvo.setOne_liner(rs.getString("one_liner"));
+				uvo.setImg_path(rs.getString("img_path"));
+				dto.setUser(uvo);
+				dto.setBlog(bvo);
 			}
+
+			System.out.println("테스트");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -251,7 +260,7 @@ public class BlogDAO {
 		String sql = null;
 		String sql_top = "select * from (\r\n" + 
 				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_ctgr,p_private,p_title,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
+				"rownum rn,p_idx,p_ctgr,p_private,p_title,p_content,category.ctgr_name,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
 				"left join img on img.post_img = p_idx\r\n" + 
 				"left join blog on post.p_b_idx = blog.b_idx " +
 				"left join category on category.ctgridx = post.p_ctgr ";
@@ -263,6 +272,7 @@ public class BlogDAO {
 		sql = sql_top + sql_middle + sql_bot;
 		
 		List<PostVo> list = new ArrayList<PostVo>();
+		
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
@@ -280,14 +290,15 @@ public class BlogDAO {
 				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
 				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
 				vo.setP_ctgr(cvo);
 				vo.setP_private(rs.getInt("p_private"));
 				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("p_content"));
 				vo.setImg_path(rs.getString("img_path"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setHit(rs.getInt("hit"));
 				bvo.setB_idx(rs.getInt("p_b_idx"));
-				bvo.setP_pri_yn(rs.getInt("p_pri_yn"));
 				vo.setP_b_idx(bvo);
 				
 				list.add(vo);
@@ -329,7 +340,7 @@ public class BlogDAO {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getBlog().getB_idx());
-			pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				cnt = rs.getInt("cnt");
@@ -359,13 +370,15 @@ public class BlogDAO {
 					+ "from category "
 					+ "left join post "
 					+ "on p_ctgr = category.ctgridx "
-					+ "where ctgr_b_idx = ? and post.p_private = 0 and ctgr_private = 0 ";
+					+ "where ctgr_b_idx = ? and post.p_private = 0 and ctgr_private = 0 "
+					+ " group by ctgridx,ctgr_name,ctgr_b_idx,ctgr_private ";
 		}else {
 			sql = " select category.*,count(post.p_idx) as ctgr_p_cnt "
 					+ "from category "
 					+ "left join post "
 					+ "on p_ctgr = category.ctgridx "
-					+ "where ctgr_b_idx = ? ";	
+					+ "where ctgr_b_idx = ? "
+					+ " group by ctgridx,ctgr_name,ctgr_b_idx,ctgr_private ";	
 		}
 		
 		//System.out.println(sql);
@@ -373,9 +386,9 @@ public class BlogDAO {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getBlog().getB_idx());
-			pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				categoryVo vo = new categoryVo();
 				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
 				vo.setCtgridx(rs.getInt("ctgridx"));
@@ -412,20 +425,24 @@ public class BlogDAO {
 	             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
 	             "WHERE blog.b_idx = ? AND category.ctgr_private = 0 AND post.p_private = 0 " +
 	             "ORDER BY hit DESC " +  // 먼저 정렬
-	             ") " +
+	             ") post " +
+	             "LEFT JOIN img ON img.post_img = post.p_idx " +
+	             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+	             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
 	             "WHERE ROWNUM <= 3 " +  // 그 후 최대 3개 행 선택
 	             ")";
 		List<PostVo> list = new ArrayList<PostVo>();
 		
 		
-		//System.out.println(sql);
+		//System.out.println(sql + "sdadfdfafs");
+		System.out.println(dto.getBlog().getB_idx()+"dsfadfadfsadfsadfsadfss");
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getBlog().getB_idx());
-			pstmt.executeUpdate();
+			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				PostVo vo = new PostVo();
 				categoryVo cvo = new categoryVo();
 				BlogVo bvo = new BlogVo();
@@ -801,6 +818,45 @@ public class BlogDAO {
 			}
 		}
 		
+		return list;
+	}
+	public List<TagVo> getTagList(String my, ManageUserDTO dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		List<TagVo> list = new ArrayList<TagVo>();
+			sql = " select tag.* "
+					+ "from tag "
+					+ "left join post "
+					+ "on tag_p_id = post.p_idx "
+					+ "where post.p_b_idx = ? " + my;
+		
+		System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getBlog().getB_idx());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				TagVo vo = new TagVo();
+				vo.setTag_id(rs.getInt("tag_id"));
+				vo.setTag_name(rs.getString("tag_name"));
+				vo.setTag_p_id(rs.getInt("tag_p_id"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
 		return list;
 	}
 }

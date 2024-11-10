@@ -15,6 +15,7 @@ import DTO.ManageUserDTO;
 import Service.Action;
 import VO.PostVo;
 import VO.QuestionVo;
+import VO.TagVo;
 import VO.categoryVo;
 import user.DAO.BlogDAO;
 import user.DAO.ManageDAO;
@@ -36,11 +37,11 @@ public class getlist implements Action {
 		request.setAttribute("dto", dto);
 		
 		String my = "and category.ctgr_private = 0 and p_private = 0";
-		
-		if(dto.getUser().getUser_id().equals(login_userid)) {
-			my = "";
+		if(login_userid != null) {
+			if(dto.getUser().getUser_id().equals(login_userid)) {
+				my = "";
+			}
 		}
-		
 		int pageNum = 1;
 		int amount = 5;
 		
@@ -87,6 +88,10 @@ public class getlist implements Action {
 		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(dto);
 		
 		request.setAttribute("top3list", top3list);
+		
+		List<TagVo> taglist = BlogDAO.getInstance().getTagList(my,dto);
+		
+		request.setAttribute("taglist", taglist);
 
 	}
 

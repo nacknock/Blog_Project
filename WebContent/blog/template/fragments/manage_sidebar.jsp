@@ -9,7 +9,7 @@
 							</a>
 							<div class="mt-15" style="padding:15px; border-top: #e6e6e6 solid 1px;border-bottom: #e6e6e6 solid 1px;">
 								<h3>あなたのブログ</h3>
-								<a href="#"><h5>${dto.blog.b_title }</h5></a>
+								<a href="/b/list.do?blog=${dto.blog.b_idx }"><h5>${dto.blog.b_title }</h5></a>
 							</div>
 							<div style="padding:15px;border-bottom: #e6e6e6 solid 1px;">
 								<a href="/manage/open_post_write.do" class="btn btn-sm btn-outline-primary" style="width: 80%;">ブログを書く</a>
