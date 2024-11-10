@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -1703,6 +1705,161 @@ public class ManageDAO {
 			}
 		}
 		return tag_ids;
+	}
+	public List<PostVo> getP_list_3(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT p.p_idx, p.p_title, p.p_content, p.p_private, p.created_at, p.modified_at, p.hit, \r\n" + 
+				"           img.img_path, ctgr.ctgridx, ctgr.ctgr_name, \r\n" + 
+				"           COUNT(reply.r_idx) AS r_cnt\r\n" + 
+				"    FROM post p\r\n" + 
+				"    LEFT JOIN img ON img.post_img = p.p_idx\r\n" + 
+				"    LEFT JOIN b_reply reply ON reply.r_p_idx = p.p_idx\r\n" + 
+				"    LEFT JOIN category ctgr ON ctgr.ctgridx = p.p_ctgr\r\n" + 
+				"    WHERE p.p_b_idx = ?\r\n" + 
+				"    GROUP BY p.p_idx, p.p_title, p.p_content, p.p_private, p.created_at, \r\n" + 
+				"             p.modified_at, p.hit, img.img_path, ctgr.ctgridx, ctgr.ctgr_name\r\n" + 
+				"    ORDER BY p.created_at DESC \r\n" + 
+				")\r\n" + 
+				"WHERE ROWNUM <= 3";
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			
+			int i = 0;
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				categoryVo cvo = new categoryVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("p_content"));
+				vo.setHit(rs.getInt("hit"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setModified_at(rs.getString("modified_at"));
+				cvo.setCtgridx(rs.getInt("ctgridx"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
+				vo.setP_ctgr(cvo);
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setR_cnt(rs.getInt("r_cnt"));
+				vo.setImg_path(rs.getString("img_path"));
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+//	public int getTodayHit(int b_idx) {
+//		Connection conn = null;
+//		PreparedStatement pstmt = null;
+//		ResultSet rs = null;
+//		String sql = "select count(hit) from post where p_b_idx = ? and ";
+//		int result = 0;
+//		
+//		 // 오늘 날짜 가져오기
+//        LocalDate today = LocalDate.now();
+//        
+//        // 날짜 형식 설정
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        
+//        // 형식에 맞춰 날짜 출력
+//        String formattedDate = today.format(formatter);
+//        
+//        System.out.println(formattedDate);
+//		
+//		try {
+//			conn = DBManager.getInstance().getConnection();
+//			pstmt = conn.prepareStatement(sql);
+//			pstmt.setInt(1, b_idx);
+//			rs = pstmt.executeQuery();
+//			
+//			int i = 0;
+//			while(rs.next()) {
+//				
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}finally {
+//			try {
+//				if(conn != null) conn.close();
+//				if(pstmt != null) pstmt.close();
+//			}catch (Exception e2) {
+//				e2.printStackTrace();
+//			}
+//		}
+//		return tag_ids;
+//	}
+	public List<B_replyVo> getR_list_3(int idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT b_reply.*, post.p_title, img.img_path,b_user.nickname\r\n" + 
+				"    FROM b_reply\r\n" + 
+				"    LEFT JOIN img ON img.post_img = b_reply.r_p_idx\r\n" + 
+				"    LEFT JOIN post ON post.p_idx = b_reply.r_p_idx\r\n" + 
+				"    LEFT JOIN b_user ON b_user.idx = b_reply.r_u_idx\r\n" + 
+				"    WHERE b_reply.r_u_idx = ?\r\n" + 
+				"    ORDER BY b_reply.created_at DESC\r\n" + 
+				")\r\n" + 
+				"WHERE ROWNUM <= 3";
+		List<B_replyVo> list = new ArrayList<B_replyVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs = pstmt.executeQuery();
+			
+			int i = 0;
+			while(rs.next()) {
+				B_replyVo vo = new B_replyVo();
+				B_replyVo parentvo = new B_replyVo();
+				B_userVo uvo = new B_userVo();
+				PostVo pvo = new PostVo();
+				
+				vo.setR_idx(rs.getInt("r_idx"));
+				vo.setR_content(rs.getString("r_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setModified_at(rs.getString("modified_at"));
+				vo.setR_grade(rs.getInt("r_grade"));
+				uvo.setIdx(rs.getInt("r_u_idx"));
+				uvo.setNickname(rs.getString("nickname"));
+				vo.setR_u_idx(uvo);
+				pvo.setP_idx(rs.getInt("r_p_idx"));
+				pvo.setP_title(rs.getString("p_title"));
+				pvo.setImg_path(rs.getString("img_path"));
+				vo.setR_p_idx(pvo);
+				parentvo.setR_idx(rs.getInt("r_parent"));
+				vo.setR_parent(parentvo);
+				list.add(vo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
 	}
 	
 }

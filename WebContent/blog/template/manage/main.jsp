@@ -76,7 +76,7 @@
 				<!-- sidebar end -->
 				<!-- sidebar end -->
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
-					<div class="box_blog box_visitor mb-30 pt-20" 
+					<!-- <div class="box_blog box_visitor mb-30 pt-20" 
 					style="display: flex;justify-content: space-around;
 					background-color: rgba(0, 0, 0, 0.03);
 					border-radius: 5px;border: 1px solid rgba(0, 0, 0, 0.125);">
@@ -109,9 +109,9 @@
 							</dl>
 						</div>
 					</div>
-					<div class="card shadow mb-4">
+					<div class="card shadow mb-4"> -->
 						<!-- Card Header - Dropdown -->
-						<div
+						<!-- <div
 							class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 							<div class="d-flex flex-row align-items-center justify-content-between">
 								<h6 class="m-0 font-weight-bold text-primary" id="chart-text">アクセス解析</h6><small id="chart-small">(基準：1年)</small>
@@ -133,52 +133,76 @@
 									<a class="dropdown-item" onclick="updateChart('댓글')">댓글</a>
 								</div>
 							</div>
-						</div>
+						</div> -->
 						<!-- Card Body -->
-						<div class="card-body">
+					<!--<div class="card-body">
 							<div class="chart-area">
 								<canvas id="myAreaChart" style="height: 300px !important;"></canvas>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="sidebar-box">
 						<h3 class="heading">最近投稿した記事</h3>
+						<c:if test="empty p_list3">
 						<div class="post-entry-sidebar">
 						<h2>最近投稿した記事はありませんでした</h2>
+						</div>
+						</c:if>
+						<div class="post-entry-sidebar">
 							<ul>
+							<c:forEach var="p_list3" items="${p_list3 }">
 								<li>
 									<a href="">
-										<img src="../images/img_1_sq.jpg" alt="Image placeholder" class="me-4 rounded">
+									<c:if test="${empty p_list3.img_path }">
+										<img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
+									</c:if>
+									<c:if test="${not empty p_list3.img_path }">
+										<img src="/blog/images/${p_list3.img_path }" alt="Image placeholder" class="me-4 rounded">
+									</c:if>
 										<div class="text">
-											<h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
+											<h4>${p_list3.p_title }</h4>
 											<div class="post-meta">
-												<span class="mr-2">March 15, 2018 / 댓글 0 </span>
+												<span class="mr-2">${p_list3.p_ctgr.ctgr_name } / ${p_list3.created_at } /<i class="fa-solid fa-comment"></i> ${p_list3.r_cnt } </span>
 											</div>
 										</div>
 									</a>
 								</li>
+							</c:forEach>
+							</ul>
+						</div>
+					</div>
+					<div class="sidebar-box">
+						<h3 class="heading">最近ついたコメント</h3>
+						<c:if test="empty p_list3">
+						<div class="post-entry-sidebar">
+						<h2>最近投稿した記事はありませんでした</h2>
+						</div>
+						</c:if>
+						<div class="post-entry-sidebar">
+							<ul>
+							<c:forEach var="rep_list3" items="${rep_list3 }">
 								<li>
 									<a href="">
-										<img src="../images/img_2_sq.jpg" alt="Image placeholder" class="me-4 rounded">
+									<c:if test="${empty rep_list3.r_p_idx.img_path }">
+										<img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
+									</c:if>
+									<c:if test="${not empty rep_list3.r_p_idx.img_path }">
+										<img src="/blog/images/${rep_list3.r_p_idx.img_path }" alt="Image placeholder" class="me-4 rounded">
+									</c:if>
 										<div class="text">
-											<h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
+										<c:if test="${rep_list3.r_grade eq 0 }">
+											<h4>${rep_list3.r_content }</h4>
+										</c:if>
+										<c:if test="${rep_list3.r_grade eq 1 }">
+											<h4><span class="from" style="color: #306EE8;">[返信]</span>${rep_list3.r_content }</h4>
+										</c:if>
 											<div class="post-meta">
-												<span class="mr-2">March 15, 2018 / 댓글 0 </span>
+												<span class="mr-2">${rep_list3.r_p_idx.p_title } / ${rep_list3.created_at }</span>
 											</div>
 										</div>
 									</a>
 								</li>
-								<li>
-									<a href="">
-										<img src="../images/img_3_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-										<div class="text">
-											<h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-											<div class="post-meta">
-												<span class="mr-2">March 15, 2018 / 댓글 0 </span>
-											</div>
-										</div>
-									</a>
-								</li>
+							</c:forEach>
 							</ul>
 						</div>
 					</div>
