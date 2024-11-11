@@ -30,15 +30,26 @@ public class reply_writeAciton implements Action {
 		
 		int r_p_idx = Integer.parseInt(request.getParameter("p_idx"));
 		
+		int b_idx = Integer.parseInt(request.getParameter("b_idx"));
+		
 		String r_content = request.getParameter("r_content");
 
 		int r_grade = 0;
 		
+		int r_group = 0;
+		
 		B_replyVo r_parent = new B_replyVo();
+		System.out.println(request.getParameter("r_parent")+" : r_parent");
 		
 		if(request.getParameter("r_parent") != null && !request.getParameter("r_parent").equals("")) {
 			r_parent.setR_idx(Integer.parseInt(request.getParameter("r_parent")));
 			r_grade = 1;
+			
+			if(request.getParameter("r_group") != null && !request.getParameter("r_group").equals("")) {
+				r_group = Integer.parseInt(request.getParameter("r_group"));
+			}
+		}else {
+			r_parent = null;
 		}
 		
 		B_replyVo vo = new B_replyVo();
@@ -53,25 +64,12 @@ public class reply_writeAciton implements Action {
 		vo.setR_u_idx(u_vo);
 		vo.setR_parent(r_parent);
 		vo.setR_grade(r_grade);
+		vo.setR_group(r_group);
 		
 		
-		int result = BlogDAO.getInstance().reply_write(vo);
-
-		Map<String, String> map = new HashMap<String, String>();
-
-		Gson gson = new Gson();
+		BlogDAO.getInstance().reply_write(vo);
 		
-		String msg = null;
-		
-		if(result > 0) {
-			map.put("result","ok");
-		}else{
-			map.put("result","nok");
-		}
-
-		msg = gson.toJson(map); //map->json
-		response.setCharacterEncoding("utf-8");
-		response.getWriter().write(msg.toString());
+		response.sendRedirect("/b/detail.do?blog="+b_idx+"&&p="+r_p_idx);
 	}
 
 }

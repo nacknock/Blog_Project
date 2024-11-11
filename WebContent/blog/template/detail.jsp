@@ -68,6 +68,7 @@
       <div class="row same-height justify-content-center">
         <div class="col-md-6">
           <div class="post-entry text-center">
+              <input type="hidden" name="blog" value="${dto.blog.b_idx }" id="blog">
             <h1 class="mb-4">${vo.p_title }</h1>
             <div class="post-meta align-items-center text-center">
             <c:if test="${not empty dto.user.img_path }">
@@ -112,20 +113,27 @@
            	</c:forEach>
             </p>
           </div>
-          <div class="pt-5">
-            <a href="#" class="" style="height: 45px;margin-right: 15px;">
-              <i class="fa-solid fa-pen-to-square" style="font-size: xx-large;"></i>
-            </a>
-            <a href="#" class="">
-              <i class="fa-solid fa-square-xmark" style="font-size: xx-large;"></i>
-            </a>
-            <a href="#" class="">
+          <div class="pt-5 d-flex">
+            <form method="post" action="/manage/openP_modify.do">
+	            <input type="hidden" name="p_idx" value="${vo.p_idx }">
+	            <button type="submit" style="background-color: transparent;border: none; color: black;cursor: pointer;padding: 10px 20px;font-size: 16px;">
+	              <i class="fa-solid fa-pen-to-square" style="font-size: xx-large;"></i>
+	            </button>
+            </form>
+            <form method="post" action="/b/del_post.do">
+	            <input type="hidden" name="blog" value="${dto.blog.b_idx }">
+	            <input type="hidden" name="p_idx" value="${vo.p_idx }">
+	            <button type="submit" style="background-color: transparent;border: none; color: black;cursor: pointer;padding: 10px 20px;font-size: 16px;">
+	              <i class="fa-solid fa-square-xmark" style="font-size: xx-large;"></i>
+	            </button>
+            </form>
+            <!--<a href="#" class="">-->
               <!-- <i class="fa-solid fa-face-frown" style="color: red; font-size: xx-large;float: right;"></i> -->
-            </a>
+            <!--</a>-->
           </div>
 
 
-          <div class="pt-5 comment-wrap">
+          <div class="pt-3 comment-wrap">
             <!-- Start comment-list -->
             <!-- Start comment-list -->
             <!-- Start comment-list -->
@@ -137,27 +145,17 @@
             <!-- END comment-list -->
 
             <div class="comment-form-wrap pt-5">
-              <h3 class="mb-5">Leave a comment</h3>
-              <form action="#" class="p-5 bg-light">
-                <div class="form-group">
-                  <label for="name">Name *</label>
-                  <input type="text" class="form-control" id="name">
-                </div>
-                <div class="form-group">
-                  <label for="email">Email *</label>
-                  <input type="email" class="form-control" id="email">
-                </div>
-                <div class="form-group">
-                  <label for="website">Website</label>
-                  <input type="url" class="form-control" id="website">
-                </div>
+              <h3 class="mb-5">コメントする</h3>
+              <form action="/b/reply_write.do" method="post" class="p-5 bg-light">
+              <input type="hidden" name="p_idx" class="form-control" id="p_idx_input" value="${vo.p_idx}">
+              <input type="hidden" name="b_idx" class="form-control" id="b_idx_input" value="${vo.p_b_idx.b_idx}">
 
                 <div class="form-group">
-                  <label for="message">Message</label>
-                  <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
+                  <label for="message">コメントを入力</label>
+                  <textarea name="r_content" id="message" cols="30" rows="10" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
-                  <input type="submit" value="Post Comment" class="btn btn-primary">
+                  <input type="submit" value="コメントを送信する" class="btn btn-primary">
                 </div>
 
               </form>

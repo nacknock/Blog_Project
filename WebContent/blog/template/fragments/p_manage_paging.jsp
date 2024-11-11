@@ -49,7 +49,7 @@
 				aria-labelledby="dropdownMenuLink">
 				<input type="hidden" name="pidx" class="pidx" value="${list.p_idx }">
 				<div class="dropdown-header">オプション:</div>
-				<a class="dropdown-item" href="/manage/openP_modify.do">編集</a>
+				<a class="dropdown-item" href="/manage/openP_modify.do?p_idx=${list.p_idx}">編集</a>
 				<a class="dropdown-item" onclick="del(this)">削除</a>
 				<div class="dropdown-divider"></div>
 				<input type="hidden" value="${list.p_private}" class="private">

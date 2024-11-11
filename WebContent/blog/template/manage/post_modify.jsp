@@ -95,40 +95,50 @@
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
 						<h2>ブログを書く</h2>
 					</div>
-					<form method="post" action="/manage/post_writeAction.do" enctype="multipart/form-data" name="p_wrt_form" onsubmit="return check()">
+					<form method="post" action="/manage/postModifyAction.do" enctype="multipart/form-data" name="p_wrt_form" onsubmit="return check()">
 						<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
 							<div class="form-group col-md-12">
 								<div class="mt-30 mb-15" style="display: flex;justify-content: center;">
-									<select class="form-control" name="ctgridx" style="width: 60%;height: 50%;text-align: center;background: white !important;">
-									<option value="">カテゴリ</option>
+									<select class="form-control" name="p_ctgr" style="width: 60%;height: 50%;text-align: center;background: white !important;">
+									<option value="${vo.p_ctgr.ctgridx}">${vo.p_ctgr.ctgr_name}</option>
 									<c:forEach var="list" items="${ctgr_list}">
 										<option value="${list.ctgridx }">${list.ctgr_name }</option>
 									</c:forEach>
 									</select>
 									<input type="hidden" name="b_idx" id="wrt_b_idx" value="${dto.blog.b_idx }">
-									<input type="hidden" name="p_private" value="${p_pri_yn }">
+									<input type="hidden" name="p_idx" id="p_idx" value="${vo.p_idx }">
+									<input type="hidden" name="p_private" id="p_private" value="${vo.p_private }">
+									<!-- <input type="hidden" name="p_private" value="${p_pri_yn }"> -->
 								</div>
 								<div>
-									<input style="border-top: none;border-left: none;border-right: none; text-align: center;" class="form-control" type="text" placeholder="title" name="p_title" id="p_title">
+									<input value="${vo.p_title}" style="border-top: none;border-left: none;border-right: none; text-align: center;" class="form-control" type="text" placeholder="title" name="p_title" id="p_title">
 								</div>
 								<div class="col-12">
 									<textarea hidden="hidden" id="txt_detail" class="form-control" name="p_content" rows="5"
-									style="resize:none"></textarea>
+									style="resize:none">${vo.p_content}</textarea>
 									<div id="editor"></div>
 								</div>
 								<div>
-									<input style="height: 37px;" multiple class="form-control" type="file" placeholder="title" name="imgurl" id="imgurl">
+									<input style="height: 37px;" multiple class="form-control" type="file" placeholder="title" name="img" id="img">
+									<c:if test="${not empty vo.img_path }">
+									<input type="hidden" name="imgurl" value="/blog/upload/${vo.img_path}">
+									</c:if>
 								</div>
 								<div style="display: flex;padding: 30px 10px;">
 									<label class="mr-15 pt-7" for="tagSelect">#ハッシュタグ</label>
 									<div style="width: 80%;">
 										<select class="js-example-basic-multiple" multiple="multiple" name="tags" id="tagSelect"><!-- sendto배열로 db에 넘긴 후 바꿈-->
+										<c:forEach var="list" items="${taglist}">
+										<option value="${list.tag_name}" selected="selected">
+										${list.tag_name}
+										</option>
+										</c:forEach>
 										</select>
 									</div>
 								</div>
 							</div>
 							<div class="mt-15" style="margin-bottom: 15px !important; display: flex;justify-content: center;">
-								<button type="submit" class="btn btn-sm btn-outline-primary">投稿する</button>
+								<button type="submit" class="btn btn-sm btn-outline-primary">保存する</button>
 							</div>							
 						</div>
 					</form>
@@ -179,6 +189,7 @@
 		})
 			.then(newEditor => {
 				editor = newEditor;
+				 editor.setData('${vo.p_content}');
 			})
 			.catch(error => {
 				console.error(error);

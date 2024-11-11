@@ -594,6 +594,48 @@ public class ManageDAO {
 		
 		return list;
 	}
+public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<categoryVo> list = new ArrayList<categoryVo>();
+		String sql = "select ctgridx,ctgr_name,ctgr_b_idx,ctgr_private\r\n" + 
+				"from category\r\n" + 
+				"left join post\r\n" + 
+				"on ctgridx = post.p_ctgr\r\n" + 
+				"where not ctgridx = ? and ctgr_b_idx = ?\r\n";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, ctgridx);
+			pstmt.setInt(2, b_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				categoryVo vo = new categoryVo();
+				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
+				vo.setCtgr_name(rs.getString("ctgr_name"));
+				vo.setCtgridx(rs.getInt("ctgridx"));
+				vo.setCtgr_private(rs.getInt("ctgr_private"));
+				list.add(vo);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
 	public categoryVo saveCtgr(categoryVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -986,7 +1028,7 @@ public class ManageDAO {
 		
 		sql = sql_top + sql_middle + sql_bot;
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
@@ -1046,7 +1088,7 @@ public class ManageDAO {
 		}else {
 			sql = "select count(*) as cnt from post where p_b_idx = ? and "+ query_keyword;
 		}
-		System.out.println(sql);
+		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -1075,10 +1117,12 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		PostVo vo = new PostVo();
-		String sql = "select post.*,img.img_path "
+		String sql = "select post.*,img.img_path,category.ctgr_name,category.ctgridx "
 				+ "from post "
 				+ "left join img "
-				+ "on post_img = pidx "
+				+ "on post_img = p_idx "
+				+ "left join category "
+				+ "on p_ctgr = ctgridx "
 				+ "where p_idx = ?";
 		//System.out.println(sql);
 		try {
@@ -1090,10 +1134,15 @@ public class ManageDAO {
 			if(rs.next()) {
 				vo.setP_idx(rs.getInt("p_idx"));
 				vo.setP_title(rs.getString("p_title"));
-				vo.setP_content(rs.getString("content"));
+				vo.setP_content(rs.getString("p_content"));
 				vo.setCreated_at(rs.getString("created_at"));
+				vo.setP_private(rs.getInt("p_private"));
 				vo.setHit(rs.getInt("hit"));
 				vo.setImg_path(rs.getString("img_path"));
+				categoryVo cvo = new categoryVo();
+				cvo.setCtgridx(rs.getInt("ctgridx"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
+				vo.setP_ctgr(cvo);
 			}
 			
 		} catch (Exception e) {
@@ -1308,7 +1357,7 @@ public class ManageDAO {
 		
 		sql = sql_top + sql_middle + sql_bot;
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		
 		List<B_replyVo> list = new ArrayList<B_replyVo>();
 		
@@ -1406,14 +1455,13 @@ public class ManageDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = "delete b_reply where r_idx = ? or r_parent = ?";
+		String sql = "delete b_reply where r_idx = ?";
 		
 		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, r_idx);
-			pstmt.setInt(2, r_idx);
 			pstmt.executeUpdate();
 			
 			result = 1;
@@ -1601,25 +1649,25 @@ public class ManageDAO {
 		}
 		return list;
 	}
-	public int tagModifyAction(String[] tags,String[] tag_ids,int p_idx) {
+	public int tagModifyAction(String[] tags,int p_idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String sql = "update tag set tag_name = ? where tag_id = ?";
+		String sql = "insert into tag (tag_id,tag_name,tag_p_id) values (tag_seq.nextval,?,?)";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			for(int i = 0;i > tags.length;i++) {
-				pstmt.setString(1, tags[i]);
-				pstmt.setInt(2, Integer.parseInt(tag_ids[i]));
+				pstmt.setString(1, Integer.parseInt(tags[i]));
+				pstmt.setInt(2, p_idx);
 				pstmt.executeQuery();
 			}
 			result = 1;
 			
 			int[] tag_ids_all = selTagIdByP(p_idx);
 			
-			result = tagDelByModify(tag_ids,tag_ids_all);
+			result = tagDelByModify(tags,tag_ids_all);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1633,17 +1681,17 @@ public class ManageDAO {
 		}
 		return result;
 	}
-	private int tagDelByModify(String[] tag_ids, int[] tag_ids_all) {
+	private int tagDelByModify(String[] tags, int[] tag_ids_all) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = "delete tag_id from tag where tag_id = ?";
 		
-		int[] tag_ids_int = Arrays.stream(tag_ids).mapToInt(Integer::parseInt).toArray();
+		int[] tags_int = Arrays.stream(tags).mapToInt(Integer::parseInt).toArray();
 		int result = 0;
 		
 		HashSet<Integer> tagIdsSet = new HashSet<>();
-        for (int id : tag_ids_int) {
+        for (int id : tags_int) {
             tagIdsSet.add(id);
         }
         

@@ -182,6 +182,7 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/postModifyAction.do":			
 			new postModifyAction().command(request, response);
+			page="/manage/openP_manage.do";
 			break;
 		case "/del_post.do":			
 			new post_del().command(request, response);

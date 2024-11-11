@@ -11,6 +11,8 @@ import DTO.ManageUserDTO;
 import Service.Action;
 import VO.PostVo;
 import VO.TagVo;
+import VO.categoryVo;
+import user.DAO.BlogDAO;
 import user.DAO.ManageDAO;
 
 public class open_post_modify implements Action {
@@ -25,7 +27,7 @@ public class open_post_modify implements Action {
 
 		request.setAttribute("dto", dto);
 		
-		int pidx = Integer.parseInt((String)request.getParameter("p_idx"));
+		int pidx = Integer.parseInt(request.getParameter("p_idx"));
 		
 		PostVo vo = ManageDAO.getInstance().sel_post_one(pidx);
 		
@@ -34,6 +36,10 @@ public class open_post_modify implements Action {
 		List<TagVo> taglist = ManageDAO.getInstance().sel_tags(pidx);
 		
 		request.setAttribute("taglist", taglist);
+		
+		List<categoryVo> list = ManageDAO.getInstance().sel_ctgrUpdate(dto.getBlog().getB_idx(),vo.getP_ctgr().getCtgridx());
+		
+		request.setAttribute("ctgr_list", list);
 
 	}
 

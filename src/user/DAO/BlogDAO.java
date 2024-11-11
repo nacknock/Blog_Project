@@ -135,13 +135,13 @@ public class BlogDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		B_userVo vo = new B_userVo();
-		String sql = "select * from user where user_id = ?";
+		String sql = "select * from b_user where user_id = ?";
 		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userid);
-			pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				vo.setIdx(rs.getInt("idx"));
@@ -168,9 +168,9 @@ public class BlogDAO {
 		PreparedStatement pstmt = null;
 		String sql = null;
 		if(vo.getR_parent() == null) {
-			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade) values (b_reply_seq.nextval,?,?,?,?)";
+			sql = "insert into b_reply (r_idx,r_group,r_content,r_u_idx,r_p_idx,r_grade) values (b_reply_seq.nextval, b_reply_seq.CURRVAL,?,?,?,?)";
 		}else {
-			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade,r_parent) values (b_reply_seq.nextval,?,?,?,?,?)";
+			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade,r_parent,r_group) values (b_reply_seq.nextval,?,?,?,?,?,?)";
 		}
 		int result = 0;
 		//System.out.println(sql);
@@ -183,6 +183,7 @@ public class BlogDAO {
 			pstmt.setInt(4, vo.getR_grade());
 			if(vo.getR_parent() != null) {
 				pstmt.setInt(5, vo.getR_parent().getR_idx());
+				pstmt.setInt(6, vo.getR_group());
 			}
 			pstmt.executeUpdate();
 			
@@ -532,12 +533,12 @@ public class BlogDAO {
 		String sql = " SELECT * " + 
 				"FROM ( " + 
 				"    SELECT /*+ index_desc(reply b_reply_pk) */ " + 
-				"           ROWNUM rn, reply.r_idx, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
+				"           ROWNUM rn, reply.r_idx, reply.r_group, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
 				"           reply.r_parent, " + 
 				"           loguser.nickname, loguser.user_id,img.img_path, " + 
 				"           parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
 				"    FROM ( " + 
-				"        SELECT reply.r_idx, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
+				"        SELECT reply.r_idx, reply.r_group, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
 				"               reply.r_parent, " + 
 				"               loguser.nickname, loguser.user_id,img.img_path, " + 
 				"               parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
@@ -548,8 +549,8 @@ public class BlogDAO {
 				"        LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
 				"        LEFT JOIN img ON img.user_img = loguser.idx " + 
 				"        WHERE post.p_idx = ? " + 
-				"        ORDER BY CASE WHEN reply.r_parent IS NULL THEN 0 ELSE 1 END,   " + 
-				"            reply.created_at DESC " + 
+				"        ORDER BY reply.r_group desc,reply.created_at desc    \r\n" + 
+				"         " + 
 				"    ) reply " + 
 				"    LEFT JOIN post ON post.p_idx = reply.r_p_idx " + 
 				"    LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
@@ -596,6 +597,7 @@ public class BlogDAO {
 				parn_u_vo.setNickname(rs.getString("parnnick"));
 				parent_vo.setR_u_idx(parn_u_vo);
 				vo.setR_parent(parent_vo);
+				vo.setR_group(rs.getInt("r_group"));
 				
 				
 				list.add(vo);

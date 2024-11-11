@@ -1,6 +1,12 @@
 package VO;
 
 public class B_replyVo {
+	public int getR_group() {
+		return r_group;
+	}
+	public void setR_group(int r_group) {
+		this.r_group = r_group;
+	}
 	private int r_idx;
 	private String r_content;
 	private String created_at;
@@ -9,6 +15,7 @@ public class B_replyVo {
 	private PostVo r_p_idx;
 	private int r_grade;
 	private B_replyVo r_parent;
+	private int r_group;
 	public int getR_idx() {
 		return r_idx;
 	}

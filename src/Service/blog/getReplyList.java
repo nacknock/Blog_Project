@@ -28,7 +28,12 @@ public class getReplyList implements Action {
 	public void command(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 
+		String userid = (String)request.getSession().getAttribute("userid");
+		
+		request.setAttribute("loginUser", userid);
+
 		int p_idx = Integer.parseInt(request.getParameter("p_idx"));
+		int b_idx = Integer.parseInt(request.getParameter("b_idx"));
 		
 		int pageNum = 1;
 		int amount = 5;
@@ -63,6 +68,8 @@ public class getReplyList implements Action {
 		request.setAttribute("re_list", list);
 		
 		request.setAttribute("count", count);
+		
+		request.setAttribute("b_idx", b_idx);
 		
 		response.setContentType("text/html;charset=UTF-8");
 		StringWriter stringWriter = new StringWriter();

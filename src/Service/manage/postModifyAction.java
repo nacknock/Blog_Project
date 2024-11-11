@@ -58,7 +58,9 @@ public class postModifyAction implements Action {
 			image.write(realPath); //첨부파일 업로드
 			imgChange = true;//파일을 수정했는지 여부 체크 true는 새 파일 등록, false는 파일 교체 없음
 		}else { //첨부파일 안 했을때
-			realFile = request.getParameter("imgurl").substring(8);//원래 파일 경로에서 /upload를 제외한것(db에 담겨있던 그대로)
+			if(request.getParameter("imgurl") != null) {
+			realFile = request.getParameter("imgurl").substring(13);//원래 파일 경로에서 /upload를 제외한것(db에 담겨있던 그대로)
+			}
 		}
 		
 		int p_idx = Integer.parseInt(request.getParameter("p_idx"));//update 시 where절에 넣을 idx//modify.jsp에서 input type hidden으로 보내온 것
@@ -84,25 +86,11 @@ public class postModifyAction implements Action {
 		int result = ManageDAO.getInstance().PostModifyAction(vo,imgChange);
 		
 		String[] tags = request.getParameterValues("tags");
-		String[] tag_ids = request.getParameterValues("tag_ids");
 		
 		if(result > 0) {
-			result = ManageDAO.getInstance().tagModifyAction(tags,tag_ids,p_idx);
+			result = ManageDAO.getInstance().tagModifyAction(tags,p_idx);
 		}
 		
-		Gson gson = new Gson();
-		Map<String, String> map = new HashMap<String, String>();
-		
-		if(result > 0) {
-			map.put("check", "ok");
-		}else {
-			map.put("check", "nok");
-		}
-		
-		response.setCharacterEncoding("utf-8");
-		
-		String json = gson.toJson(map);
-		response.getWriter().write(json.toString());
 		
 	}
 

@@ -15,6 +15,7 @@ import Service.Sign.login_check;
 import Service.blog.getDetail;
 import Service.blog.getReplyList;
 import Service.blog.getlist;
+import Service.blog.reply_delAciton;
 import Service.blog.reply_update;
 import Service.blog.reply_writeAciton;
 import Service.blog.search_result;
@@ -39,7 +40,7 @@ import Service.manage.open_post_write;
 import Service.manage.open_pw_chk;
 import Service.manage.open_reply_manage;
 import Service.manage.postModifyAction;
-import Service.manage.post_del;
+import Service.blog.post_delete;
 import Service.manage.post_paging;
 import Service.manage.pw_chk;
 import Service.manage.q_detail;
@@ -85,14 +86,23 @@ public class BlogController extends HttpServlet {
 		String action = request.getPathInfo();
 		System.out.println(action);
 		String page = null;
+		if(action.equals("/reply_update.do") || action.equals("/reply_write.do")) {
+			new login_check().command(request, response);
+			if (response.isCommitted()) { // 응답이 이미 전송된 경우
+		        return; // 더 이상 처리하지 않음
+		    }
+		}
 		switch (action) {
 		case "/reply_update.do":
-			new login_check().command(request, response);
 			new reply_update().command(request, response);
 			break;
 		case "/reply_write.do":
-			new login_check().command(request, response);
 			new reply_writeAciton().command(request, response);
+			page = null;
+			break;
+		case "/reply_del.do":
+			new reply_delAciton().command(request, response);
+			page = null;
 			break;
 		case "/list.do":
 			new getlist().command(request, response);
@@ -107,6 +117,11 @@ public class BlogController extends HttpServlet {
 			break;
 		case "/search_result.do":
 			new search_result().command(request, response);
+			break;
+		case "/del_post.do":			
+			new post_delete().command(request, response);
+			new getlist().command(request, response);
+			page = "/blog/template/list.jsp";
 			break;
 			
 		}

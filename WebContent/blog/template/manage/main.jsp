@@ -143,7 +143,7 @@
 					</div> -->
 					<div class="sidebar-box">
 						<h3 class="heading">最近投稿した記事</h3>
-						<c:if test="empty p_list3">
+						<c:if test="${empty p_list3}">
 						<div class="post-entry-sidebar">
 						<h2>最近投稿した記事はありませんでした</h2>
 						</div>
@@ -152,7 +152,7 @@
 							<ul>
 							<c:forEach var="p_list3" items="${p_list3 }">
 								<li>
-									<a href="">
+									<a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${p_list3.p_idx}">
 									<c:if test="${empty p_list3.img_path }">
 										<img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
 									</c:if>
@@ -173,7 +173,7 @@
 					</div>
 					<div class="sidebar-box">
 						<h3 class="heading">最近ついたコメント</h3>
-						<c:if test="empty p_list3">
+						<c:if test="${empty p_list3}">
 						<div class="post-entry-sidebar">
 						<h2>最近投稿した記事はありませんでした</h2>
 						</div>
