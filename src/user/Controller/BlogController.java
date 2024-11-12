@@ -15,10 +15,12 @@ import Service.Sign.login_check;
 import Service.blog.getDetail;
 import Service.blog.getReplyList;
 import Service.blog.getlist;
+import Service.blog.open_search_result;
 import Service.blog.reply_delAciton;
 import Service.blog.reply_update;
 import Service.blog.reply_writeAciton;
-import Service.blog.search_result;
+import Service.blog.search_result_b;
+import Service.blog.search_result_p;
 import Service.blog.search_result_blog;
 import Service.manage.CertiCheck;
 import Service.manage.LoadUser;
@@ -116,7 +118,16 @@ public class BlogController extends HttpServlet {
 			new getReplyList().command(request, response);
 			break;
 		case "/search_result.do":
-			new search_result().command(request, response);
+			new open_search_result().command(request, response);
+			page= "/blog/template/search_result.jsp";
+			break;
+		case "/search_paging_p.do":
+			new search_result_p().command(request, response);
+			page=null;
+			break;
+		case "/search_paging_b.do":
+			new search_result_b().command(request, response);
+			page=null;
 			break;
 		case "/del_post.do":			
 			new post_delete().command(request, response);

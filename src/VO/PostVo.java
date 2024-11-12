@@ -2,6 +2,12 @@ package VO;
 
 public class PostVo {
 	
+	public int getRn() {
+		return rn;
+	}
+	public void setRn(int rn) {
+		this.rn = rn;
+	}
 	public int getR_cnt() {
 		return r_cnt;
 	}
@@ -19,6 +25,7 @@ public class PostVo {
 	private categoryVo p_ctgr;
 	private String img_path;
 	private int r_cnt;
+	private int rn;
 	public String getImg_path() {
 		return img_path;
 	}

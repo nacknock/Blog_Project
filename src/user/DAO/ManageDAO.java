@@ -1538,7 +1538,7 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 		if(keyword_post == "") {
 			sql = "select count(*) as cnt from post";
 		}else {
-			sql = "select count(*) as cnt from post where "+ keyword_post;
+			sql = "select count(*) as cnt from post "+ keyword_post;
 		}
 		//System.out.println(sql);
 		try {

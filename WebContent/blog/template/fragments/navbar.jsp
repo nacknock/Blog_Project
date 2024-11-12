@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     <nav class="site-nav">
 		<div class="container">
 			<div class="menu-bg-wrap">
@@ -45,7 +47,7 @@
 									<c:if test = "${not empty userid }">
                       					<ul class="dropdown">
 											<li><a href="/sign/logout.do">Log out</a></li>
-											<li><a href="/manage/main.do">블로그 관리</a></li>
+											<li><a href="/manage/main.do">ブログ管理</a></li>
 										</ul>
 	                   				</c:if>
 									<c:if test = "${empty userid }">
@@ -61,8 +63,8 @@
 							<a href="#" class="burger ms-auto float-end site-menu-toggle js-menu-toggle d-inline-block d-lg-none light">
 								<span></span>
 							</a>
-							<form action="#" class="search-form d-none d-lg-inline-block">
-								<input type="text" class="form-control" placeholder="Search...">
+							<form method="post" action="/b/search_result.do" class="search-form d-none d-lg-inline-block">
+								<input type="text" class="form-control" id="bp_keyword" name="bp_keyword" value="${bp_keyword}" placeholder="検索">
 								<i class="bi-search"></i>
 							</form>
 						</div>
@@ -71,3 +73,4 @@
 			</div>
 		</div>
 	</nav>
+	<script scr="/blog/js/search.js"></script>

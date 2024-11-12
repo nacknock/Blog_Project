@@ -108,7 +108,7 @@
               overflow: hidden;text-overflow: ellipsis;max-width: 301px;">
               	${list.p_content}
               </p>
-              <p><a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="btn btn-sm btn-outline-primary">続きを読む</a></p>
+              <p><a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="btn btn-sm btn-outline-primary">もっと見る</a></p>
             </div>
           </div>
 		</c:forEach>
@@ -166,7 +166,7 @@
 		              <img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
 		            </c:if>
 		            <c:if test="${not empty top3list.img_path }">
-		              <img src="blog/images/${top3list.img_path }" alt="Image placeholder" class="me-4 rounded">
+		              <img src="/blog/images/${top3list.img_path }" alt="Image placeholder" class="me-4 rounded">
 		            </c:if>
                     <div class="text">
                       <h4>${top3list.p_title }</h4>
@@ -186,7 +186,12 @@
             <h3 class="heading">カテゴリ</h3>
             <ul class="categories">
             <c:forEach var="ctgr_list" items="${ctgr_list }">
-              <li><a href="#">${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
+            <c:if test="${ctgr_list.ctgr_p_cnt > 0 }">
+              <li><a href="/b/list.do?blog=${dto.blog.b_idx}&&type=${ctgr_list.ctgridx}">${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
+            </c:if>
+            <c:if test="${ctgr_list.ctgr_p_cnt eq 0 }">
+              <li><a >${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
+            </c:if>
             </c:forEach>
             </ul>
           </div>
@@ -196,7 +201,7 @@
             <h3 class="heading">ハッシュタグ</h3>
             <ul class="tags">
             <c:forEach var="taglist" items="${taglist }">
-              <li><a href="#">#${taglist.tag_name }</a></li>
+              <li><a href="/b/list.do?blog=${dto.blog.b_idx}&&term=${taglist.tag_id}">#${taglist.tag_name }</a></li>
             </c:forEach>
             </ul>
           </div>

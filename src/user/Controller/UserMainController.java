@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Service.LoadMain;
+import Service.blog.getReplyList;
+
 /**
  * Servlet implementation class UserMainController
  */
@@ -39,6 +42,7 @@ public class UserMainController extends HttpServlet {
 	}
 	
 	protected void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		new LoadMain().command(request, response);
 		request.getRequestDispatcher("/blog/template/index.jsp").forward(request, response);
 	}
 

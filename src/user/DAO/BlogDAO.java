@@ -254,23 +254,35 @@ public class BlogDAO {
 		}
 		return dto;
 	}
-	public List<PostVo> getListByBlog(Criteria cri, ManageUserDTO dto, String my, String query_keyword) {
+	public List<PostVo> getListByBlog(Criteria cri, ManageUserDTO dto, String my, String query_keyword, String query_type, String query_term) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
+		String query_tagif = "";
+		if(!query_term.equals("")) {
+			query_tagif = "left join tag on tag.tag_p_id = post.p_idx ";
+		}
 		String sql_top = "select * from (\r\n" + 
+				"select * from (\r\n" + 
 				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_ctgr,p_private,p_title,p_content,category.ctgr_name,category.ctgr_private,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
+				"p_idx,p_ctgr,p_private,p_title,p_content,category.ctgr_name,category.ctgr_private,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
 				"left join img on img.post_img = p_idx\r\n" + 
 				"left join blog on post.p_b_idx = blog.b_idx " +
-				"left join category on category.ctgridx = post.p_ctgr ";
-
-		String sql_middle = "where rownum <= ?*? and blog.b_idx = ? "+ my + query_keyword + " ";
+				"left join category on category.ctgridx = post.p_ctgr " + query_tagif +
+				"where blog.b_idx = ? "+ my + query_keyword +" " + query_type;
 		
-		String sql_bot = " ) where rn > (?-1)*? ";
+		String sql_middle = ") where rownum <= ?*? ";
+		if(!query_term.equals("")) {
+			sql_top = sql_top + query_term+" ";
+		}
+		sql_top = sql_top + " order by post.created_at ";
+		
+		String sql_bot = " ) where rownum > (?-1)*? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
+		
+		System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
@@ -278,13 +290,12 @@ public class BlogDAO {
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, cri.getPageNum());
-			pstmt.setInt(2, cri.getAmount());
-			pstmt.setInt(3, dto.getBlog().getB_idx());
+			pstmt.setInt(1, dto.getBlog().getB_idx());
+			pstmt.setInt(2, cri.getPageNum());
+			pstmt.setInt(3, cri.getAmount());
 			pstmt.setInt(4, cri.getPageNum());
 			pstmt.setInt(5, cri.getAmount());
 			rs = pstmt.executeQuery();
-			
 			while(rs.next()) {
 				PostVo vo = new PostVo();
 				categoryVo cvo = new categoryVo();
@@ -367,14 +378,16 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		List<categoryVo> list = new ArrayList<categoryVo>();
-		if(my.equals("")) {
+		if(!my.equals("")) {
+			System.out.println(123);
 			sql = " select category.*,count(post.p_idx) as ctgr_p_cnt "
 					+ "from category "
 					+ "left join post "
 					+ "on p_ctgr = category.ctgridx "
-					+ "where ctgr_b_idx = ? and post.p_private = 0 and ctgr_private = 0 "
+					+ "where ctgr_b_idx = ? and ctgr_private = 0 "
 					+ " group by ctgridx,ctgr_name,ctgr_b_idx,ctgr_private ";
 		}else {
+			System.out.println(456);
 			sql = " select category.*,count(post.p_idx) as ctgr_p_cnt "
 					+ "from category "
 					+ "left join post "
@@ -391,6 +404,7 @@ public class BlogDAO {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
+				System.out.println(rs.getString("ctgr_name")+"lasdf");
 				categoryVo vo = new categoryVo();
 				vo.setCtgr_b_idx(rs.getInt("ctgr_b_idx"));
 				vo.setCtgridx(rs.getInt("ctgridx"));
@@ -412,27 +426,49 @@ public class BlogDAO {
 		}
 		return list;
 	}
-	public List<PostVo> getLoadTop3(ManageUserDTO dto) {
+	public List<PostVo> getLoadTop3(String my, ManageUserDTO dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM ( " +
-	             "SELECT /*+ index_desc(post post_pk) */ " +
-	             "ROWNUM rn, p_idx, p_ctgr, p_private, p_title, img.img_path, post.created_at, p_b_idx, hit " +
-	             "FROM ( " +
-	             "SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, img.img_path, post.created_at, post.p_b_idx, post.hit " +
-	             "FROM post " +
-	             "LEFT JOIN img ON img.post_img = post.p_idx " +
-	             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
-	             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
-	             "WHERE blog.b_idx = ? AND category.ctgr_private = 0 AND post.p_private = 0 " +
-	             "ORDER BY hit DESC " +  // 먼저 정렬
-	             ") post " +
-	             "LEFT JOIN img ON img.post_img = post.p_idx " +
-	             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
-	             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
-	             "WHERE ROWNUM <= 3 " +  // 그 후 최대 3개 행 선택
-	             ")";
+		String sql = "";
+		if(!my.equals("")) {
+			sql = "SELECT * FROM ( " +
+		             "SELECT /*+ index_desc(post post_pk) */ " +
+		             "ROWNUM rn, p_idx, p_ctgr, p_private, p_title, img.img_path, post.created_at, p_b_idx, hit " +
+		             "FROM ( " +
+		             "SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, img.img_path, post.created_at, post.p_b_idx, post.hit " +
+		             "FROM post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE blog.b_idx = ? " +
+		             "ORDER BY hit DESC " +  // 먼저 정렬
+		             ") post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE ROWNUM <= 3 " +  // 그 후 최대 3개 행 선택
+		             ")";
+		}else {
+			sql = "SELECT * FROM ( " +
+		             "SELECT /*+ index_desc(post post_pk) */ " +
+		             "ROWNUM rn, p_idx, p_ctgr, p_private, p_title, img.img_path, post.created_at, p_b_idx, hit " +
+		             "FROM ( " +
+		             "SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, img.img_path, post.created_at, post.p_b_idx, post.hit " +
+		             "FROM post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE blog.b_idx = ? AND category.ctgr_private = 0 AND post.p_private = 0 " +
+		             "ORDER BY hit DESC " +  // 먼저 정렬
+		             ") post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE ROWNUM <= 3 " +  // 그 후 최대 3개 행 선택
+		             ")";
+		}
+		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
 		
@@ -680,15 +716,21 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		String sql_top = "select * from (\r\n" + 
-				"select /*+ index_desc(blog blog_pk) */\r\n" + 
-				"rownum rn,b_idx,one_liner,b_title,created_at,img.img_path from blog "
-				+ "left join img on img.user_img = blog.b_u_idx ";
+				"    select * from (\r\n" + 
+				"        select /*+ index_desc(blog blog_pk) */ \r\n" + 
+				"            b_idx, one_liner, b_title, created_at, img.img_path \r\n" + 
+				"        from blog \r\n" + 
+				"        left join img on img.user_img = blog.b_u_idx \r\n" + 
+				"       " + keyword_blog + 
+				"        order by created_at desc ";
 
-		String sql_middle = " where rownum <= ?*? "+ keyword_blog + " ";
+		String sql_middle = " ) where rownum <= ?*? ";
 		
-		String sql_bot = " ) where rn > (?-1)*? ";
+		String sql_bot = " ) where rownum > (?-1)*? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
+		
+		//System.out.println(sql);
 		
 		List<BlogVo> list = new ArrayList<BlogVo>();
 		
@@ -731,15 +773,23 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		String sql_top = "select * from (\r\n" + 
-				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"rownum rn,p_idx,p_title,created_at,img.img_path from post "
-				+ "left join img on img.post_img = post.p_idx ";
+				"    select * from (\r\n" + 
+				"        select /*+ index_desc(post post_pk) */\r\n" + 
+				"            p_idx, p_title, p_content, post.created_at, img.img_path, p_b_idx, blog.b_title \r\n" + 
+				"        from post \r\n" + 
+				"        left join img on img.post_img = post.p_idx  \r\n" + 
+				"        left join blog on blog.b_idx = post.p_b_idx  \r\n" + 
+				"        " + keyword_post +
+				"          \r\n" + 
+				"        order by hit\r\n";
 
-		String sql_middle = " where rownum <= ?*? "+ keyword_post + " and p_private = 0 ";
+		String sql_middle = ") where rownum <= ?*?";
 		
-		String sql_bot = " ) where rn > (?-1)*? ";
+		String sql_bot = " ) where rownum > (?-1)*? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
+		
+		//System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
@@ -753,12 +803,17 @@ public class BlogDAO {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
+				System.out.println("b_title : "+rs.getString("b_title"));
 				PostVo vo = new PostVo();
+				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
 				vo.setP_title(rs.getString("p_title"));
+				vo.setP_title(rs.getString("p_content"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setImg_path(rs.getString("img_path"));
-				vo.setP_content(rs.getString("p_content"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				bvo.setB_title(rs.getString("b_title"));
+				vo.setP_b_idx(bvo);
 				
 				list.add(vo);
 			}
@@ -876,6 +931,8 @@ public class BlogDAO {
 					+ "from tag "
 					+ "left join post "
 					+ "on tag_p_id = post.p_idx "
+					+ "left join category "
+					+ "on category.ctgridx = post.p_ctgr "
 					+ "where post.p_b_idx = ? " + my;
 		
 		//System.out.println(sql);
@@ -891,6 +948,261 @@ public class BlogDAO {
 				vo.setTag_name(rs.getString("tag_name"));
 				vo.setTag_p_id(rs.getInt("tag_p_id"));
 				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+	public List<PostVo> getrecomm4(String my, ManageUserDTO dto, int ctgridx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "";
+		if(!my.equals("")) {
+			sql = "SELECT * FROM ( " +
+		             "SELECT /*+ index_desc(post post_pk) */ " +
+		             "ROWNUM rn, p_idx, p_ctgr, p_private, p_title, p_content, img.img_path, post.created_at, p_b_idx, hit " +
+		             "FROM ( " +
+		             "SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, post.p_content, img.img_path, post.created_at, post.p_b_idx, post.hit " +
+		             "FROM post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE blog.b_idx = ? and post.p_ctgr = ? " +
+		             "ORDER BY hit DESC " +  // 먼저 정렬
+		             ") post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE ROWNUM <= 4 " +  // 그 후 최대 3개 행 선택
+		             ")";
+		}else {
+			sql = "SELECT * FROM ( " +
+		             "SELECT /*+ index_desc(post post_pk) */ " +
+		             "ROWNUM rn, p_idx, p_ctgr, p_private, p_title, p_content, img.img_path, post.created_at, p_b_idx, hit " +
+		             "FROM ( " +
+		             "SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, post.p_content, img.img_path, post.created_at, post.p_b_idx, post.hit " +
+		             "FROM post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE blog.b_idx = ? and post.p_ctgr = ? AND category.ctgr_private = 0 AND post.p_private = 0 " +
+		             "ORDER BY hit DESC " +  // 먼저 정렬
+		             ") post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE ROWNUM <= 4 " +  // 그 후 최대 3개 행 선택
+		             ")";
+		}
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		
+		//System.out.println(sql + "sdadfdfafs");
+		//System.out.println(dto.getBlog().getB_idx()+"dsfadfadfsadfsadfsadfss");
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getBlog().getB_idx());
+			pstmt.setInt(2, ctgridx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				categoryVo cvo = new categoryVo();
+				BlogVo bvo = new BlogVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				vo.setP_ctgr(cvo);
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_content(rs.getString("p_content"));
+				vo.setImg_path(rs.getString("img_path"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setHit(rs.getInt("hit"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				vo.setP_b_idx(bvo);
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+	public List<PostVo> gethitTop6() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "";
+			sql = "SELECT * FROM ( " +
+		             "SELECT /*+ index_desc(post post_pk) */ " +
+		             "ROWNUM rn, p_idx, p_ctgr, p_private, p_title, img.img_path, post.created_at, p_b_idx, hit " +
+		             "FROM ( " +
+		             "SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, img.img_path, post.created_at, post.p_b_idx, post.hit " +
+		             "FROM post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             " " +
+		             " " +  // 먼저 정렬
+		             ") post " +
+		             "LEFT JOIN img ON img.post_img = post.p_idx " +
+		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
+		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
+		             "WHERE ROWNUM <= 6 " +  // 그 후 최대 3개 행 선택
+		             ")";
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				categoryVo cvo = new categoryVo();
+				BlogVo bvo = new BlogVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				vo.setP_ctgr(cvo);
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setImg_path(rs.getString("img_path"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setHit(rs.getInt("hit"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				vo.setP_b_idx(bvo);
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+	public List<TagVo> getCtgrListUpHit() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = null;
+		List<TagVo> list = new ArrayList<TagVo>();
+		
+			sql = "select * from ( " + 
+					"    select tag.*, rownum rn " + 
+					"    from tag " + 
+					"    left join post on p_idx = tag.tag_p_id " + 
+					"    order by post.hit " + 
+					") " + 
+					"where rownum <= 2";	
+		
+		
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				TagVo vo = new TagVo();
+				vo.setTag_id(rs.getInt("tag_id"));
+				vo.setTag_name(rs.getString("tag_name"));
+				vo.setTag_p_id(rs.getInt("tag_p_id"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return list;
+	}
+	public List<PostVo> gettaglist5(String tag_name) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "";
+			sql = "SELECT distinct post.p_idx, post.p_ctgr, post.p_private, post.p_title, img.img_path, post.created_at, post.p_b_idx, post.hit FROM ( \r\n" + 
+					"		             SELECT /*+ index_desc(post post_pk) */ \r\n" + 
+					"		             ROWNUM rn, p_idx, p_ctgr, p_private, p_title, img.img_path, post.created_at, p_b_idx, hit \r\n" + 
+					"		             FROM ( \r\n" + 
+					"		             SELECT post.p_idx, post.p_ctgr, post.p_private, post.p_title, img.img_path, post.created_at, post.p_b_idx, post.hit \r\n" + 
+					"		             FROM post \r\n" + 
+					"                     LEFT JOIN img ON img.post_img = post.p_idx \r\n" + 
+					"		             LEFT JOIN blog ON post.p_b_idx = blog.b_idx \r\n" + 
+					"		             LEFT JOIN category ON category.ctgridx = post.p_ctgr \r\n" + 
+					"		             LEFT JOIN tag ON tag.tag_p_id = post.p_idx \r\n" + 
+					"		              where tag.tag_name = ? \r\n" + 
+					"		              order by post.hit desc \r\n" + 
+					"		             ) post\r\n" + 
+					"		             LEFT JOIN img ON img.post_img = post.p_idx \r\n" + 
+					"		             LEFT JOIN blog ON post.p_b_idx = blog.b_idx \r\n" + 
+					"		             LEFT JOIN category ON category.ctgridx = post.p_ctgr \r\n" + 
+					"		             LEFT JOIN tag ON tag.tag_p_id = post.p_idx \r\n" + 
+					"		             WHERE ROWNUM <= 5 \r\n" + 
+					"		             ) post\r\n" + 
+					"                     \r\n" + 
+					"                     LEFT JOIN img ON img.post_img = post.p_idx \r\n" + 
+					"		             LEFT JOIN blog ON post.p_b_idx = blog.b_idx \r\n" + 
+					"		             LEFT JOIN category ON category.ctgridx = post.p_ctgr \r\n" + 
+					"		             LEFT JOIN tag ON tag.tag_p_id = post.p_idx";
+		
+		List<PostVo> list = new ArrayList<PostVo>();
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, tag_name);
+			rs = pstmt.executeQuery();
+			int i = 1;
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				categoryVo cvo = new categoryVo();
+				BlogVo bvo = new BlogVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				cvo.setCtgridx(rs.getInt("p_ctgr"));
+				vo.setP_ctgr(cvo);
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setImg_path(rs.getString("img_path"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setHit(rs.getInt("hit"));
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				vo.setP_b_idx(bvo);
+				vo.setRn(i);
+				list.add(vo);
+				i++;
 			}
 			
 		} catch (Exception e) {

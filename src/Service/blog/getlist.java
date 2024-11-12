@@ -45,8 +45,8 @@ public class getlist implements Action {
 		int pageNum = 1;
 		int amount = 5;
 		
-		String term = "";//기간
-		String type = "";//답변된것만
+		String term = "";//태그
+		String type = "";//카테고리
 		String keyword = "";
 		String query_keyword = "";
 		String query_type = "";
@@ -55,6 +55,16 @@ public class getlist implements Action {
 		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
 			query_keyword = "and p_title like '%"+keyword+"%' ";
+		}
+		
+		if(request.getParameter("type") != null &&!request.getParameter("type").equals("")) {
+			type = request.getParameter("type");
+			query_type = "and p_ctgr = "+type+" ";
+		}
+		
+		if(request.getParameter("term") != null &&!request.getParameter("term").equals("")) {
+			term = request.getParameter("term");
+			query_term = "and tag.tag_id = "+term+" ";
 		}
 		
 		if(request.getParameter("pageNum") != null) {
@@ -69,7 +79,7 @@ public class getlist implements Action {
 		cri.setType(type);
 		cri.setKeyword(keyword);
 
-		List<PostVo> list = BlogDAO.getInstance().getListByBlog(cri,dto,my,query_keyword);
+		List<PostVo> list = BlogDAO.getInstance().getListByBlog(cri,dto,my,query_keyword,query_type,query_term);
 		
 		int count = BlogDAO.getInstance().getCountByBlogMain(my,dto,query_keyword);
 		
@@ -85,7 +95,7 @@ public class getlist implements Action {
 		
 		request.setAttribute("ctgr_list", ctgr_list);
 		
-		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(dto);
+		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(my,dto);
 		
 		request.setAttribute("top3list", top3list);
 		

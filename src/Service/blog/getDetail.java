@@ -62,13 +62,17 @@ public class getDetail implements Action {
 		
 		request.setAttribute("Ptaglist", Ptaglist);
 		
-		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(dto);
+		List<PostVo> top3list = BlogDAO.getInstance().getLoadTop3(my,dto);
 		
 		request.setAttribute("top3list", top3list);
 		
-		List<TagVo> taglist = BlogDAO.getInstance().getTagList(dto);
+		List<TagVo> taglist = BlogDAO.getInstance().getTagList(my,dto);
 		
 		request.setAttribute("taglist", taglist);
+		
+		List<PostVo> recommlist = BlogDAO.getInstance().getrecomm4(my,dto,vo.getP_ctgr().getCtgridx());
+		
+		request.setAttribute("recommlist", recommlist);
 
 	}
 

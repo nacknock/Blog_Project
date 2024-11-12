@@ -199,7 +199,7 @@
 		              <img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
 		            </c:if>
 		            <c:if test="${not empty top3list.img_path }">
-		              <img src="blog/images/${top3list.img_path }" alt="Image placeholder" class="me-4 rounded">
+		              <img src="/blog/images/${top3list.img_path }" alt="Image placeholder" class="me-4 rounded">
 		            </c:if>
                     <div class="text">
                       <h4>${top3list.p_title }</h4>
@@ -219,7 +219,7 @@
             <h3 class="heading">カテゴリ</h3>
             <ul class="categories">
             <c:forEach var="ctgr_list" items="${ctgr_list }">
-              <li><a href="#">${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
+              <li><a href="/b/list.do?type=${ctgr_list.ctgridx}">${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
             </c:forEach>
             </ul>
           </div>
@@ -229,7 +229,7 @@
             <h3 class="heading">ハッシュタグ</h3>
             <ul class="tags">
             <c:forEach var="taglist" items="${taglist }">
-              <li><a href="#">#${taglist.tag_name }</a></li>
+              <li><a href="/b/list.do?term=${taglist.tag_id}">#${taglist.tag_name }</a></li>
             </c:forEach>
             </ul>
           </div>
@@ -245,53 +245,27 @@
   <section class="section posts-entry posts-entry-sm bg-light">
     <div class="container">
       <div class="row mb-4">
-        <div class="col-12 text-uppercase text-black">More Blog Posts</div>
+        <div class="col-12 text-uppercase text-black">同じカテゴリ「<span style="color:blue;">${vo.p_ctgr.ctgr_name}</span>」の記事</div>
       </div>
       <div class="row">
+      <c:forEach var="p_list" items="${recommlist}">
         <div class="col-md-6 col-lg-3">
           <div class="blog-entry">
-            <a href="single.html" class="img-link">
-              <img src="../images/img_1_horizontal.jpg" alt="Image" class="img-fluid">
+            <a href="/b/detail/blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}" class="img-link">
+              <c:if test="${empty p_list.img_path}">
+			  <img src="/blog/images/post_not_image.jpg" alt="Image" class="img-fluid" style="width: 306px;height: 192px;">
+			  </c:if>
+			  <c:if test="${not empty p_list.img_path}">
+			  <img src="/blog/images/${p_list.img_path}" alt="Image" class="img-fluid" style="width: 306px;height: 192px;">
+			  </c:if>
             </a>
-            <span class="date">Apr. 14th, 2022</span>
-            <h2><a href="single.html">Thought you loved Python? Wait until you meet Rust</a></h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p><a href="#" class="read-more">Continue Reading</a></p>
+            <span class="date">${p_list.created_at}</span>
+            <h2><a href="/b/detail/blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}">${p_list.p_title}</a></h2>
+            <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 306px;">${p_list.p_content}</p>
+            <p><a href="/b/detail/blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}" class="read-more">もっと見る</a></p>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3">
-          <div class="blog-entry">
-            <a href="single.html" class="img-link">
-              <img src="../images/img_2_horizontal.jpg" alt="Image" class="img-fluid">
-            </a>
-            <span class="date">Apr. 14th, 2022</span>
-            <h2><a href="single.html">Startup vs corporate: What job suits you best?</a></h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p><a href="#" class="read-more">Continue Reading</a></p>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-          <div class="blog-entry">
-            <a href="single.html" class="img-link">
-              <img src="../images/img_3_horizontal.jpg" alt="Image" class="img-fluid">
-            </a>
-            <span class="date">Apr. 14th, 2022</span>
-            <h2><a href="single.html">UK sees highest inflation in 30 years</a></h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p><a href="#" class="read-more">Continue Reading</a></p>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-          <div class="blog-entry">
-            <a href="single.html" class="img-link">
-              <img src="../images/img_4_horizontal.jpg" alt="Image" class="img-fluid">
-            </a>
-            <span class="date">Apr. 14th, 2022</span>
-            <h2><a href="single.html">Don’t assume your user data in the cloud is safe</a></h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p><a href="#" class="read-more">Continue Reading</a></p>
-          </div>
-        </div>
+      </c:forEach>
       </div>
     </div>
   </section>
