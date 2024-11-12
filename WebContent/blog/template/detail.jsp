@@ -114,6 +114,7 @@
             </p>
           </div>
           <div class="pt-5 d-flex">
+          <c:if test="${my eq true}">
             <form method="post" action="/manage/openP_modify.do">
 	            <input type="hidden" name="p_idx" value="${vo.p_idx }">
 	            <button type="submit" style="background-color: transparent;border: none; color: black;cursor: pointer;padding: 10px 20px;font-size: 16px;">
@@ -127,6 +128,7 @@
 	              <i class="fa-solid fa-square-xmark" style="font-size: xx-large;"></i>
 	            </button>
             </form>
+          </c:if>
             <!--<a href="#" class="">-->
               <!-- <i class="fa-solid fa-face-frown" style="color: red; font-size: xx-large;float: right;"></i> -->
             <!--</a>-->

@@ -216,7 +216,7 @@ public class BlogDAO {
 				"on b.b_u_idx = b_user.idx\r\n" + 
 				"where b_idx = ?";
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -228,7 +228,7 @@ public class BlogDAO {
 				B_userVo uvo = new B_userVo();
 				uvo.setUser_id(rs.getString("user_id"));
 				bvo.setB_idx(rs.getInt("b_idx"));
-				System.out.println(rs.getInt("b_idx")+" : b_idx");
+				//System.out.println(rs.getInt("b_idx")+" : b_idx");
 				uvo.setIdx(rs.getInt("idx"));
 				uvo.setEmail(rs.getString("email"));
 				bvo.setB_title(rs.getString("b_title"));
@@ -239,7 +239,7 @@ public class BlogDAO {
 				dto.setBlog(bvo);
 			}
 
-			System.out.println("테스트");
+			//System.out.println("테스트");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -437,7 +437,7 @@ public class BlogDAO {
 		
 		
 		//System.out.println(sql + "sdadfdfafs");
-		System.out.println(dto.getBlog().getB_idx()+"dsfadfadfsadfsadfsadfss");
+		//System.out.println(dto.getBlog().getB_idx()+"dsfadfadfsadfsadfsadfss");
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -564,7 +564,7 @@ public class BlogDAO {
 		List<B_replyVo> list = new ArrayList<B_replyVo>();
 		
 		
-		System.out.println(sql+"@@@@@@@@@@reply");
+		//System.out.println(sql+"@@@@@@@@@@reply");
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -839,7 +839,7 @@ public class BlogDAO {
 					+ "on tag_p_id = post.p_idx "
 					+ "where post.p_b_idx = ? ";
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -878,7 +878,7 @@ public class BlogDAO {
 					+ "on tag_p_id = post.p_idx "
 					+ "where post.p_b_idx = ? " + my;
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);

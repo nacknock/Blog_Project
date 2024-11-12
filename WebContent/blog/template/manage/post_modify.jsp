@@ -95,7 +95,7 @@
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
 						<h2>ブログを書く</h2>
 					</div>
-					<form method="post" action="/manage/postModifyAction.do" enctype="multipart/form-data" name="p_wrt_form" onsubmit="return check()">
+					<form method="post" action="/manage/postModifyAction.do" enctype="multipart/form-data" name="p_wrt_form" onsubmit="return check(event)">
 						<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
 							<div class="form-group col-md-12">
 								<div class="mt-30 mb-15" style="display: flex;justify-content: center;">
@@ -115,7 +115,7 @@
 								</div>
 								<div class="col-12">
 									<textarea hidden="hidden" id="txt_detail" class="form-control" name="p_content" rows="5"
-									style="resize:none">${vo.p_content}</textarea>
+									style="resize:none"></textarea>
 									<div id="editor"></div>
 								</div>
 								<div>
@@ -205,25 +205,26 @@
 			});
 		});
 		
-		function check() {
-			
+		function check(event) {
+			event.preventDefault();
 			if(p_wrt_form.p_title.value=="") {
 				alert("タイトルを入力してください。");
 				p_wrt_form.p_title.focus();
 				return false;
 			}
-			if(p_wrt_form.ctgridx.value=="") {
+			if(p_wrt_form.p_ctgr.value=="") {
 				alert("カテゴリを選択してください。");
 				p_wrt_form.ctgridx.focus();
 				return false;
 			}
-			if(editor.getData()=="") {
+			if(editor.getData()==="") {
 				alert("文字を入力してください。");
 				p_wrt_form.p_content.focus();
 				return false;
 			}else{
 				p_wrt_form.p_content.value = editor.getData();
 			}
+			p_wrt_form.submit();
 			return true;
 		}
 	</script>

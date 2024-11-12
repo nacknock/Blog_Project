@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,6 +32,7 @@ public class postModifyAction implements Action {
 		
 		String savepath = "/blog/images";//저장될 파일 바로 위 디렉토리
 		boolean imgChange = false;//파일을 수정했는지 여부 체크 true는 새 파일 등록, false는 파일 교체 없음
+		boolean InsertImg = false;
 		
 		ServletContext context = request.getServletContext();
 		String path = context.getRealPath(savepath);
@@ -57,6 +60,9 @@ public class postModifyAction implements Action {
 			realPath = path+"\\"+realFile;//파일 경로 + 파일명
 			image.write(realPath); //첨부파일 업로드
 			imgChange = true;//파일을 수정했는지 여부 체크 true는 새 파일 등록, false는 파일 교체 없음
+			if(request.getParameter("imgurl") == null) {
+				InsertImg = true;
+			}
 		}else { //첨부파일 안 했을때
 			if(request.getParameter("imgurl") != null) {
 			realFile = request.getParameter("imgurl").substring(13);//원래 파일 경로에서 /upload를 제외한것(db에 담겨있던 그대로)
@@ -83,12 +89,17 @@ public class postModifyAction implements Action {
 		//path+"\\"+request.getParameter("imgurl").substring(8) = 원래 이미지 url
 		//용도는 파일 수정했을 시 원래 파일 삭제용
 		//imgChange 파일을 수정했는지 여부 체크 true는 새 파일 등록, false는 파일 교체 없음
-		int result = ManageDAO.getInstance().PostModifyAction(vo,imgChange);
+		int result = ManageDAO.getInstance().PostModifyAction(vo,imgChange,InsertImg);
 		
 		String[] tags = request.getParameterValues("tags");
 		
+		List<String> tag_list = new ArrayList<String>();
+		for(String tag : tags) {
+			tag_list.add(tag);
+		}
+		
 		if(result > 0) {
-			result = ManageDAO.getInstance().tagModifyAction(tags,p_idx);
+			result = ManageDAO.getInstance().tagModifyAction(tag_list,p_idx);
 		}
 		
 		

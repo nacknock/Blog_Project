@@ -45,6 +45,9 @@ public class getDetail implements Action {
 		
 		if(dto.getUser().getUser_id().equals(login_userid)) {
 			my = "";
+			request.setAttribute("my", true);
+		}else {
+			request.setAttribute("my", false);
 		}
 		
 		PostVo vo = BlogDAO.getInstance().loadDetail(p_idx);

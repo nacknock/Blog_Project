@@ -4,10 +4,12 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1158,11 +1160,18 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 		
 		return vo;
 	}
-	public int PostModifyAction(PostVo vo, boolean imgChange) {
+	public int PostModifyAction(PostVo vo, boolean imgChange, boolean insertImg) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
-		
+		 // 현재 날짜와 시간을 가져오기
+        Date now = new Date();
+
+        // 원하는 형식으로 날짜 포맷 설정
+        SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd");
+
+        // 날짜를 포맷팅하여 문자열로 변환
+        String formattedDate = sdf.format(now);
 		//where절의 idx로 수정할 대상 찾기
 		String sql = "update post set p_title = ?,p_content = ?,modified_at = ?,p_ctgr = ? where p_idx = ?";
 		
@@ -1171,21 +1180,25 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getP_title());
 			pstmt.setString(2, vo.getP_content());
-			pstmt.setString(3, "");
+			pstmt.setString(3, formattedDate);
 			pstmt.setInt(4, vo.getP_ctgr().getCtgridx());
 			pstmt.setInt(5, vo.getP_idx());
 			pstmt.executeUpdate();
-			
+
 			if(imgChange) {
+				
 				String img_sql = "update img set img_path = ? where post_img = ?";
 				
+				if(insertImg) {
+					img_sql = "insert into img (img_id,img_path,post_img) values (img_seq.nextval,?,?)";
+				}
+				System.out.println(img_sql+" : "+vo.getImg_path());
 					pstmt = conn.prepareStatement(img_sql);
 					pstmt.setString(1, vo.getImg_path());
 					pstmt.setInt(2, vo.getP_idx());
 					pstmt.executeUpdate();
-					result = 1;
 			}
-			
+			result = 1;
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -1649,25 +1662,34 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 		}
 		return list;
 	}
-	public int tagModifyAction(String[] tags,int p_idx) {
+	public int tagModifyAction(List<String> tags,int p_idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int result = 0;
+		
+		if(tags == null) {
+			List<String> tag_ids_all = selTagIdByP(p_idx);
+			result = tagDelByModify(tag_ids_all,p_idx);
+			
+			return result;
+		}
+		
+		List<String>Uptags = checkUpTag(tags,p_idx);
+		
 		String sql = "insert into tag (tag_id,tag_name,tag_p_id) values (tag_seq.nextval,?,?)";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			for(int i = 0;i > tags.length;i++) {
-				pstmt.setString(1, Integer.parseInt(tags[i]));
+			for(String tag : Uptags) {
+				pstmt.setString(1, tag);
 				pstmt.setInt(2, p_idx);
-				pstmt.executeQuery();
+				pstmt.executeUpdate();
 			}
 			result = 1;
 			
-			int[] tag_ids_all = selTagIdByP(p_idx);
-			
-			result = tagDelByModify(tags,tag_ids_all);
+			List<String> tag_ids_all = selTagIdByP(p_idx);
+			result = tagDelByModify(tags,tag_ids_all,p_idx);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1681,32 +1703,85 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 		}
 		return result;
 	}
-	private int tagDelByModify(String[] tags, int[] tag_ids_all) {
+	private List<String> checkUpTag(List<String> tags, int p_idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "delete tag_id from tag where tag_id = ?";
+		List<String> dblist = new ArrayList<String>();
+		List<String> uplist = new ArrayList<String>();
 		
-		int[] tags_int = Arrays.stream(tags).mapToInt(Integer::parseInt).toArray();
+		String sql = "select tag_name from tag where tag_p_id = ?";
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,p_idx);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				dblist.add(rs.getString("tag_name"));
+			}
+			
+			// Set을 사용하여 a 배열의 값을 빠르게 조회
+	        HashSet<String> setA = new HashSet<>();
+	        for (String tag : dblist) {
+	            setA.add(tag);
+	        }
+
+	        // b 배열의 값 중 a 배열에 없는 값만 c 배열에 추가
+	        for (String tag : tags) {
+	            if (!setA.contains(tag)) {
+	                uplist.add(tag);
+	            }
+	        }
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return uplist;
+	}
+	private int tagDelByModify(List<String> tags, List<String> tag_ids_all, int p_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "delete from tag where tag_p_id = ? and tag_name = ?";
 		int result = 0;
-		
-		HashSet<Integer> tagIdsSet = new HashSet<>();
-        for (int id : tags_int) {
-            tagIdsSet.add(id);
+		List<String> del_list = new ArrayList<String>();
+		// Set을 사용하여 a 배열의 값을 빠르게 조회
+        HashSet<String> setA = new HashSet<>();
+        for (String tag : tag_ids_all) {
+            setA.add(tag);
         }
-        
-        int[] missingTags = Arrays.stream(tag_ids_all)
-                .filter(id -> !tagIdsSet.contains(id)) // tag_ids에 없는 값 필터링
-                .toArray(); // 결과를 int[]로 변환
+        // tags 배열을 HashSet으로 변환
+        HashSet<String> tagsSet = new HashSet<>();
+        for (String tag : tags) {
+            tagsSet.add(tag);
+        }
+        // setA의 각 요소를 tagsSet과 비교
+        for (String tag : setA) {
+            if (!tagsSet.contains(tag)) { // tagsSet에 tag가 포함되지 않은 경우
+                del_list.add(tag); // setA의 요소가 tags에 없으면 del_list에 추가
+            }
+        }
 		
 		
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			for(int tag_id : missingTags) {
-				pstmt.setInt(1, tag_id);
-				rs = pstmt.executeQuery();
+			for(String tag_id : del_list) {
+				System.out.println(tag_id);
+				pstmt.setInt(1, p_idx);
+				pstmt.setString(2, tag_id);
+				pstmt.executeUpdate();
 			}
 			result = 1;
 			
@@ -1723,12 +1798,39 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 		return result;
 		
 	}
-	private int[] selTagIdByP(int p_idx) {
+	private int tagDelByModify(List<String> tag_ids_all, int p_idx) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select tag_id from tag where tag_p_id = ?";
-		int tag_ids[] = new int[100];
+		String sql = "delete from tag where tag_p_id = ?";
+		int result = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, p_idx);
+				pstmt.executeUpdate();
+			result = 1;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
+		
+	}
+	private List<String> selTagIdByP(int p_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select tag_name from tag where tag_p_id = ?";
+		List<String> tag_ids = new ArrayList<String>();
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
@@ -1738,8 +1840,7 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 			
 			int i = 0;
 			while(rs.next()) {
-				tag_ids[i] = rs.getInt("tag_id");
-				i++;
+				tag_ids.add(rs.getString("tag_name"));
 				
 			}
 		} catch (Exception e) {
