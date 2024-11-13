@@ -25,7 +25,7 @@
 					</label>-->
 				</div>
 				<div class="email-list-detail" onclick="location.href='/b/detail.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}'">
-					<p class="msg mb-7" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
+					<p class="msg mb-7" style="	">
 						${list.p_title }
 					</p>
 					<div>

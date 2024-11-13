@@ -1,6 +1,12 @@
 package VO;
 
 public class B_userVo {
+	public int getUser_num() {
+		return user_num;
+	}
+	public void setUser_num(int user_num) {
+		this.user_num = user_num;
+	}
 	public String getImg_path() {
 		return img_path;
 	}
@@ -16,6 +22,7 @@ public class B_userVo {
 	private String created_at;
 	private String modified_at;
 	private String img_path;
+	private int user_num;
 	public int getIdx() {
 		return idx;
 	}

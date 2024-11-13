@@ -1,6 +1,12 @@
 package VO;
 
 public class QuestionVo {
+	public int getQ_num() {
+		return q_num;
+	}
+	public void setQ_num(int q_num) {
+		this.q_num = q_num;
+	}
 	private int q_idx;
 	private int q_ctgr;
 	private String q_title;
@@ -10,6 +16,7 @@ public class QuestionVo {
 	private int q_u_idx;
 	private String q_img;
 	private String a_content;
+	private int q_num;
 	public int getQ_idx() {
 		return q_idx;
 	}

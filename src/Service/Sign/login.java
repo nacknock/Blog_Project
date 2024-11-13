@@ -24,15 +24,27 @@ request.setCharacterEncoding("utf-8");
 		int result = SignDAO.getInstance().getSelectIdPw(userid,pw);
 		HttpSession session = request.getSession();
 		
-		if(result == 1) {//·Î±×ÀÎ
-			session.setAttribute("userid", userid);
-			response.sendRedirect("/");
-		}else if(result == 0) {//id or pw Æ²¸²
-			session.setAttribute("msg", "¾ÆÀÌµğ ¶Ç´Â ÆĞ½º¿öµå È®ÀÎ ¹Ù¶ø´Ï´Ù");
+		if(result == 1) {//admin
+			result = SignDAO.getInstance().getCheckRole(userid);
+//			session.setAttribute("userid", userid);
+//			response.sendRedirect("/");
+			if(result == 1) {
+				session.setAttribute("userid", userid);
+				response.sendRedirect("/admin/main.do");
+				return;
+			}else if(result == 0) {
+				session.setAttribute("userid", userid);
+				response.sendRedirect("/");
+				return;
+			}
+		}else if(result == 0) {//id or pw í‹€ë¦¼
+			session.setAttribute("msg", "IDã¾ãŸã¯ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 			response.sendRedirect("/sign/login.do");
-		}else if(result == -1) {//È¸¿ø°¡ÀÔ ¾ÈÇÔ
-			session.setAttribute("msg", "¾ÆÀÌµğ ¶Ç´Â ÆĞ½º¿öµå È®ÀÎ ¹Ù¶ø´Ï´Ù");
+			//return;
+		}else if(result == -1) {//íšŒì›ê°€ì… ì•ˆí•¨
+			session.setAttribute("msg", "IDã¾ãŸã¯ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“");
 			response.sendRedirect("/sign/login.do");
+			//return;
 		}
 
 	}

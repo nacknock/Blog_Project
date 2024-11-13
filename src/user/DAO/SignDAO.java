@@ -312,5 +312,38 @@ public class SignDAO {
 			}
 		}
 		return result;
+	}
+	public int getCheckRole(String userid) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String query = "select role from b_user where user_id = ?";
+		
+		int result = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();//insert,update,delete 쿼리는 정상적으로 실행했을때 0보다 큰값을 리턴한다
+			
+			if(rs.next()) {
+				result = rs.getInt("role");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
 	}	
 }

@@ -5,7 +5,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
@@ -32,17 +32,17 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
+        <a class="nav-link collapsed" href="/admin/user_list.do">
             <i class="fa-solid fa-user"></i>
-            <span>USER</span>
+            <span>ユーザー</span>
         </a>
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#">
+        <a class="nav-link collapsed" href="/admin/blog_list.do">
             <i class="fa-brands fa-blogger-b"></i>
-            <span>BLOG</span>
+            <span>ブログ</span>
         </a>
     </li>
 
@@ -50,7 +50,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#">
             <i class="fa-solid fa-circle-question"></i>
-            <span>QnA</span>
+            <span>問い合わせ</span>
         </a>
     </li>
 

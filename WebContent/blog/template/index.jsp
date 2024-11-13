@@ -91,7 +91,7 @@
 		<div class="container">
 			<div class="row mb-4">
 				<div class="col-sm-6">
-					<h2 class="posts-entry-title">${tag1}</h2>
+					<h2 class="posts-entry-title">#${tag1}</h2>
 				</div>
 			</div>
 			<div class="row g-3">

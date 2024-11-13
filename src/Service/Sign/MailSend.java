@@ -86,7 +86,8 @@ public class MailSend implements Action {
 			//메시지의 세부사항을 나타낸다
 			msg.setFrom(new InternetAddress(user,"JSLHRD"));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(to_email));
-			msg.setSubject("Blogy会員登録の認証コード");
+			String subject = "Blogy会員登録の認証コード";
+			msg.setSubject(subject,"UTF-8");
 			msg.setContent(htmlContent, "text/html; charset=utf-8");
 			Transport.send(msg);
 		}catch (Exception e) {

@@ -1,6 +1,24 @@
 package VO;
 
 public class BlogVo {
+	public int getB_num() {
+		return b_num;
+	}
+	public void setB_num(int b_num) {
+		this.b_num = b_num;
+	}
+	public int getP_cnt() {
+		return p_cnt;
+	}
+	public void setP_cnt(int p_cnt) {
+		this.p_cnt = p_cnt;
+	}
+	public int getB_hit() {
+		return b_hit;
+	}
+	public void setB_hit(int b_hit) {
+		this.b_hit = b_hit;
+	}
 	public int getP_pri_yn() {
 		return p_pri_yn;
 	}
@@ -23,6 +41,9 @@ public class BlogVo {
 	private String img_path;
 	private int b_u_idx;
 	private int p_pri_yn;
+	private int p_cnt;
+	private int b_hit;
+	private int b_num;
 	public int getB_idx() {
 		return b_idx;
 	}
