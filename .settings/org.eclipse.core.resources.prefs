@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding//WebContent/blog/template/manage/post_manage.jsp=UTF-8
 encoding//src/Service/Sign/MailSend.java=UTF-8
 encoding//src/Service/Sign/login.java=UTF-8
+encoding//src/Service/admin/answer_writeAction.java=UTF-8
 encoding//src/Service/manage/CertiCheck.java=UTF-8
 encoding//src/Service/manage/MailSendByUpdate.java=UTF-8
 encoding//src/Service/manage/q_detail.java=UTF-8

@@ -33,13 +33,15 @@ public class open_admin_main implements Action {
 		
 		request.setAttribute("hitcnt", hitcnt);
 		
-//		List<Integer> raiting = AdminDAO.getInstance().getRaitingGrape();
-//		int j = 1;
-//		for(Integer i : raiting) {
-//			request.setAttribute("rat"+j, i);
-//			System.out.println(i);
-//			j++;
-//		}
+		List<Integer> raiting = AdminDAO.getInstance().getRaitingGrape();
+		int j = 0;
+		for(Integer i : raiting) {
+			request.setAttribute("rat"+j, i);
+			j++;
+		}
+		int raiting_cnt = AdminDAO.getInstance().getRatingCnt();
+		
+		request.setAttribute("rating_cnt", raiting_cnt);
 		
 		List<QuestionVo> q_list = AdminDAO.getInstance().getQ5();
 		

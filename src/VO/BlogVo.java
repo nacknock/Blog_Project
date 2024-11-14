@@ -1,6 +1,12 @@
 package VO;
 
 public class BlogVo {
+	public int getR_cnt() {
+		return r_cnt;
+	}
+	public void setR_cnt(int r_cnt) {
+		this.r_cnt = r_cnt;
+	}
 	public int getB_num() {
 		return b_num;
 	}
@@ -44,6 +50,7 @@ public class BlogVo {
 	private int p_cnt;
 	private int b_hit;
 	private int b_num;
+	private int r_cnt;
 	public int getB_idx() {
 		return b_idx;
 	}

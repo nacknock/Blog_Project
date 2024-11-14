@@ -146,7 +146,55 @@
                     <div class="row">
 
                         <!-- Content Column -->
-                        
+                        <div class="col-lg-6 mb-4">
+
+                            <!-- Project Card Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">回答評価(${rating_cnt })</h6>
+                                </div>
+                                <div class="card-body">
+                                	<h4 class="small font-weight-bold">未評価 <span
+                                            class="float-right">${rat0}%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-dark" role="progressbar" style="width: ${rat0}%"
+                                            aria-valuenow="${rat0}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">1点 <span
+                                            class="float-right">${rat1}%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${rat1}%"
+                                            aria-valuenow="${rat1}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">2点 <span
+                                            class="float-right">${rat2}%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: ${rat2}%"
+                                            aria-valuenow="${rat2}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">3点 <span
+                                            class="float-right">${rat3}%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar" role="progressbar" style="width: ${rat3}%"
+                                            aria-valuenow="${rat3}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">4点 <span
+                                            class="float-right">${rat4}%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: ${rat4}%"
+                                            aria-valuenow="${rat4}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">5点 <span
+                                            class="float-right">${rat5}%</span></h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: ${rat5}%"
+                                            aria-valuenow="${rat5}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
 
                         <div class="col-lg-6 mb-4">
 
@@ -170,7 +218,7 @@
                                                 </thead>
                                                 <tbody>
                                                 <c:forEach var="list" items="${q_list }">
-                                                    <tr onclick="location.href='#'" style="cursor: pointer;">
+                                                    <tr onclick="location.href='/admin/qna_detail.do?q_idx=${list.q_idx}'" style="cursor: pointer;">
                                                         <th>${list.q_num}</th>
                                                         <c:if test="${list.q_ctgr eq 1}"><th>ログイン</th></c:if>
                                                         <c:if test="${list.q_ctgr eq 2}"><th>機能/使い方</th></c:if>
@@ -195,7 +243,7 @@
 
                 </div>
                 <!-- /.container-fluid -->
-
+                
             </div>
             <!-- End of Main Content -->
 

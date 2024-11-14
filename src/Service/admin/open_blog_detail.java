@@ -22,12 +22,17 @@ public class open_blog_detail implements Action {
 		
 		//blog vo,post list
 		//b_title,b_idx,created_at,one_liner(user_id),최신 포스트 등록 일자,sum(hit),count(post),count(reply)
-		//p_idx,p_title,p_private,created_at,hit,count(reply),p_ctgr(name),
+		//p_idx,p_title,p_private,created_at,hit,count(reply),p_ctgr(name)
 		//tag
 		
 		BlogVo vo = AdminDAO.getInstance().getB_detail(b_idx);
+		String p_created = AdminDAO.getInstance().getBlogLastPostCre(b_idx);
 		
 		List<PostVo> list = AdminDAO.getInstance().getAdminPList(b_idx);
+		
+		request.setAttribute("vo", vo);
+		request.setAttribute("p_created", p_created);
+		request.setAttribute("list", list);
 
 	}
 

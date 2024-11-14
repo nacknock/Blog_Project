@@ -17,8 +17,8 @@
 							</form>
 
 							<ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-								<li class="active"><a href="/">Home</a></li>
-								<li class="has-children">
+								<li class="active"><a href="/">ホーム</a></li>
+								<!-- <li class="has-children">
 									<a href="category.html">Pages</a>
 									<ul class="dropdown">
 										<li><a href="search-result.html">Search Result</a></li>
@@ -38,12 +38,12 @@
 											</ul>
 										</li>
 									</ul>
-								</li>
+								</li> 
 								<li><a href="category.html">Culture</a></li>
 								<li><a href="category.html">Business</a></li>
-								<li><a href="category.html">Politics</a></li>
+								<li><a href="category.html">Politics</a></li> -->
 								<li class="has-children">
-									<a>유저</a>
+									<a></a>
 									<c:if test = "${not empty userid }">
                       					<ul class="dropdown">
 											<li><a href="/sign/logout.do">Log out</a></li>

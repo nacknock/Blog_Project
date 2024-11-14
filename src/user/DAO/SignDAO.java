@@ -75,7 +75,7 @@ public class SignDAO {
 				result = insertBlogByJoin(vo);
 			}
 			if(result > 0) {
-				result = insertPostByJoin(result);
+				//result = insertPostByJoin(result);
 			}
 			if(result > 0) {
 				result = insertImgByJoin(vo);
@@ -281,38 +281,38 @@ public class SignDAO {
 		}
 		return result;
 	}
-	private int insertPostByJoin(int b_idx) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		String query = "insert into post (P_IDX,P_TITLE,P_CONTENT,P_PRIVATE,HIT,P_B_IDX) values(post_seq.nextval,?,?,?,?,?)";
-		
-		int result = 0;
-		
-		try {
-			conn = DBManager.getInstance().getConnection();
-			pstmt = conn.prepareStatement(query);
-			
-			pstmt.setString(1, "환영합니다!");
-			pstmt.setString(2, "환영합니다. 앞으로 많은 글을 작성해보세요.");
-			pstmt.setInt(3, 1);
-			pstmt.setInt(4, 0);
-			pstmt.setInt(5, b_idx);
-			
-			result = pstmt.executeUpdate();//insert,update,delete 쿼리는 정상적으로 실행했을때 0보다 큰값을 리턴한다
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-		return result;
-	}
+//	private int insertPostByJoin(int b_idx) {
+//		Connection conn = null;
+//		PreparedStatement pstmt = null;
+//		
+//		String query = "insert into post (P_IDX,P_TITLE,P_CONTENT,P_PRIVATE,HIT,P_B_IDX) values(post_seq.nextval,?,?,?,?,?)";
+//		
+//		int result = 0;
+//		
+//		try {
+//			conn = DBManager.getInstance().getConnection();
+//			pstmt = conn.prepareStatement(query);
+//			
+//			pstmt.setString(1, "환영합니다!");
+//			pstmt.setString(2, "환영합니다. 앞으로 많은 글을 작성해보세요.");
+//			pstmt.setInt(3, 1);
+//			pstmt.setInt(4, 0);
+//			pstmt.setInt(5, b_idx);
+//			
+//			result = pstmt.executeUpdate();//insert,update,delete 쿼리는 정상적으로 실행했을때 0보다 큰값을 리턴한다
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if(pstmt != null) pstmt.close();
+//				if(conn != null) conn.close();
+//			} catch (Exception e2) {
+//				e2.printStackTrace();
+//			}
+//		}
+//		return result;
+//	}
 	public int getCheckRole(String userid) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;

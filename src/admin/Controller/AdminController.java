@@ -9,9 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import Service.Sign.login_check;
 import Service.admin.admin_check;
+import Service.admin.answer_writeAction;
 import Service.admin.open_admin_main;
 import Service.admin.open_blog_detail;
 import Service.admin.open_blog_list;
+import Service.admin.open_qna_detail;
+import Service.admin.open_qna_list;
 import Service.admin.open_user_detail;
 import Service.admin.open_user_list;
 import Service.blog.getDetail;
@@ -84,6 +87,17 @@ public class AdminController extends HttpServlet {
 		case "/blog_detail.do":
 			new open_blog_detail().command(request, response);
 			page="/blog/template/admin/blog_detail.jsp";
+			break;
+		case "/qna_list.do":
+			new open_qna_list().command(request, response);
+			page="/blog/template/admin/qna_list.jsp";
+			break;
+		case "/qna_detail.do":
+			new open_qna_detail().command(request, response);
+			page="/blog/template/admin/qna_detail.jsp";
+			break;
+		case "/answer_write.do":
+			new answer_writeAction().command(request, response);
 			break;
 		}
 		

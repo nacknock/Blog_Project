@@ -6,10 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import VO.AnswerVo;
 import VO.B_userVo;
 import VO.BlogVo;
 import VO.PostVo;
 import VO.QuestionVo;
+import VO.categoryVo;
 import util.DBManager;
 
 public class AdminDAO {
@@ -163,28 +165,28 @@ public class AdminDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select count(raiting) as rat from answer where not raiting = 0";
+		String sql = "select count(raiting) as rat from answer";
 		String sql_notz = "select count(raiting) as rat from answer where raiting = ?";
 		int cnt_all = 0;
-		int[] cnt_notz = new int[5];
+		int[] cnt_notz = new int[6];
 		List<Integer> result_list = new ArrayList<Integer>();
 		//System.out.println(sql);
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();pstmt.close();
-			if(rs.next()) {
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
 				cnt_all = rs.getInt("rat");
 			}
-			for(int i = 1; i<6;i++) {
+			for(int i = 0; i<6;i++) {
 				pstmt = conn.prepareStatement(sql_notz);
 				pstmt.setInt(1, i);
-				rs = pstmt.executeQuery();pstmt.close();
+				rs = pstmt.executeQuery();
 				if(rs.next()) {
-					cnt_notz[i-1] = rs.getInt("rat");
+					cnt_notz[i] = rs.getInt("rat");
 				}
 			}
-			for(int i = 0; i < 5;i++) {
+			for(int i = 0; i < 6;i++) {
 				result_list.add((cnt_notz[i]/cnt_all) * 100);
 			}
 		} catch (Exception e) {
@@ -322,5 +324,324 @@ public class AdminDAO {
 		}
 		
 		return list;
+	}
+	public BlogVo getB_detail(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select b_idx,b_title,blog.created_at,u.user_id,sum(p.hit) as b_hit,count(p.p_idx) as p_cnt,count(r.r_idx) as r_cnt\r\n" + 
+				"from blog\r\n" + 
+				"left join b_user u\r\n" + 
+				"on u.idx = blog.b_u_idx\r\n" + 
+				"left join post p\r\n" + 
+				"on p.p_b_idx = blog.b_idx\r\n" + 
+				"left join b_reply r\r\n" + 
+				"on r.r_p_idx = p.p_idx\r\n" + 
+				"where b_idx = ?"
+				+ " group by b_idx,b_title,blog.created_at,u.user_id";
+		BlogVo vo = new BlogVo();
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				vo.setB_idx(rs.getInt("b_idx"));
+				vo.setB_title(rs.getString("b_title"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setOne_liner(rs.getString("user_id"));
+				vo.setP_cnt(rs.getInt("p_cnt"));
+				vo.setB_hit(rs.getInt("b_hit"));
+				vo.setR_cnt(rs.getInt("r_cnt"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public String getBlogLastPostCre(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select created_at from post where p_b_idx = ? and rownum = 1";
+		String cre = "";
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				cre = rs.getString("created_at");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return cre;
+	}
+	public List<PostVo> getAdminPList(int b_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT p_idx, p_title, p_private, post.created_at,p_b_idx, hit, COUNT(r.r_idx) AS r_cnt, ctgr.ctgr_name\r\n" + 
+				"    FROM post\r\n" + 
+				"    LEFT JOIN b_reply r ON r.r_p_idx = p_idx\r\n" + 
+				"    LEFT JOIN category ctgr ON ctgr.ctgridx = p_ctgr\r\n" + 
+				"    WHERE p_b_idx = ?\r\n" + 
+				"    GROUP BY p_idx, p_title, p_private, post.created_at, p_b_idx, hit, ctgr.ctgr_name\r\n" + 
+				"    ORDER BY post.created_at DESC\r\n" + 
+				")\r\n" + 
+				"WHERE ROWNUM <= 5";
+		List<PostVo> list = new ArrayList<PostVo>();
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, b_idx);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				PostVo vo = new PostVo();
+				BlogVo bvo = new BlogVo();
+				categoryVo cvo = new categoryVo();
+				vo.setP_idx(rs.getInt("p_idx"));
+				vo.setP_title(rs.getString("p_title"));
+				vo.setP_private(rs.getInt("p_private"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setHit(rs.getInt("hit"));
+				vo.setR_cnt(rs.getInt("r_cnt"));
+				cvo.setCtgr_name(rs.getString("ctgr_name"));
+				vo.setP_ctgr(cvo);
+				bvo.setB_idx(rs.getInt("p_b_idx"));
+				vo.setP_b_idx(bvo);
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	public List<QuestionVo> getQ_list() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT ROWNUM AS rn, question.*\r\n" + 
+				"FROM question";
+		List<QuestionVo> list = new ArrayList<QuestionVo>();
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				QuestionVo vo = new QuestionVo();
+				vo.setQ_idx(rs.getInt("q_idx"));
+				vo.setQ_title(rs.getString("q_title"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setQ_ctgr(rs.getInt("q_ctgr"));
+				vo.setA_yn(rs.getInt("a_yn"));
+				vo.setQ_num(rs.getInt("rn"));
+				list.add(vo);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	public QuestionVo getQ_detail(int q_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT q_idx,q_title,q.created_at,q_ctgr,q_u_idx,u.user_id,img.img_path,q_content,a_yn\r\n" + 
+				"from question q\r\n" + 
+				"left join img\r\n" + 
+				"on img.q_img = q_idx " +
+				"left join b_user u \r\n" +
+				"on u.idx = q_u_idx \r\n" ;
+		QuestionVo vo = new QuestionVo();
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				vo.setQ_idx(rs.getInt("q_idx"));
+				vo.setQ_title(rs.getString("q_title"));
+				vo.setQ_content(rs.getString("q_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setQ_ctgr(rs.getInt("q_ctgr"));
+				vo.setA_yn(rs.getInt("a_yn"));
+				vo.setQ_img(rs.getString("img_path"));
+				vo.setQ_u_idx(rs.getInt("q_u_idx"));
+				vo.setUser_id(rs.getString("user_id"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public int A_write(AnswerVo avo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "insert into answer (a_idx,a_content,a_q_idx,raiting) values (a_seq.nextval,?,?,0)" ;
+		int result = 0;
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, avo.getA_content());
+			pstmt.setInt(2, avo.getA_q_idx());
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	public int UpA_yn(int q_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "update question set a_yn = 1 where q_idx = ?" ;
+		int result = 0;
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, q_idx);
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	public AnswerVo getA_detail(int q_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT a_idx,a.created_at,a.raiting,a_content \r\n" + 
+				"from answer a \r\n" + 
+				"left join question q\r\n" + 
+				"on q.q_idx = a.a_q_idx " +
+				"where q_idx = ?";
+		AnswerVo vo = new AnswerVo();
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, q_idx);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				vo.setA_idx(rs.getInt("a_idx"));
+				vo.setA_content(rs.getString("a_content"));
+				vo.setCreated_at(rs.getString("created_at"));
+				vo.setRaiting(rs.getInt("raiting"));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	public int getRatingCnt() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select count(raiting) as raiting_cnt from answer";
+		int result = 0;
+		//System.out.println(sql);
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				result = rs.getInt("raiting_cnt");
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 }

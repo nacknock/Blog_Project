@@ -1,6 +1,12 @@
 package VO;
 
 public class QuestionVo {
+	public String getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
 	public int getQ_num() {
 		return q_num;
 	}
@@ -14,6 +20,7 @@ public class QuestionVo {
 	private int a_yn;
 	private String created_at;
 	private int q_u_idx;
+	private String user_id;
 	private String q_img;
 	private String a_content;
 	private int q_num;

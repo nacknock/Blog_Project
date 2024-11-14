@@ -64,7 +64,7 @@
 
                     <!-- Page Heading -->
                     <h1 class="h3 text-gray-800 mb-15">ブログ詳細</h1>
-                    <h6 class="mb-4"><a href="#">Main</a> / <a href="#">ブログ一覧</a> / nawj0603의 블로그</h6>
+                    <h6 class="mb-4"><a href="/admin/main.do">Main</a> / <a href="/admin/blog_list.do">ブログ一覧</a> / ${vo.b_title}</h6>
                     <!-- DataTales Example -->
                     <!-- ============================================================== -->
 	                <!-- content  -->
@@ -81,16 +81,16 @@
 	                                            <div class="user-avatar-info">
 	                                                <div class="m-b-20">
 	                                                    <div class="user-avatar-name">
-	                                                        <h2 class="mb-1">nawj0603의 블로그</h2>
+	                                                        <h2 class="mb-1">${vo.b_title }</h2>
 	                                                    </div>
 	                                                </div>
 	                                                <!--  <div class="float-right"><a href="#" class="user-avatar-email text-secondary">www.henrybarbara.com</a></div> -->
 	                                                <div class="user-avatar-address">
 	                                                    <p class="border-bottom pb-3">
-	                                                        <span class="d-xl-inline-block d-block mb-2"><i class="fa-solid fa-arrow-up-right-from-square" style="color:#4e73df;"></i><a href="#">블로그 바로가기</a></span>
-	                                                        <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">作成日: 23 June, 2018  </span>
-	                                                        <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">ユーザー : <a href="#">nawj0603</a></span>
-	                                                        <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">最新投稿日: 23 June, 2018  </span>
+	                                                        <span class="d-xl-inline-block d-block mb-2"><i class="fa-solid fa-arrow-up-right-from-square" style="color:#4e73df;"></i><a href="/b/list.do?blog=${vo.b_idx }">ブログに移動</a></span>
+	                                                        <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">作成日:${ vo.created_at}  </span>
+	                                                        <span class=" mb-2 d-xl-inline-block d-block ml-xl-4">ユーザー : ${vo.one_liner }</span>
+	                                                        <span class="mb-2 ml-xl-4 d-xl-inline-block d-block">最新投稿日: ${p_created }  </span>
 	                                                    </p>
 	                                                </div>
 	                                            </div>
@@ -118,7 +118,7 @@
 	                                <div class="card-body">
 	                                    <div class="d-inline-block">
 	                                        <h5 class="text-muted">総閲覧数</h5>
-	                                        <h2 class="mb-0"> 10,28,056</h2>
+	                                        <h2 class="mb-0"> ${vo.b_hit }</h2>
 	                                    </div>
 	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-info-light mt-1">
 	                                        <i class="fa fa-eye fa-fw fa-sm text-info"></i>
@@ -137,7 +137,7 @@
 	                                <div class="card-body">
 	                                    <div class="d-inline-block">
 	                                        <h5 class="text-muted">総投稿数</h5>
-	                                        <h2 class="mb-0"> 24,763</h2>
+	                                        <h2 class="mb-0"> ${vo.p_cnt }</h2>
 	                                    </div>
 	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-primary-light mt-1">
 	                                        <i class="fa-solid fa-newspaper" style="color: #4e73df;"></i>
@@ -156,7 +156,7 @@
 	                                <div class="card-body">
 	                                    <div class="d-inline-block">
 	                                        <h5 class="text-muted">総コメント数</h5>
-	                                        <h2 class="mb-0">14</h2>
+	                                        <h2 class="mb-0">${vo.r_cnt }</h2>
 	                                    </div>
 	                                    <div class="float-right icon-circle-medium  icon-box-lg  bg-secondary-light mt-1">
 	                                        <i class="fa-solid fa-comment-dots" style="color: #f6c23e;"></i>
@@ -191,41 +191,26 @@
 	                                    <table class="table">
 	                                        <thead>
 	                                            <tr class="border-0">
+	                                                <th class="border-0">投稿日</th>
 	                                                <th class="border-0">タイトル</th>
 	                                                <th class="border-0">公開設定</th>
-	                                                <th class="border-0">投稿日</th>
 	                                                <th class="border-0">閲覧数</th>
 	                                                <th class="border-0">コメント数</th>
 	                                                <th class="border-0">カテゴリ</th>
-	                                                <th class="border-0">ハッシュタグ</th>
 	                                            </tr>
 	                                        </thead>
 	                                        <tbody>
-	                                            <tr onclick="location.href='#'" style="cursor: pointer;">
-	                                                <td>글 제목</td>
-	                                                <td>공개</td>
-	                                                <td>2014-04-09</td>
-	                                                <td>1,00,000</td>
-	                                                <td>14</td>
-	                                                <td>여행</td>
-	                                                <td>
-	                                                    <div class="dropdown float-right">
-	                                                        <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="true">
-	                                                                <i class="mdi mdi-dots-vertical"></i>
-	                                                                     </a>
-	                                                        <div class="dropdown-menu dropdown-menu-right">
-	                                                            <!-- item-->
-	                                                            <a href="javascript:void(0);" class="dropdown-item">#여행</a>
-	                                                            <!-- item-->
-	                                                            <a href="javascript:void(0);" class="dropdown-item">#강원도</a>
-	                                                            <!-- item-->
-	                                                            <a href="javascript:void(0);" class="dropdown-item">#폭설</a>
-	                                                            <!-- item-->
-	                                                            <a href="javascript:void(0);" class="dropdown-item">#조난</a>
-	                                                        </div>
-	                                                    </div>
-	                                                </td>
+	                                        <c:forEach var="list" items="${list }">
+	                                            <tr onclick="location.href='/b/detail.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}'" style="cursor: pointer;">
+	                                                <td>${list.created_at }</td>
+	                                                <td>${list.p_title }</td>
+	                                                <c:if test="${list.p_private eq 0 }"><td>公開</td></c:if>
+	                                                <c:if test="${list.p_private eq 1 }"><td>非公開</td></c:if>
+	                                                <td>${list.hit }</td>
+	                                                <td>${list.r_cnt }</td>
+	                                                <td>${list.p_ctgr.ctgr_name }</td>
 	                                            </tr>
+                                            </c:forEach>
 	                                        </tbody>
 	                                    </table>
 	                                </div>

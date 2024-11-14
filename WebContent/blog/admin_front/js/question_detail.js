@@ -28,3 +28,28 @@ function cancel(){
 
 
 }
+
+function submit(a_q_idx) {
+	a_q_idx = parseInt(a_q_idx,10);
+							
+    $.ajax({
+        url: '/admin/answer_write.do', // Ajax 요청 URL
+        type: 'GET',
+        data:{
+            q_idx:a_q_idx,
+            a_content:$('#a-txtarea').val(),
+        },
+        success: function(data) {
+            console.log(data.result+" : result");
+            if(data.result === 'ok'){
+                console.log("123");
+                window.location.href = window.location.href;
+            }else if(data.result === 'ok'){
+                alert('通信エーラが発生しました。');
+            }
+        },
+        error: function() {
+            alert('通信エーラが発生しました。');
+        }
+    });
+}
