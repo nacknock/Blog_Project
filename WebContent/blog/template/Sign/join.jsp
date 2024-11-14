@@ -83,7 +83,7 @@
               <div class="row">
                 <div class="col-12">
                   <div class="mb-5">
-                    <h3>join</h3>
+                    <h3>新規登録</h3>
                   </div>
                 </div>
               </div>
@@ -94,34 +94,46 @@
                       <input type="text" class="form-control" name="userid" id="userid" placeholder="id" required>
                       <label for="userid" class="form-label">Id</label>
                     </div>
+                    <c:if test = "${not empty msg }">
+                      		<label style="margin: 0 0 0 90px;color: red;">${msg}</label>
+	                   	<c:remove var="msg" scope="session" /><!-- 세션 안에 있는 msg라는 속성을 삭제 -->
+                   	</c:if>
                   </div>
                   <div class="col-12">
                     <div class="form-floating mb-3">
-                      <input type="password" class="form-control" name="pw" id="password" value="" placeholder="Password" required>
-                      <label for="password" class="form-label">Password</label>
+                      <input type="password" class="form-control" name="pw" id="password" value="" placeholder="半角英数字記号・9文字以上13文字以下" required>
+                      <label for="password" class="form-label">半角英数字記号・9文字以上13文字以下</label>
                     </div>
+                    <c:if test = "${not empty msg_pw }">
+                      		<label style="margin: 0 0 0 10px;color: red;">${msg_pw}</label>
+	                   	<c:remove var="msg_pw" scope="session" /><!-- 세션 안에 있는 msg라는 속성을 삭제 -->
+                   	</c:if>
                   </div>
                   <div class="col-12">
                     <div class="form-floating mb-3">
-                      <input type="password" class="form-control" name="pw_chk" id="pw_chk" value="" placeholder="pw_chk" required>
-                      <label for="pw_chk" class="form-label">Password Check</label>
+                      <input type="password" class="form-control" name="pw_chk" id="pw_chk" value="" placeholder="パスワード確認" required>
+                      <label for="pw_chk" class="form-label">パスワード確認</label>
                     </div>
+                    <c:if test = "${not empty msg_pw_chk }">
+                      		<label style="margin: 0 0 0 90px;color: red;">${msg_pw_chk}</label>
+	                   	<c:remove var="msg_pw_chk" scope="session" /><!-- 세션 안에 있는 msg라는 속성을 삭제 -->
+                   	</c:if>
                   </div>
                   <div class="col-12">
                     <div class="form-floating mb-3">
                       <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
-                      <label for="email" class="form-label">Email</label>
+                      <label for="email" class="form-label">メールアドレス</label>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" name="nickname" id="nickname" placeholder="name@example.com" required>
-                      <label for="nickname" class="form-label">Nickname</label>
+                      <label for="nickname" class="form-label">ニックネーム</label>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="d-grid">
-                      <button class="btn bsb-btn-2xl btn-primary" type="submit">join now</button>
+                      <button class="btn bsb-btn-2xl btn-primary" type="submit">登録する</button>
                     </div>
                   </div>
                 </div>
@@ -130,7 +142,7 @@
                 <div class="col-12">
                   <hr class="mt-5 mb-4 border-secondary-subtle">
                   <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end">
-                    <a href="/login.do" class="link-secondary text-decoration-none">Log in</a>
+                    <a href="/sign/login.do" class="link-secondary text-decoration-none">ログイン</a>
                   </div>
                 </div>
               </div>              

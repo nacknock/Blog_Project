@@ -82,13 +82,13 @@
       <div class="card mt-5">
         <div class="card-body py-5 px-lg-5">
           <h3 class="fw-normal text-dark mt-4">
-            메일 인증
+            認証コードの入力
           </h3>
           <p class="mt-4 mb-1">
-            메일을 보냈습니다.
+            送信したメールアドレスに届いたコードを入力してください。
           </p>
           <p>
-            확인하고 번호를 입력하세요.
+            認証コードを入力
           </p>
           <form>
             <div id="otp" class="row mt-4 pt-2 mb-20" style="display: flex;justify-content: center;">
@@ -101,18 +101,18 @@
             </div>
 
             <button type="button" class="btn bsb-btn-2xl btn-primary" id="postbtn">
-              인증하기
+              認証して完了
             </button>
           </form>
         </div>
       </div>
 
-      <p class="text-center text-muted mt-4" style="color: white !important;">
+      <!-- <p class="text-center text-muted mt-4" style="color: white !important;">
         인증번호가 가지 않았나요?
         <a href="#!" class="text-decoration-none ms-2" style="color: white;">
           다시 받기
         </a>
-      </p>
+      </p> -->
     </div>
   </div>
 

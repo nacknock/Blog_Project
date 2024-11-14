@@ -42,9 +42,8 @@ function submit(a_q_idx) {
         success: function(data) {
             console.log(data.result+" : result");
             if(data.result === 'ok'){
-                console.log("123");
                 window.location.href = window.location.href;
-            }else if(data.result === 'ok'){
+            }else if(data.result === 'nok'){
                 alert('通信エーラが発生しました。');
             }
         },

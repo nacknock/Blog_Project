@@ -114,11 +114,12 @@
 								<input disabled style="border-top: none;border-left: none;border-right: none; text-align: center;" class="form-control" type="text" name="p_title" id="p_title">
 							</div>
 							<div class="col-12">
-								<textarea id="txt_detail" disabled class="form-control" name="q_detail" rows="15"
+								<textarea id="txt_detail" disabled class="form-control" id=""a_content"" name="a_content" rows="15"
 								style="resize:none;background: white !important;">${a_vo.a_content }</textarea>
 							</div>
 							<div class="col-12 d-flex justify-content-center pt-30 pb-30">
 							<input type="hidden" value="${a_vo.a_idx }" name="a_idx" id="a_idx">
+							<c:if test="${a_vo.raiting == 0 }">
 								<div class="col-6 d-flex align-items-center" style="flex-direction:column;">
 									<label class="mb-30">回答の満足度はいかがでしたか？</label>
 									<div class="mb-30" style="font-size: xx-large;color:#214252;">
@@ -129,6 +130,24 @@
 										<i class="fa-regular fa-face-laugh" onclick="raiting(5)"></i><!-- <i class="fa-solid fa-face-laugh"></i> -->
 									</div>
 								</div>
+							</c:if>
+							<c:if test="${a_vo.raiting != 0 }">
+								<div class="col-6 d-flex align-items-center" style="flex-direction:column;">
+									<label class="mb-30">評価いただきありがとうございます。</label>
+									<div class="mb-30" style="font-size: xx-large;color:#214252;">
+										<c:if test="${a_vo.raiting >= 1}"><i class="fa-solid fa-face-angry"></i></c:if><!-- <i class="fa-solid fa-face-angry"></i> -->
+                                        <c:if test="${a_vo.raiting == 0 }"><i class="fa-regular fa-face-angry"></i></c:if>
+                                        <c:if test="${a_vo.raiting >= 2 }"><i class="fa-solid fa-face-frown"></i></c:if>
+                                        <c:if test="${a_vo.raiting < 2 }"><i class="fa-regular fa-face-frown"></i></c:if>
+                                        <c:if test="${a_vo.raiting >= 3 }"><i class="fa-solid fa-face-meh"></i></c:if>
+                                        <c:if test="${a_vo.raiting < 3 }"><i class="fa-regular fa-face-meh"></i></c:if>
+                                        <c:if test="${a_vo.raiting >= 4 }"><i class="fa-solid fa-face-smile"></i></c:if>
+                                        <c:if test="${a_vo.raiting < 4 }"><i class="fa-regular fa-face-smile"></i></c:if>
+                                        <c:if test="${a_vo.raiting == 5 }"><i class="fa-solid fa-face-laugh"></i></c:if>
+                                        <c:if test="${a_vo.raiting < 5 }"><i class="fa-regular fa-face-laugh"></i></c:if>
+									</div>
+								</div>
+							</c:if>
 							</div>
 						</div>					
 					</div>
@@ -168,6 +187,7 @@
     <script src="/blog/js/navbar.js"></script>
     <script src="/blog/js/counter.js"></script>
     <script src="/blog/js/custom.js"></script>
+    <script src="/blog/js/q_detail.js"></script>
     
   </body>
   </html>

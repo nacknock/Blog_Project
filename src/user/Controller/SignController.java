@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import Service.Sign.MailAuth;
 import Service.Sign.MailSend;
+import Service.Sign.UserCheck;
 import Service.Sign.login;
 import Service.Sign.logout;
 
@@ -54,6 +55,10 @@ public class SignController extends HttpServlet {
 			page="/blog/template/Sign/join.jsp";
 			break;
 		case "/mailAction.do":
+			new UserCheck().command(request, response);
+			if (response.isCommitted()) { // 응답이 이미 전송된 경우
+		        return; // 더 이상 처리하지 않음
+		    }
 			new MailSend().command(request, response);
 			page=null;
 			response.sendRedirect("/sign/mail_auth.do");

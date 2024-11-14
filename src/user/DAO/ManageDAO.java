@@ -596,7 +596,7 @@ public class ManageDAO {
 		
 		return list;
 	}
-public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
+	public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -2009,6 +2009,31 @@ public List<categoryVo> sel_ctgrUpdate(int b_idx, int ctgridx) {
 			}
 		}
 		return list;
+	}
+	public int upRaiting(int raiting, int a_idx) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "update answer set raiting = ? where a_idx = ?";
+		int result = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, raiting);
+			pstmt.setInt(2, a_idx);
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 }

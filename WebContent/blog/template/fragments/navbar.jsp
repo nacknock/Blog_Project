@@ -43,17 +43,17 @@
 								<li><a href="category.html">Business</a></li>
 								<li><a href="category.html">Politics</a></li> -->
 								<li class="has-children">
-									<a></a>
+									<a>ユーザー</a>
 									<c:if test = "${not empty userid }">
                       					<ul class="dropdown">
-											<li><a href="/sign/logout.do">Log out</a></li>
+											<li><a href="/sign/logout.do">ログアウト</a></li>
 											<li><a href="/manage/main.do">ブログ管理</a></li>
 										</ul>
 	                   				</c:if>
 									<c:if test = "${empty userid }">
                       					<ul class="dropdown">
-											<li><a href="/sign/login.do">Login</a></li>
-											<li><a href="/sign/join.do">join</a></li>
+											<li><a href="/sign/login.do">ログイン</a></li>
+											<li><a href="/sign/join.do">新規登録</a></li>
 										</ul>
 	                   				</c:if>
 								</li>

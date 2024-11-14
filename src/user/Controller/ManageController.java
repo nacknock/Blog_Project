@@ -44,6 +44,7 @@ import Service.manage.q_list;
 import Service.manage.q_paging;
 import Service.manage.q_writeAction;
 import Service.manage.qna_write;
+import Service.manage.raiting;
 import Service.manage.reply_del;
 import Service.manage.reply_paging;
 
@@ -145,6 +146,9 @@ public class ManageController extends HttpServlet {
 		case "/qna_detail.do":			
 			new q_detail().command(request, response);
 			page="/blog/template/manage/q_detail.jsp";
+			break;
+		case "/raiting.do":			
+			new raiting().command(request, response);
 			break;
 		case "/ctgr_manage.do":			
 			new openCtgr().command(request, response);

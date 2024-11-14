@@ -345,5 +345,44 @@ public class SignDAO {
 			}
 		}
 		return result;
+	}
+	public int checkUser(String userid) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String query = "select user_id from b_user where user_id = ?";
+		
+		int result = 0;
+		
+		try {
+			conn = DBManager.getInstance().getConnection();
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, userid);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				if(userid.equals(rs.getString("user_id"))) {
+					result = -1;
+				}else {
+					result = 1;
+				}
+			}else {
+				result = 1;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return result;
 	}	
 }
