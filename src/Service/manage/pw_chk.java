@@ -28,12 +28,12 @@ public class pw_chk implements Action {
 	        int page = Integer.parseInt(request.getParameter("page"));
 	        
 	        if (page == 0) {
-	            session.setAttribute("msg", "¹®Á¦ ¹ß»ı.");
+	            session.setAttribute("msg", "ë¬¸ì œ ë°œìƒ.");
 	            response.sendRedirect("/manage/pw_chk.do?page=" + page);
-	            return; // ¸®µğ·º¼Ç ÈÄ ¸Ş¼­µå Á¾·á
+	            return; // ë¦¬ë””ë ‰ì…˜ í›„ ë©”ì„œë“œ ì¢…ë£Œ
 	        } else {
 	            int result = SignDAO.getInstance().getSelectIdPw(userid, pw);
-	            if (result == 1) { // ·Î±×ÀÎ ¼º°ø
+	            if (result == 1) { // ë¡œê·¸ì¸ ì„±ê³µ
 	                session.setAttribute("checked", true);
 	                if (page == 1) {
 	                    response.sendRedirect("/manage/user.do");
@@ -45,13 +45,13 @@ public class pw_chk implements Action {
 		                	if (page == 3) {
 			                    response.sendRedirect("/manage/user_del.do");
 			                } else {
-			                    session.setAttribute("msg", "¹®Á¦ ¹ß»ı.");
+			                    session.setAttribute("msg", "ë¬¸ì œ ë°œìƒ.");
 			                    response.sendRedirect("/manage/pw_chk.do?page=" + page);
 			                }
 		                }
 	                }
-	            } else { // ·Î±×ÀÎ ½ÇÆĞ
-	                session.setAttribute("msg", "ºñ¹Ğ¹øÈ£°¡ ´Ù¸¨´Ï´Ù.");
+	            } else { // ë¡œê·¸ì¸ ì‹¤íŒ¨
+	                session.setAttribute("msg", "ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé•ã„ã¾ã™ã€‚");
 	                response.sendRedirect("/manage/pw_chk.do?page=" + page);
 	            }
 	        }

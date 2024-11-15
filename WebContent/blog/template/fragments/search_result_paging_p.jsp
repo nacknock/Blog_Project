@@ -20,7 +20,7 @@
 	<div>
 		<span class="date">${p_list.p_b_idx.b_title} / ${p_list.created_at}</span>
 		<h2><a href="/b/detail.do?blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}">${p_list.p_title}</a></h2>
-		<p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">${p_list.p_content}</p>
+		<div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;max-height: 45px;">${p_list.p_content}</div>
 		<p><a href="/b/detail.do?blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}" class="btn btn-sm btn-outline-primary">Read More</a></p>
 	</div>
 </div>

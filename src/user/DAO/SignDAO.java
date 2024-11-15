@@ -228,7 +228,7 @@ public class SignDAO {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(query);
 			
-			pstmt.setString(1, vo.getNickname()+"의 blog");
+			pstmt.setString(1, vo.getNickname()+"のブログ");
 			pstmt.setInt(2, vo.getIdx());
 			
 			result = pstmt.executeUpdate();//insert,update,delete 쿼리는 정상적으로 실행했을때 0보다 큰값을 리턴한다

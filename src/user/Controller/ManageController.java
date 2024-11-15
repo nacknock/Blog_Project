@@ -113,7 +113,7 @@ public class ManageController extends HttpServlet {
 			break;
 		case "/user_update.do":			
 			new UserUpdate().command(request, response);
-			page="/blog/template/manage/main.jsp";
+			page="/manage/main.do";
 			break;
 		case "/pw_update.do":			
 			new PwUpdate().command(request, response);

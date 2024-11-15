@@ -263,26 +263,30 @@ public class BlogDAO {
 		if(!query_term.equals("")) {
 			query_tagif = "left join tag on tag.tag_p_id = post.p_idx ";
 		}
-		String sql_top = "select * from (\r\n" + 
-				"select * from (\r\n" + 
-				"select /*+ index_desc(post post_pk) */\r\n" + 
-				"p_idx,p_ctgr,p_private,p_title,p_content,category.ctgr_name,category.ctgr_private,img.img_path,post.created_at,p_b_idx,hit from post \r\n" + 
-				"left join img on img.post_img = p_idx\r\n" + 
-				"left join blog on post.p_b_idx = blog.b_idx " +
-				"left join category on category.ctgridx = post.p_ctgr " + query_tagif +
-				"where blog.b_idx = ? "+ my + query_keyword +" " + query_type;
+		String sql_top = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT p_idx, p_ctgr, p_private, p_title, p_content,\r\n" + 
+				"           category.ctgr_name, category.ctgr_private, img.img_path,\r\n" + 
+				"           post.created_at, p_b_idx, hit,\r\n" + 
+				"           ROW_NUMBER() OVER (ORDER BY post.created_at DESC) AS rn\r\n" + 
+				"    FROM post\r\n" + 
+				"    LEFT JOIN img ON img.post_img = p_idx\r\n" + 
+				"    LEFT JOIN blog ON post.p_b_idx = blog.b_idx \r\n" + 
+				"    LEFT JOIN category ON category.ctgridx = post.p_ctgr \r\n" + 
+				"    WHERE blog.b_idx = ? "+ my + query_keyword +" " + query_type +" ";
 		
-		String sql_middle = ") where rownum <= ?*? ";
+		String sql_middle = ")\r\n" + 
+				"WHERE rn > (? - 1) * ? AND rn <= ? * ?";
 		if(!query_term.equals("")) {
 			sql_top = sql_top + query_term+" ";
 		}
-		sql_top = sql_top + " order by post.created_at ";
+		sql_top = sql_top + " order by post.created_at desc ";
 		
-		String sql_bot = " ) where rownum > (?-1)*? ";
+		String sql_bot = " ";
 		
 		sql = sql_top + sql_middle + sql_bot;
 		
-		System.out.println(sql);
+		//System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
@@ -330,7 +334,7 @@ public class BlogDAO {
 		
 		return list;
 	}
-	public int getCountByBlogMain(String my, ManageUserDTO dto, String query_keyword) {
+	public int getCountByBlogMain(String my, ManageUserDTO dto, String query_keyword, String query_type, String query_term) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -340,12 +344,12 @@ public class BlogDAO {
 			sql = " select count(*) as cnt from post "
 					+ " left join blog "
 					+ " on blog.b_idx = post.p_b_idx "
-					+ " where blog.b_idx = ? and post.p_private = 0 " + query_keyword;
+					+ " where blog.b_idx = ? and post.p_private = 0 " + query_keyword + query_type + query_term;
 		}else {
 			sql = " select count(*) as cnt from post "
 					+ " left join blog "
 					+ " on blog.b_idx = post.p_b_idx "
-					+ " where blog.b_idx = ? " + query_keyword;	
+					+ " where blog.b_idx = ? " + query_keyword + query_type + query_term;	
 		}
 		
 		//System.out.println(sql);
@@ -379,7 +383,7 @@ public class BlogDAO {
 		String sql = null;
 		List<categoryVo> list = new ArrayList<categoryVo>();
 		if(!my.equals("")) {
-			System.out.println(123);
+			//System.out.println(123);
 			sql = " select category.*,count(post.p_idx) as ctgr_p_cnt "
 					+ "from category "
 					+ "left join post "
@@ -387,7 +391,7 @@ public class BlogDAO {
 					+ "where ctgr_b_idx = ? and ctgr_private = 0 "
 					+ " group by ctgridx,ctgr_name,ctgr_b_idx,ctgr_private ";
 		}else {
-			System.out.println(456);
+			//System.out.println(456);
 			sql = " select category.*,count(post.p_idx) as ctgr_p_cnt "
 					+ "from category "
 					+ "left join post "
@@ -468,7 +472,7 @@ public class BlogDAO {
 		             "WHERE ROWNUM <= 3 " +  // 그 후 최대 3개 행 선택
 		             ")";
 		}
-		
+	
 		List<PostVo> list = new ArrayList<PostVo>();
 		
 		
@@ -479,7 +483,6 @@ public class BlogDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getBlog().getB_idx());
 			rs = pstmt.executeQuery();
-			
 			while(rs.next()) {
 				PostVo vo = new PostVo();
 				categoryVo cvo = new categoryVo();
@@ -803,12 +806,12 @@ public class BlogDAO {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				System.out.println("b_title : "+rs.getString("b_title"));
+				//System.out.println("b_title : "+rs.getString("b_title"));
 				PostVo vo = new PostVo();
 				BlogVo bvo = new BlogVo();
 				vo.setP_idx(rs.getInt("p_idx"));
 				vo.setP_title(rs.getString("p_title"));
-				vo.setP_title(rs.getString("p_content"));
+				vo.setP_content(rs.getString("p_content"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setImg_path(rs.getString("img_path"));
 				bvo.setB_idx(rs.getInt("p_b_idx"));
@@ -927,13 +930,20 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		List<TagVo> list = new ArrayList<TagVo>();
-			sql = " select tag.* "
-					+ "from tag "
-					+ "left join post "
-					+ "on tag_p_id = post.p_idx "
-					+ "left join category "
-					+ "on category.ctgridx = post.p_ctgr "
-					+ "where post.p_b_idx = ? " + my;
+			sql = " SELECT tag.*\r\n" + 
+					"FROM (\r\n" + 
+					"    SELECT tag.*, \r\n" + 
+					"           ROW_NUMBER() OVER (PARTITION BY tag.tag_name ORDER BY post.hit DESC) AS rn\r\n" + 
+					"    FROM tag\r\n" + 
+					"    LEFT JOIN post ON tag.tag_p_id = post.p_idx\r\n" + 
+					"    LEFT JOIN category ON category.ctgridx = post.p_ctgr\r\n" + 
+					"    WHERE post.p_b_idx = ? " + my + " " +
+					") tag\r\n" + 
+					"    LEFT JOIN post ON tag.tag_p_id = post.p_idx\r\n" + 
+					"    LEFT JOIN category ON category.ctgridx = post.p_ctgr\r\n" + 
+					"WHERE rn = 1\r\n" + my + " " +
+					"AND ROWNUM <= 10\r\n" + 
+					"ORDER BY post.hit DESC";
 		
 		//System.out.println(sql);
 		try {
@@ -1113,13 +1123,15 @@ public class BlogDAO {
 		String sql = null;
 		List<TagVo> list = new ArrayList<TagVo>();
 		
-			sql = "select * from ( " + 
-					"    select tag.*, rownum rn " + 
-					"    from tag " + 
-					"    left join post on p_idx = tag.tag_p_id " + 
-					"    order by post.hit " + 
-					") " + 
-					"where rownum <= 2";	
+			sql = "SELECT *\r\n" + 
+					"FROM (\r\n" + 
+					"    SELECT tag.tag_name, COUNT(*) AS tag_count\r\n" + 
+					"    FROM tag\r\n" + 
+					"    GROUP BY tag.tag_name\r\n" + 
+					"    HAVING COUNT(*) > 1\r\n" + 
+					"    ORDER BY COUNT(*) DESC\r\n" + 
+					")\r\n" + 
+					"WHERE ROWNUM <= 2";	
 		
 		
 		//System.out.println(sql);
@@ -1130,9 +1142,7 @@ public class BlogDAO {
 			
 			while(rs.next()) {
 				TagVo vo = new TagVo();
-				vo.setTag_id(rs.getInt("tag_id"));
 				vo.setTag_name(rs.getString("tag_name"));
-				vo.setTag_p_id(rs.getInt("tag_p_id"));
 				list.add(vo);
 			}
 			
@@ -1170,7 +1180,7 @@ public class BlogDAO {
 					"		             LEFT JOIN blog ON post.p_b_idx = blog.b_idx \r\n" + 
 					"		             LEFT JOIN category ON category.ctgridx = post.p_ctgr \r\n" + 
 					"		             LEFT JOIN tag ON tag.tag_p_id = post.p_idx \r\n" + 
-					"		             WHERE ROWNUM <= 5 \r\n" + 
+					"		             WHERE ROWNUM <= 7 and tag.tag_name = ? \r\n" + 
 					"		             ) post\r\n" + 
 					"                     \r\n" + 
 					"                     LEFT JOIN img ON img.post_img = post.p_idx \r\n" + 
@@ -1184,6 +1194,7 @@ public class BlogDAO {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, tag_name);
+			pstmt.setString(2, tag_name);
 			rs = pstmt.executeQuery();
 			int i = 1;
 			while(rs.next()) {

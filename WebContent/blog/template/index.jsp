@@ -60,7 +60,7 @@
 			<div class="row align-items-stretch retro-layout">
 			<c:forEach var="list" items="${hitTop6list}">
 				<div class="col-md-4">
-					<a href="/b/list.do?blog=${list.p_b_idx}&&p=${list.p_idx}" class="h-entry mb-30 v-height gradient">
+					<a href="/b/list.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}" class="h-entry mb-30 v-height gradient">
 					<c:if test="${empty list.img_path }">
 		              <div class="featured-img" style="background-image: url('/blog/images/post_not_image.jpg');"></div>
 		            </c:if>
@@ -123,7 +123,7 @@
 				<div class="col-md-3">
 					<ul class="list-unstyled blog-entry-sm">
 					<c:forEach var="list" items="${cate1list5}">
-						<c:if test="${list.rn eq 3 or list.rn eq 4 or list.rn eq 5}">
+						<c:if test="${list.rn eq 3 or list.rn eq 4 or list.rn eq 5 or list.rn eq 6 or list.rn eq 7}">
 						<li>
 							<span class="date">${list.created_at}</span>
 							<h3><a href="/b/detail.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}">${list.p_title}</a></h3>
@@ -180,14 +180,14 @@
 								<p><a href="/b/detail.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}" class="btn btn-sm btn-outline-primary">もっと見る</a></p>
 							</div>
 						</div>
-					</div>
 					</c:if>
 				</c:forEach>
+					</div>
 				</div>
 				<div class="col-md-3">
 					<ul class="list-unstyled blog-entry-sm">
-					<c:forEach var="list" items="${cate1list5}">
-						<c:if test="${list.rn eq 3 or list.rn eq 4 or list.rn eq 5}">
+					<c:forEach var="list" items="${cate2list5}">
+						<c:if test="${list.rn eq 3 or list.rn eq 4 or list.rn eq 5 or list.rn eq 6 or list.rn eq 7}">
 						<li>
 							<span class="date">${list.created_at}</span>
 							<h3><a href="/b/detail.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}">${list.p_title}</a></h3>

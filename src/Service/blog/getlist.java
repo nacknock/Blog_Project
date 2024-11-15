@@ -64,7 +64,7 @@ public class getlist implements Action {
 		
 		if(request.getParameter("term") != null &&!request.getParameter("term").equals("")) {
 			term = request.getParameter("term");
-			query_term = "and tag.tag_id = "+term+" ";
+			query_term = "and tag.tag_name = '"+term+"' ";
 		}
 		
 		if(request.getParameter("pageNum") != null) {
@@ -81,7 +81,9 @@ public class getlist implements Action {
 
 		List<PostVo> list = BlogDAO.getInstance().getListByBlog(cri,dto,my,query_keyword,query_type,query_term);
 		
-		int count = BlogDAO.getInstance().getCountByBlogMain(my,dto,query_keyword);
+		int count = BlogDAO.getInstance().getCountByBlogMain(my,dto,query_keyword,query_type,query_term);
+		
+		System.out.println(count + " : cnt");
 		
 		PageVo pvo = new PageVo(cri, count);
 		

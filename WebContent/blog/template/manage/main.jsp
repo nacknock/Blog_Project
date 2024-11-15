@@ -173,9 +173,9 @@
 					</div>
 					<div class="sidebar-box">
 						<h3 class="heading">最近ついたコメント</h3>
-						<c:if test="${empty p_list3}">
+						<c:if test="${empty rep_list3}">
 						<div class="post-entry-sidebar">
-						<h2>最近投稿した記事はありませんでした</h2>
+						<h2>最近ついたコメントはありませんでした</h2>
 						</div>
 						</c:if>
 						<div class="post-entry-sidebar">

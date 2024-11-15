@@ -19,11 +19,11 @@ public class User_Del implements Action {
 		if(check) {
 			String userid = (String)request.getSession().getAttribute("userid");
 			
-			ManageUserDTO dto =  ManageDAO.getInstance().loadPage(userid);
+			ManageUserDTO dto =  ManageDAO.getInstance().selSidebar(userid);
 			
 			request.setAttribute("dto", dto);
 		}else {
-			response.sendRedirect("/manage/main");
+			response.sendRedirect("/manage/main.do");
 		}
 
 	}

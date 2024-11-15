@@ -42,6 +42,20 @@
    <link rel="stylesheet" href="/blog/css/btn.css">
    <link rel="stylesheet" href="/blog/css/mg_pd.css">
 
+	<style>
+	.img-link {
+    display: inline-block; /* 블록 요소로 설정하여 크기 조정 가능 */
+    width: 230px; /* 원하는 너비 */
+    height: 130px; /* 원하는 높이 */
+    overflow: hidden; /* 넘치는 부분 숨김 */
+}
+
+.img-link img {
+    width: 100%; /* 부모 요소에 맞게 너비 조정 */
+    height: 100%; /* 부모 요소에 맞게 높이 조정 */
+    object-fit: cover; /* 비율 유지 및 잘리기 */
+}
+	</style>
 
   <title>Blogy &mdash; Free Bootstrap 5 Website Template by Untree.co</title>
 </head>
@@ -90,12 +104,12 @@
         </c:if>
       	<c:forEach var="list" items="${list }">
           <div class="blog-entry d-flex blog-entry-search-item">
-            <a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="img-link me-4">
+            <a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="" style="width: 230px;height: 230px;margin-right:24px;">
             <c:if test="${empty list.img_path }">
-              <img src="/blog/images/post_not_image.jpg" alt="Image" class="img-fluid">
+              <img src="/blog/images/post_not_image.jpg" alt="Image" class="" style="width: 230px;height: 230px;border-radius:10px;">
             </c:if>
             <c:if test="${not empty list.img_path }">
-              <img src="/blog/images/${list.img_path }" alt="Image" class="img-fluid">
+              <img src="/blog/images/${list.img_path }" alt="Image" class="" style="width: 230px;height: 230px;border-radius:10px;">
             </c:if>
             </a>
             <div>
@@ -104,10 +118,10 @@
 				<i class="fa-solid fa-eye-slash pri-i"></i>
 			  </c:if>
               <h2><a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}">${list.p_title }</a></h2>
-              <p style=" display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;
+              <div style=" display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;
               overflow: hidden;text-overflow: ellipsis;max-width: 301px;">
               	${list.p_content}
-              </p>
+              </div>
               <p><a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${list.p_idx}" class="btn btn-sm btn-outline-primary">もっと見る</a></p>
             </div>
           </div>
@@ -120,18 +134,18 @@
 		<input type="hidden" id="keyword" value="${pageMaker.cri.keyword}">
 		<input type="hidden" id="term" value="${pageMaker.cri.term}">
 		<c:if test="${pageMaker.prev}">
-			<a style="color: #FFF !important;cursor:pointer;" onclick="prev_page('${pageMaker.startPage-1}')">←</a>
+			<a style="color: #FFF !important;cursor:pointer;" href="/b/list.do?blog=${dto.blog.b_idx }&pageNum=${pageMaker.startPage-1}&amount=${pageMaker.cri.amount}&term=${pageMaker.cri.term}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">←</a>
 		</c:if>
 		<c:forEach var="page" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
 			<c:if test="${pageMaker.cri.pageNum == page}">
 				<span id="nowpage">${page}</span>
 			</c:if>
 			<c:if test="${pageMaker.cri.pageNum != page}">
-				<a style="cursor:pointer;color: #FFF !important;" onclick="page('${page}')">${page}</a>
+				<a style="cursor:pointer;color: #FFF !important;" href="/b/list.do?blog=${dto.blog.b_idx}&pageNum=${page}&amount=${pageMaker.cri.amount}&term=${pageMaker.cri.term}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">${page}</a>
 			</c:if>								
 		</c:forEach>
 		<c:if test="${pageMaker.next}">
-			<a style="cursor:pointer;color: #FFF !important;" onclick="next_page('${pageMaker.endPage+1}')">→</a>
+			<a style="cursor:pointer;color: #FFF !important;" href="/b/list.do?blog=${dto.blog.b_idx }&pageNum=${pageMaker.endPage+1}&amount=${pageMaker.cri.amount}&term=${pageMaker.cri.term}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">→</a>
 		</c:if>
 		</div>
         </div>
@@ -201,7 +215,7 @@
             <h3 class="heading">ハッシュタグ</h3>
             <ul class="tags">
             <c:forEach var="taglist" items="${taglist }">
-              <li><a href="/b/list.do?blog=${dto.blog.b_idx}&&term=${taglist.tag_id}">#${taglist.tag_name }</a></li>
+              <li><a href="/b/list.do?blog=${dto.blog.b_idx}&&term=${taglist.tag_name}">#${taglist.tag_name }</a></li>
             </c:forEach>
             </ul>
           </div>

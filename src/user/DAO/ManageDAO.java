@@ -1,6 +1,7 @@
 package user.DAO;
 
 import java.io.File;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -168,6 +169,8 @@ public class ManageDAO {
 				"		on b.b_u_idx = b_user.idx\r\n" + 
 				"		where b_user.user_id = ?";
 		
+		System.out.println(sql);
+		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -175,10 +178,14 @@ public class ManageDAO {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				dto.getUser().setIdx(rs.getInt("idx"));
-				dto.getBlog().setB_idx(rs.getInt("b_idx"));
-				dto.getBlog().setB_title(rs.getString("b_title"));
-				dto.getUser().setImg_path(rs.getString("img_path"));
+				B_userVo uvo = new B_userVo();
+				BlogVo bvo = new BlogVo();
+				uvo.setIdx(rs.getInt("idx"));
+				bvo.setB_idx(rs.getInt("b_idx"));
+				bvo.setB_title(rs.getString("b_title"));
+				uvo.setImg_path(rs.getString("img_path"));
+				dto.setBlog(bvo);
+				dto.setUser(uvo);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -840,16 +847,20 @@ public class ManageDAO {
 		int result = 0;
 		
 		//where절의 idx로 수정할 대상 찾기
-		String sql = "insert into post (p_idx,p_ctgr,p_title,p_content,p_private,p_b_idx) values (post_seq.nextval,?,?,?,?,?)";
+		String sql = "insert into post (p_idx,p_ctgr,p_title,p_content,p_private,p_b_idx,hit) values (post_seq.nextval,?,?,?,?,?,0)";
 		
 		try {
 			conn = DBManager.getInstance().getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, vo.getP_ctgr().getCtgridx());
 			pstmt.setString(2, vo.getP_title());
-			pstmt.setString(3, vo.getP_content());
+			String content = vo.getP_content();
+			Clob clob = conn.createClob();
+			clob.setString(1, content); // CLOB에 문자열 삽입
+			pstmt.setClob(3, clob);      // p_content
 			pstmt.setInt(4, vo.getP_private());
 			pstmt.setInt(5, vo.getP_b_idx().getB_idx());
+			System.out.println(sql);
 			pstmt.executeUpdate();
 			result = 1;
 			
@@ -864,13 +875,12 @@ public class ManageDAO {
 				pstmt.executeUpdate();
 			}
 			
-			sql = "select p_idx from post where p_ctgr = ? and p_title = ? and p_content = ? and p_private = ? and p_b_idx = ?";
+			sql = "SELECT p_idx FROM post WHERE p_ctgr = ? AND p_title = ? AND p_private = ? AND p_b_idx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, vo.getP_ctgr().getCtgridx());
 			pstmt.setString(2, vo.getP_title());
-			pstmt.setString(3, vo.getP_content());
-			pstmt.setInt(4, vo.getP_private());
-			pstmt.setInt(5, vo.getP_b_idx().getB_idx());
+			pstmt.setInt(3, vo.getP_private());
+			pstmt.setInt(4, vo.getP_b_idx().getB_idx());
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
@@ -1861,7 +1871,7 @@ public class ManageDAO {
 		ResultSet rs = null;
 		String sql = "SELECT *\r\n" + 
 				"FROM (\r\n" + 
-				"    SELECT p.p_idx, p.p_title, p.p_content, p.p_private, p.created_at, p.modified_at, p.hit, \r\n" + 
+				"    SELECT p.p_idx, p.p_title, p.p_private, p.created_at, p.modified_at, p.hit, \r\n" + 
 				"           img.img_path, ctgr.ctgridx, ctgr.ctgr_name, \r\n" + 
 				"           COUNT(reply.r_idx) AS r_cnt\r\n" + 
 				"    FROM post p\r\n" + 
@@ -1869,7 +1879,7 @@ public class ManageDAO {
 				"    LEFT JOIN b_reply reply ON reply.r_p_idx = p.p_idx\r\n" + 
 				"    LEFT JOIN category ctgr ON ctgr.ctgridx = p.p_ctgr\r\n" + 
 				"    WHERE p.p_b_idx = ?\r\n" + 
-				"    GROUP BY p.p_idx, p.p_title, p.p_content, p.p_private, p.created_at, \r\n" + 
+				"    GROUP BY p.p_idx, p.p_title ,p.p_private, p.created_at, \r\n" + 
 				"             p.modified_at, p.hit, img.img_path, ctgr.ctgridx, ctgr.ctgr_name\r\n" + 
 				"    ORDER BY p.created_at DESC \r\n" + 
 				")\r\n" + 
@@ -1888,7 +1898,6 @@ public class ManageDAO {
 				categoryVo cvo = new categoryVo();
 				vo.setP_idx(rs.getInt("p_idx"));
 				vo.setP_title(rs.getString("p_title"));
-				vo.setP_content(rs.getString("p_content"));
 				vo.setHit(rs.getInt("hit"));
 				vo.setCreated_at(rs.getString("created_at"));
 				vo.setModified_at(rs.getString("modified_at"));

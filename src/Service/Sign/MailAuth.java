@@ -34,16 +34,16 @@ public class MailAuth implements Action {
 		if(number != null && number.equals(authenKey)) {
 			int result = SignDAO.getInstance().setMemberInsert(vo);
 			if(result > 0) {
-				map.put("msg","È¸¿ø°¡ÀÔµÇ¾ú½À´Ï´Ù");
+				map.put("msg","ä¼šå“¡ç™»éŒ²ãŒå®Œäº†ã—ã¾ã—ãŸï¼");
 				map.put("check","ok");
 				request.getSession().removeAttribute("authenticationKey");
 				request.getSession().removeAttribute("user");
 			}else {
-				map.put("msg", "È¸¿ø°¡ÀÔ¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+				map.put("msg", "é€šä¿¡ã‚¨ãƒ¼ãƒ©ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚");
 				map.put("check", "nok");
 			}
 		}else {
-			map.put("msg", "ÀÎÁõ¹øÈ£°¡ ´Ù¸¨´Ï´Ù.");
+			map.put("msg", " å…¥åŠ›ã•ã‚ŒãŸèªè¨¼ã‚³ãƒ¼ãƒ‰ãŒç„¡åŠ¹ã§ã™ã€‚");
 			map.put("check", "nok");
 		}
 		

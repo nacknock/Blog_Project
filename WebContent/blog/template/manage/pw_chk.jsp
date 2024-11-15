@@ -77,7 +77,7 @@
 				<!-- sidebar end -->
 				<div class="col-lg-8 tab-pane fade show active ml-45" id="home" role="tabpanel" aria-labelledby="home-tab">
 					<div class="col-12 mt-15 mb-15 pr-15 pl-15">
-						<h2>비밀번호 확인</h2>
+						<h2>パスワード確認</h2>
 						<c:if test = "${not empty msg }">
 							<h6 style="color: red;" id="warning">${msg}</h6>
 	                   		<c:remove var="msg" scope="session" /><!-- 세션 안에 있는 msg라는 속성을 삭제 -->
@@ -91,7 +91,7 @@
 							</c:if>
 						</div>
 						<div class="col-12 mt-55 mb-15 pr-15 pl-15" style="display: flex;justify-content: center;">
-							<button type="submit" class="btn btn-sm btn-primary">확인</button>
+							<button type="submit" class="btn btn-sm btn-primary">確認</button>
 						</div>	
 					</form>				
 				</div>

@@ -219,7 +219,7 @@
             <h3 class="heading">カテゴリ</h3>
             <ul class="categories">
             <c:forEach var="ctgr_list" items="${ctgr_list }">
-              <li><a href="/b/list.do?type=${ctgr_list.ctgridx}">${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
+              <li><a href="/b/list.do?blog=${dto.blog.b_idx }&&type=${ctgr_list.ctgridx}">${ctgr_list.ctgr_name } <span>(${ctgr_list.ctgr_p_cnt })</span></a></li>
             </c:forEach>
             </ul>
           </div>
@@ -229,7 +229,7 @@
             <h3 class="heading">ハッシュタグ</h3>
             <ul class="tags">
             <c:forEach var="taglist" items="${taglist }">
-              <li><a href="/b/list.do?term=${taglist.tag_id}">#${taglist.tag_name }</a></li>
+              <li><a href="/b/list.do?blog=${dto.blog.b_idx }&&term=${taglist.tag_name}">#${taglist.tag_name }</a></li>
             </c:forEach>
             </ul>
           </div>
@@ -261,7 +261,7 @@
             </a>
             <span class="date">${p_list.created_at}</span>
             <h2><a href="/b/detail/blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}">${p_list.p_title}</a></h2>
-            <p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 306px;">${p_list.p_content}</p>
+            <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 306px;max-height: 45px;">${p_list.p_content}</div>
             <p><a href="/b/detail/blog=${p_list.p_b_idx.b_idx}&&p=${p_list.p_idx}" class="read-more">もっと見る</a></p>
           </div>
         </div>
