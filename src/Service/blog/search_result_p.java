@@ -24,7 +24,7 @@ public class search_result_p implements Action {
 		request.setCharacterEncoding("utf-8");
 		
 		int pageNum = 1;
-		int amount = 10;
+		int amount = 5;
 		
 		String term = "";//기간
 		String type = "";//답변된것만
@@ -48,7 +48,15 @@ public class search_result_p implements Action {
 		cri.setType(type);
 		cri.setKeyword(bp_keyword);
 		
+//		System.out.println(amount+" : amount");
+//		System.out.println(pageNum+" : pageNum");
+//		System.out.println(term+" : term");
+//		System.out.println(type+" : type");
+//		System.out.println(bp_keyword+" : bp_keyword");
+		
 		List<PostVo> post_list = BlogDAO.getInstance().SearchResultP(cri,keyword_post);
+		
+		//System.out.println(post_list.size()+" : post_list");
 
 		if(request.getParameter("bp_keyword") != null &&!request.getParameter("bp_keyword").equals("")) {
 			bp_keyword = request.getParameter("bp_keyword");

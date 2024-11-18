@@ -82,7 +82,7 @@ String savepath = "/blog/images";
 			ManageDAO.getInstance().saveTag(result,tags);
 		}
 
-		response.sendRedirect("/blog/post_detail.do?p_idx="+vo.getP_idx());
+		response.sendRedirect("/b/detail.do?blog="+b_idx+"&p="+result);
 
 	}
 

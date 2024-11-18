@@ -80,12 +80,12 @@
 						<h2>お問い合わせ </h2>
 					</div>
 					<div class="sidebar-box mt-30" style="border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.125);background-color: rgba(0, 0, 0, 0.03);">
-						<form method="post" action="/manage/q_writeAction.do" enctype="multipart/form-data" name="q_form" id="q_form">
+						<form method="post" action="/manage/q_writeAction.do" enctype="multipart/form-data" name="q_form" id="q_form" onsubmit="return check()">
 							<div class="form-group col-md-12">
 								<div class="mt-30 mb-15" style="display: flex;justify-content: center;">
 								<input type="hidden" value="${dto.user.idx }" name="idx" id="idx">
 									<select id="q_ctgr" name="q_ctgr" class="form-control" style="width: 60%;height: 50%;text-align: center;background: white !important;">
-										<option value="">選択してください</option>
+										<option value="0">選択してください</option>
 										<option value="1">ログイン</option>
 										<option value="2">機能/使い方</option>
 										<option value="3">権利侵害</option>
@@ -145,4 +145,25 @@
     <script src="/blog/js/custom.js"></script>
     
   </body>
+  <script>
+  function check() {
+		
+		if(q_form.q_title.value=="") {
+			alert("タイトルを入力してください。");
+			p_wrt_form.q_title.focus();
+			return false;
+		}
+		if(q_form.q_ctgr.value==="0") {
+			alert("カテゴリを選択してください。");
+			p_wrt_form.q_ctgr.focus();
+			return false;
+		}
+		if(q_form.q_content.value=="") {
+			alert("文字を入力してください。");
+			p_wrt_form.q_content.focus();
+			return false;
+		}
+		return true;
+	}
+  </script>
   </html>

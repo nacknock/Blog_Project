@@ -94,9 +94,14 @@ public class postModifyAction implements Action {
 		String[] tags = request.getParameterValues("tags");
 		
 		List<String> tag_list = new ArrayList<String>();
-		for(String tag : tags) {
-			tag_list.add(tag);
+		if(tags != null) {
+			for(String tag : tags) {
+				if(!tag.equals("")) {
+					tag_list.add(tag);
+				}
+			}
 		}
+		
 		
 		if(result > 0) {
 			result = ManageDAO.getInstance().tagModifyAction(tag_list,p_idx);

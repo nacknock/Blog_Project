@@ -33,7 +33,7 @@
 					</c:if>
 					</p>
 					<div>
-						<a href="#">
+						<a href="/b/detail.do?blog=${b_idx }&p=${list.r_p_idx.p_idx}">
 							<p class="from" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 365px;">
 								<i class="fas fa-clipboard-list"></i> ${list.r_p_idx.p_title }
 							</p>

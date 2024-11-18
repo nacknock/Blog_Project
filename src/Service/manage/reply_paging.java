@@ -26,16 +26,18 @@ public class reply_paging implements Action {
 		request.setCharacterEncoding("utf-8");
 		
 		int idx = Integer.parseInt(request.getParameter("idx"));
+		int b_idx = Integer.parseInt(request.getParameter("b_idx"));
+		
 		
 		int pageNum = 1;
 		int amount = 10;
 		
-		String term = "";//기간
+		String term = "order by r.created_at desc";//기간
 		String type = "";//댓글/답글 구분
 		String keyword = "";
 		String query_keyword = "";
 		String query_type = "";
-		String query_term = "";
+		String query_term = "order by r.created_at desc";
 		
 		if(request.getParameter("keyword") != null &&!request.getParameter("keyword").equals("")) {
 			keyword = request.getParameter("keyword");
@@ -85,6 +87,8 @@ public class reply_paging implements Action {
 		request.setAttribute("list", list);
 		
 		request.setAttribute("count", count);
+		
+		request.setAttribute("b_idx", b_idx);
 
 		response.setContentType("text/html;charset=UTF-8");
 		StringWriter stringWriter = new StringWriter();

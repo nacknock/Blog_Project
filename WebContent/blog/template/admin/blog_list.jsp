@@ -23,6 +23,10 @@
 
     <!-- Custom styles for this template -->
     <link href="/blog/admin_front/css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/blog/admin_front/css/material-design-iconic-font/css/materialdesignicons.min.css">
 
     <!-- Custom styles for this page -->
     <link href="/blog/admin_front/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">

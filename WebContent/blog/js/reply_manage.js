@@ -4,6 +4,7 @@ $(document).ready(function() {
         type: 'GET',
         data:{
             idx:$('#idx').val(),
+            b_idx:$('#b_idx').val(),
         },
         success: function(data) {
             $('#reply-paging').append(data); // 서버에서 받은 HTML을 추가
@@ -28,6 +29,7 @@ function prev_page(page) {
             type:$('#type').val(),
             keyword:$('#keyword').val(),
             term:$('#term').val(),
+            b_idx:$('#b_idx').val(),
         },
         success: function(data) {
             $('#reply-paging').empty();
@@ -51,6 +53,7 @@ function page(page) {
             type:$('#type').val(),
             keyword:$('#keyword').val(),
             term:$('#term').val(),
+            b_idx:$('#b_idx').val(),
         },
         success: function(data) {
             $('#reply-paging').empty();
@@ -75,6 +78,7 @@ function next_page(page) {
             type:$('#type').val(),
             keyword:$('#keyword').val(),
             term:$('#term').val(),
+            b_idx:$('#b_idx').val(),
         },
         success: function(data) {
             $('#reply-paging').empty();
@@ -96,6 +100,7 @@ function page_term(term_val) {
             amount:$('#amount').val(),
             type:$('#type').val(),
             keyword:$('#keyword').val(),
+            b_idx:$('#b_idx').val(),
             term:term_val,
         },
         success: function(data) {
@@ -122,6 +127,7 @@ function page_keyword(event) {
             type:$('#type').val(),
             keyword:keyword_val,
             term:$('#term').val(),
+            b_idx:$('#b_idx').val(),
         },
         success: function(data) {
             $('#reply-paging').empty();

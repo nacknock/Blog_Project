@@ -36,18 +36,18 @@
 			<input type="hidden" id="keyword" value="${p_pageMaker.cri.keyword}">
 			<input type="hidden" id="term" value="${p_pageMaker.cri.term}">
 			<c:if test="${p_pageMaker.prev}">
-				<a style="color: #FFF !important;cursor:pointer;" onclick="prev_page('${p_pageMaker.startPage-1}')">←</a>
+				<a style="color: #FFF !important;cursor:pointer;" onclick="prev_page_p('${p_pageMaker.startPage-1}')">←</a>
 			</c:if>
 			<c:forEach var="page" begin="${p_pageMaker.startPage}" end="${p_pageMaker.endPage}">
 				<c:if test="${p_pageMaker.cri.pageNum == page}">
 					<span>${page}</span>
 				</c:if>
 				<c:if test="${p_pageMaker.cri.pageNum != page}">
-					<a style="cursor:pointer;color: #FFF !important;" onclick="page('${page}')">${page}</a>
+					<a style="cursor:pointer;color: #FFF !important;" onclick="page_p('${page}')">${page}</a>
 				</c:if>								
 			</c:forEach>
 			<c:if test="${p_pageMaker.next}">
-				<a style="cursor:pointer;color: #FFF !important;" onclick="next_page('${p_pageMaker.endPage+1}')">→</a>
+				<a style="cursor:pointer;color: #FFF !important;" onclick="next_page_p('${p_pageMaker.endPage+1}')">→</a>
 			</c:if>
 		</div>
 	</div>

@@ -30,18 +30,18 @@ public class UserCheck implements Action {
 			result = -2;
 		}
 		
-		if (pw.length() < 9 || pw.length() > 13) {
-            result = -3;
-        }
+//		if (pw.length() < 9 || pw.length() > 13) {
+//            result = -3;
+//        }
 
-        // 정규 표현식: 영어 대소문자, 숫자, 특수문자의 조합
-        String regex = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).+$";
-        Pattern pattern = Pattern.compile(regex);
-
-        // 패스워드가 정규 표현식과 일치하는지 확인
-        if(!pattern.matcher(pw).matches()) {
-        	result = -3;
-        }
+//        // 정규 표현식: 영어 대소문자, 숫자, 특수문자의 조합
+//        String regex = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).+$";
+//        Pattern pattern = Pattern.compile(regex);
+//
+//        // 패스워드가 정규 표현식과 일치하는지 확인
+//        if(!pattern.matcher(pw).matches()) {
+//        	result = -3;
+//        }
 		
 		if(result == 1) {//admin
 			return;

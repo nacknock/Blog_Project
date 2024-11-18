@@ -31,10 +31,11 @@
               <input type="hidden" name="b_idx" class="form-control" value="${b_idx}">
               <input type="hidden" name="r_parent" class="form-control" value="${re_list.r_idx}">
               <input type="hidden" name="r_group" class="form-control" value="${re_list.r_group}">
+              <input type="hidden" name="r_grade" class="form-control" value="${re_list.r_grade}">
+              <input type="hidden" name="parent_nick" class="form-control" value="${re_list.r_u_idx.nickname}">
 
                 <div class="form-group">
                   <label for="message">コメントを入力</label>
-                  <textarea name="r_content" style="display:none;" id="message" cols="30" rows="10" class="form-control r_con_hidden">${re_list.r_content}</textarea>
                   <textarea name="r_content" id="message" cols="30" rows="10" class="form-control r_con"></textarea>
                 </div>
                 <div class="form-group" style="display:flex !important;justify-content: space-between;">
@@ -70,7 +71,7 @@
 		        </c:if>
 	      	</div>
 	      <div class="meta">${re_list.created_at}</div>
-	      <span style="color: blue;">@${re_list.r_parent.r_u_idx.nickname }</span>
+	      <span style="color: blue;">@${re_list.parentNickname }</span>
 	      <p>${re_list.r_content}</p>
 	      <p><a onclick="re_reply(this)" class="reply rounded">返信する</a></p>
 	      <form action="/b/reply_write.do" method="post" class="p-5 bg-light re_re_form" style="display:none;">
@@ -78,6 +79,8 @@
               <input type="hidden" name="b_idx" class="form-control" value="${b_idx}">
               <input type="hidden" name="r_parent" class="form-control" value="${re_list.r_idx}">
               <input type="hidden" name="r_group" class="form-control" value="${re_list.r_group}">
+              <input type="hidden" name="r_grade" class="form-control" value="${re_list.r_grade}">
+              <input type="hidden" name="parent_nick" class="form-control" value="${re_list.r_u_idx.nickname}">
 
                 <div class="form-group">
                   <label for="message">コメントを入力</label>

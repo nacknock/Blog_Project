@@ -150,10 +150,10 @@
 										</c:if>
 										<div class="dropdown-divider"></div>
 										<input type="hidden" value="${list.ctgr_private}" class="private">
-										<c:if test="${list.ctgr_private eq 1}">
+										<c:if test="${list.ctgr_private == 1}">
 										<a class="dropdown-item pri-a" onclick="chngePriv(this)">公開</a>
 										</c:if>
-										<c:if test="${list.ctgr_private eq 0}">
+										<c:if test="${list.ctgr_private == 0}">
 										<a class="dropdown-item pri-a" onclick="chngePriv(this)">非公開</a>
 										</c:if>
 									</div>

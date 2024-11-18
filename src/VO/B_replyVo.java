@@ -1,6 +1,12 @@
 package VO;
 
 public class B_replyVo {
+	public String getParentNickname() {
+		return parentNickname;
+	}
+	public void setParentNickname(String parentNickname) {
+		this.parentNickname = parentNickname;
+	}
 	public int getR_group() {
 		return r_group;
 	}
@@ -16,6 +22,7 @@ public class B_replyVo {
 	private int r_grade;
 	private B_replyVo r_parent;
 	private int r_group;
+	private String parentNickname;
 	public int getR_idx() {
 		return r_idx;
 	}

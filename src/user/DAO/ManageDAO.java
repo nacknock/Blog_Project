@@ -334,50 +334,36 @@ public class ManageDAO {
 		}
 		return result;
 	}
-	public List<QuestionVo> getListWithPagingQnA(Criteria cri, String query_keyword, String query_type, String query_term) {
+	public List<QuestionVo> getListWithPagingQnA(Criteria cri, String query_keyword, String query_type, String query_term, String query_where) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
 		
-		String sql_top = "SELECT * FROM (\r\n" + 
-				"    SELECT /*+ index_desc(question q_pk) */\r\n" + 
-				"        q_idx,\r\n" + 
-				"        q_ctgr,\r\n" + 
-				"        q_title,\r\n" + 
-				"        img.img_path,\r\n" + 
-				"        q_content,\r\n" + 
-				"        question.created_at,\r\n" + 
-				"        a_yn,\r\n" + 
-				"        q_u_idx,\r\n" + 
-				"        answer.a_content,\r\n" + 
-				"        ROWNUM AS rn\r\n" + 
-				"    FROM (\r\n" + 
-				"        SELECT \r\n" + 
-				"            q_idx,\r\n" + 
-				"            q_ctgr,\r\n" + 
-				"            q_title,\r\n" + 
-				"            img.img_path,\r\n" + 
-				"            q_content,\r\n" + 
-				"            question.created_at,\r\n" + 
-				"            a_yn,\r\n" + 
-				"            q_u_idx,\r\n" + 
-				"            answer.a_content\r\n" + 
-				"        FROM question \r\n" + 
-				"        LEFT JOIN img ON img.q_img = q_idx\r\n" + 
-				"        LEFT JOIN answer ON answer.a_q_idx = q_idx \r\n" + 
-				        query_term + 
-				"    ) question";
+		String sql_top = "SELECT * FROM ( " + 
+				"       SELECT /*+ index_desc(question q_pk) */ " + 
+				"           q_idx, " + 
+				"            q_ctgr, " + 
+				"            q_title, " + 
+				"            img.img_path, " + 
+				"            q_content, " + 
+				"            question.created_at, " + 
+				"            a_yn, " + 
+				"            q_u_idx, " + 
+				"            answer.a_content, " + 
+				"            ROW_NUMBER() OVER ( "+ query_term +") AS rn " + 
+				"        FROM question " + 
+				"        LEFT JOIN img ON img.q_img = q_idx " + 
+				"        LEFT JOIN answer ON answer.a_q_idx = q_idx  " + 
+				"      " + query_where + query_keyword + query_type + " " + 
+				"    ) WHERE rn > (?-1)*? ";
 
-		String sql_middle = "\r\n" + 
-				"    LEFT JOIN img ON img.q_img = q_idx\r\n" + 
-				"    LEFT JOIN answer ON answer.a_q_idx = q_idx "
-				+ "where rownum <= ?*? " + query_keyword + query_type ;
+		//String sql_middle = "";
 		
-		String sql_bot = " ) where rn > (?-1)*? ";
+		//String sql_bot = " ) WHERE rn > (?-1)*? ";
 		
-		sql = sql_top + sql_middle + sql_bot;
-		//System.out.println(sql);
+		sql = sql_top;
+		System.out.println(sql);
 		List<QuestionVo> list = new ArrayList<QuestionVo>();
 		
 		try {
@@ -385,8 +371,6 @@ public class ManageDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cri.getPageNum());
 			pstmt.setInt(2, cri.getAmount());
-			pstmt.setInt(3, cri.getPageNum());
-			pstmt.setInt(4, cri.getAmount());
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -860,7 +844,6 @@ public class ManageDAO {
 			pstmt.setClob(3, clob);      // p_content
 			pstmt.setInt(4, vo.getP_private());
 			pstmt.setInt(5, vo.getP_b_idx().getB_idx());
-			System.out.println(sql);
 			pstmt.executeUpdate();
 			result = 1;
 			
@@ -1330,10 +1313,10 @@ public class ManageDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		String sql_top = "SELECT * FROM (\r\n" + 
+		String sql_top = 
+				"SELECT *\r\n" + 
+				"FROM (\r\n" + 
 				"    SELECT \r\n" + 
-				"        /*+ index_desc(b_reply b_reply_pk) */ \r\n" + 
-				"        ROWNUM rn, \r\n" + 
 				"        r.r_idx, \r\n" + 
 				"        r.r_content, \r\n" + 
 				"        r.created_at, \r\n" + 
@@ -1346,37 +1329,20 @@ public class ManageDAO {
 				"        myuser.nickname AS my_nickname, \r\n" + 
 				"        p.p_title, \r\n" + 
 				"        parentU.user_id AS parent_user_id, \r\n" + 
-				"        parentU.nickname AS parent_nickname\r\n" + 
-				"    FROM (\r\n" + 
-				"        SELECT \r\n" + 
-				"        r.r_idx, \r\n" + 
-				"        r.r_content, \r\n" + 
-				"        r.created_at, \r\n" + 
-				"        r.modified_at, \r\n" + 
-				"        r.r_u_idx, \r\n" + 
-				"        r.r_p_idx, \r\n" + 
-				"        r.r_grade, \r\n" + 
-				"        r.r_parent, \r\n" + 
-				"        myuser.user_id AS my_user_id, \r\n" + 
-				"        myuser.nickname AS my_nickname, \r\n" + 
-				"        p.p_title, \r\n" + 
-				"        parentU.user_id AS parent_user_id, \r\n" + 
-				"        parentU.nickname AS parent_nickname\r\n" + 
-				"        FROM b_reply r\r\n" + 
-				"        LEFT JOIN b_user myuser ON myuser.idx = r.r_u_idx \r\n" + 
-				"        LEFT JOIN b_reply parent_re ON parent_re.r_idx = r.r_parent \r\n" + 
-				"        LEFT JOIN b_user parentU ON parentU.idx = parent_re.r_u_idx \r\n" + 
-				"        LEFT JOIN post p ON p.p_idx = r.r_p_idx \r\n" + 
-				"        WHERE r.r_u_idx = ?     " + query_keyword + " " + query_term + " " +
-				") r          " +
-				"		 LEFT JOIN b_user myuser ON myuser.idx = r.r_u_idx \r\n" + 
-				"        LEFT JOIN b_reply parent_re ON parent_re.r_idx = r.r_parent \r\n" + 
-				"        LEFT JOIN b_user parentU ON parentU.idx = parent_re.r_u_idx \r\n" + 
-				"        LEFT JOIN post p ON p.p_idx = r.r_p_idx "  ;
+				"        parentU.nickname AS parent_nickname,\r\n" + 
+				"        ROW_NUMBER() OVER (" + query_term +") AS rn\r\n" + 
+				"    FROM b_reply r\r\n" + 
+				"    LEFT JOIN b_user myuser ON myuser.idx = r.r_u_idx \r\n" + 
+				"    LEFT JOIN b_reply parent_re ON parent_re.r_idx = r.r_parent \r\n" + 
+				"    LEFT JOIN b_user parentU ON parentU.idx = parent_re.r_u_idx \r\n" + 
+				"    LEFT JOIN post p ON p.p_idx = r.r_p_idx \r\n" + 
+				"    WHERE r.r_u_idx = ? " + query_keyword + " " ;
 
-		String sql_middle = "where rownum <= ?*? ";
+		String sql_middle = "  ";
 		
-		String sql_bot = " ) where rn > (?-1)*? ";
+		String sql_bot = " ) WHERE rn <= ?*? AND rn > (?-1)*?";
+		
+		
 		
 		sql = sql_top + sql_middle + sql_bot;
 		

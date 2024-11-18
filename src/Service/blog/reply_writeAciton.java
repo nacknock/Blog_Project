@@ -43,7 +43,10 @@ public class reply_writeAciton implements Action {
 		
 		if(request.getParameter("r_parent") != null && !request.getParameter("r_parent").equals("")) {
 			r_parent.setR_idx(Integer.parseInt(request.getParameter("r_parent")));
-			r_grade = 1;
+			B_userVo uvo = new B_userVo();
+			uvo.setNickname(request.getParameter("parent_nick"));
+			r_parent.setR_u_idx(uvo);
+			r_grade = Integer.parseInt(request.getParameter("r_grade"))+1;
 			
 			if(request.getParameter("r_group") != null && !request.getParameter("r_group").equals("")) {
 				r_group = Integer.parseInt(request.getParameter("r_group"));

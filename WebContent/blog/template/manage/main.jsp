@@ -182,7 +182,7 @@
 							<ul>
 							<c:forEach var="rep_list3" items="${rep_list3 }">
 								<li>
-									<a href="">
+									<a href="/b/detail.do?blog=${dto.blog.b_idx}&&p=${rep_list3.r_p_idx.p_idx}">
 									<c:if test="${empty rep_list3.r_p_idx.img_path }">
 										<img src="/blog/images/post_not_image.jpg" alt="Image placeholder" class="me-4 rounded">
 									</c:if>

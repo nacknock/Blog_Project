@@ -24,7 +24,7 @@ public class search_result_b implements Action {
 		request.setCharacterEncoding("utf-8");
 		
 		int pageNum = 1;
-		int amount = 10;
+		int amount = 5;
 		
 		String term = "";//기간
 		String type = "";//답변된것만

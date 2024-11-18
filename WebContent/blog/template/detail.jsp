@@ -77,10 +77,12 @@
             <c:if test="${empty dto.user.img_path }">
               <figure class="author-figure mb-0 me-3 d-inline-block"><img src="/blog/images/default_profile.png" alt="Image" class="img-fluid"></figure>
             </c:if>
+            <a href="/b/list.do?blog=${dto.blog.b_idx }" style="color:#FFF;">
               <span class="d-inline-block mt-1">${dto.user.nickname}</span>
               <span>&nbsp;-&nbsp; <c:out value="${fn:substring(vo.created_at, 0, 10)}" /></span>
               <span>&nbsp;-&nbsp; ${vo.p_ctgr.ctgr_name}</span>
               <span>&nbsp;-&nbsp; ${vo.hit}</span>
+            </a>
             </div>
           </div>
         </div>
@@ -151,6 +153,7 @@
               <form action="/b/reply_write.do" method="post" class="p-5 bg-light">
               <input type="hidden" name="p_idx" class="form-control" id="p_idx_input" value="${vo.p_idx}">
               <input type="hidden" name="b_idx" class="form-control" id="b_idx_input" value="${vo.p_b_idx.b_idx}">
+              <input type="hidden" name="r_grade" class="form-control" value="0">
 
                 <div class="form-group">
                   <label for="message">コメントを入力</label>

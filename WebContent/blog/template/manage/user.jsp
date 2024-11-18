@@ -140,7 +140,7 @@
 								</div>
 								<div class="mt-15 mr-70" style="display: flex;justify-content: center;">
 									<div>
-										<h4 style="color: #000;">タイトル</h4>
+										<h4 style="color: #000;">ブログ名</h4>
 									</div>
 									<div class="ml-15">
 										<input class="form-control" type="text" name="b_title" value="${dto.blog.b_title }" style="height: 30px; background: white !important;">

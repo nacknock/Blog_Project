@@ -60,7 +60,7 @@
 			<div class="row align-items-stretch retro-layout">
 			<c:forEach var="list" items="${hitTop6list}">
 				<div class="col-md-4">
-					<a href="/b/list.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}" class="h-entry mb-30 v-height gradient">
+					<a href="/b/detail.do?blog=${list.p_b_idx.b_idx}&&p=${list.p_idx}" class="h-entry mb-30 v-height gradient">
 					<c:if test="${empty list.img_path }">
 		              <div class="featured-img" style="background-image: url('/blog/images/post_not_image.jpg');"></div>
 		            </c:if>

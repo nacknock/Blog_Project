@@ -170,7 +170,7 @@ public class BlogDAO {
 		if(vo.getR_parent() == null) {
 			sql = "insert into b_reply (r_idx,r_group,r_content,r_u_idx,r_p_idx,r_grade) values (b_reply_seq.nextval, b_reply_seq.CURRVAL,?,?,?,?)";
 		}else {
-			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade,r_parent,r_group) values (b_reply_seq.nextval,?,?,?,?,?,?)";
+			sql = "insert into b_reply (r_idx,r_content,r_u_idx,r_p_idx,r_grade,r_parent,r_group,parentnick) values (b_reply_seq.nextval,?,?,?,?,?,?,?)";
 		}
 		int result = 0;
 		//System.out.println(sql);
@@ -184,6 +184,7 @@ public class BlogDAO {
 			if(vo.getR_parent() != null) {
 				pstmt.setInt(5, vo.getR_parent().getR_idx());
 				pstmt.setInt(6, vo.getR_group());
+				pstmt.setString(7,vo.getR_parent().getR_u_idx().getNickname());
 			}
 			pstmt.executeUpdate();
 			
@@ -260,8 +261,10 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		String query_tagif = "";
+		String left_join_tag = "";
 		if(!query_term.equals("")) {
 			query_tagif = "left join tag on tag.tag_p_id = post.p_idx ";
+			left_join_tag ="    LEFT JOIN tag ON tag.tag_p_id = post.p_idx  ";
 		}
 		String sql_top = "SELECT *\r\n" + 
 				"FROM (\r\n" + 
@@ -273,6 +276,7 @@ public class BlogDAO {
 				"    LEFT JOIN img ON img.post_img = p_idx\r\n" + 
 				"    LEFT JOIN blog ON post.p_b_idx = blog.b_idx \r\n" + 
 				"    LEFT JOIN category ON category.ctgridx = post.p_ctgr \r\n" + 
+				left_join_tag + 
 				"    WHERE blog.b_idx = ? "+ my + query_keyword +" " + query_type +" ";
 		
 		String sql_middle = ")\r\n" + 
@@ -286,7 +290,7 @@ public class BlogDAO {
 		
 		sql = sql_top + sql_middle + sql_bot;
 		
-		//System.out.println(sql);
+		System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
@@ -340,15 +344,25 @@ public class BlogDAO {
 		ResultSet rs = null;
 		String sql = null;
 		int cnt = 0;
+		String left_join_tag = "";
+		if(!query_term.equals("")) {
+			left_join_tag ="    LEFT JOIN tag ON tag.tag_p_id = post.p_idx  ";
+		}
 		if(my.equals("")) {
 			sql = " select count(*) as cnt from post "
 					+ " left join blog "
 					+ " on blog.b_idx = post.p_b_idx "
+					+ " left join category "
+					+ " on category.ctgridx = post.p_ctgr "
+					+ left_join_tag
 					+ " where blog.b_idx = ? and post.p_private = 0 " + query_keyword + query_type + query_term;
 		}else {
 			sql = " select count(*) as cnt from post "
 					+ " left join blog "
 					+ " on blog.b_idx = post.p_b_idx "
+					+ " left join category "
+					+ " on category.ctgridx = post.p_ctgr "
+					+ left_join_tag
 					+ " where blog.b_idx = ? " + query_keyword + query_type + query_term;	
 		}
 		
@@ -569,36 +583,23 @@ public class BlogDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = " SELECT * " + 
-				"FROM ( " + 
-				"    SELECT /*+ index_desc(reply b_reply_pk) */ " + 
-				"           ROWNUM rn, reply.r_idx, reply.r_group, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
-				"           reply.r_parent, " + 
-				"           loguser.nickname, loguser.user_id,img.img_path, " + 
-				"           parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
-				"    FROM ( " + 
-				"        SELECT reply.r_idx, reply.r_group, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, " + 
-				"               reply.r_parent, " + 
-				"               loguser.nickname, loguser.user_id,img.img_path, " + 
-				"               parnuser.nickname AS parnnick, parnuser.idx AS parnidx " + 
-				"        FROM b_reply reply " + 
-				"        LEFT JOIN post ON post.p_idx = reply.r_p_idx " + 
-				"        LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
-				"        LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent " + 
-				"        LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
-				"        LEFT JOIN img ON img.user_img = loguser.idx " + 
-				"        WHERE post.p_idx = ? " + 
-				"        ORDER BY reply.r_group desc,reply.created_at desc    \r\n" + 
-				"         " + 
-				"    ) reply " + 
-				"    LEFT JOIN post ON post.p_idx = reply.r_p_idx " + 
-				"    LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx " + 
-				"    LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent " + 
-				"    LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx " + 
-				"        LEFT JOIN img ON img.user_img = loguser.idx " + 
-				"    WHERE ROWNUM <= ?*?  " + 
-				") " + 
-				"WHERE rn > (?-1)*? ";
+		String sql = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT /*+ index_desc(reply b_reply_pk) */ \r\n" + 
+				"           ROW_NUMBER() OVER (ORDER BY  reply.r_group deSC,reply.r_grade asc, reply.created_at DESC) AS rn, \r\n" + 
+				"           reply.r_idx, reply.r_group, reply.r_content, reply.created_at, reply.r_u_idx, reply.r_p_idx, reply.r_grade, \r\n" + 
+				"           reply.r_parent, reply.parentnick, \r\n" + 
+				"           loguser.nickname, loguser.user_id, img.img_path, \r\n" + 
+				"           parnuser.idx AS parnidx \r\n" + 
+				"    FROM b_reply reply \r\n" + 
+				"    LEFT JOIN post ON post.p_idx = reply.r_p_idx \r\n" + 
+				"    LEFT JOIN b_user loguser ON loguser.idx = reply.r_u_idx \r\n" + 
+				"    LEFT JOIN b_reply parent ON parent.r_idx = reply.r_parent \r\n" + 
+				"    LEFT JOIN b_user parnuser ON parnuser.idx = parent.r_u_idx \r\n" + 
+				"    LEFT JOIN img ON img.user_img = loguser.idx \r\n" + 
+				"    WHERE post.p_idx = ? \r\n" + 
+				") \r\n" + 
+				"WHERE rn > (? - 1) * ? AND rn <= ? * ?";
 		
 		List<B_replyVo> list = new ArrayList<B_replyVo>();
 		
@@ -633,10 +634,10 @@ public class BlogDAO {
 				vo.setR_grade(rs.getInt("r_grade"));
 				parent_vo.setR_idx(rs.getInt("r_parent"));
 				parn_u_vo.setIdx(rs.getInt("parnidx"));
-				parn_u_vo.setNickname(rs.getString("parnnick"));
 				parent_vo.setR_u_idx(parn_u_vo);
 				vo.setR_parent(parent_vo);
 				vo.setR_group(rs.getInt("r_group"));
+				vo.setParentNickname(rs.getString("PARENTNICK"));
 				
 				
 				list.add(vo);
@@ -775,24 +776,23 @@ public class BlogDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql = null;
-		String sql_top = "select * from (\r\n" + 
-				"    select * from (\r\n" + 
-				"        select /*+ index_desc(post post_pk) */\r\n" + 
-				"            p_idx, p_title, p_content, post.created_at, img.img_path, p_b_idx, blog.b_title \r\n" + 
-				"        from post \r\n" + 
-				"        left join img on img.post_img = post.p_idx  \r\n" + 
-				"        left join blog on blog.b_idx = post.p_b_idx  \r\n" + 
-				"        " + keyword_post +
-				"          \r\n" + 
-				"        order by hit\r\n";
+		String sql_top = "SELECT *\r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT p_idx, p_title, p_content, post.created_at, img.img_path, p_b_idx, blog.b_title,\r\n" + 
+				"           ROW_NUMBER() OVER (ORDER BY post.created_at DESC) AS rn\r\n" + 
+				"    FROM post \r\n" + 
+				"    LEFT JOIN img ON img.post_img = post.p_idx  \r\n" + 
+				"    LEFT JOIN blog ON blog.b_idx = post.p_b_idx  \r\n" + 
+				"    " + keyword_post + "        " +
+				")";
 
-		String sql_middle = ") where rownum <= ?*?";
+		String sql_middle = " WHERE rn > (? - 1) * ? ";
 		
-		String sql_bot = " ) where rownum > (?-1)*? ";
+		String sql_bot = " AND rn <= ? * ? ";
 		
 		sql = sql_top + sql_middle + sql_bot;
 		
-		//System.out.println(sql);
+		System.out.println(sql);
 		
 		List<PostVo> list = new ArrayList<PostVo>();
 		
@@ -1071,7 +1071,7 @@ public class BlogDAO {
 		             "LEFT JOIN img ON img.post_img = post.p_idx " +
 		             "LEFT JOIN blog ON post.p_b_idx = blog.b_idx " +
 		             "LEFT JOIN category ON category.ctgridx = post.p_ctgr " +
-		             " " +
+		             " order by hit desc" +
 		             " " +  // 먼저 정렬
 		             ") post " +
 		             "LEFT JOIN img ON img.post_img = post.p_idx " +

@@ -373,7 +373,14 @@ public class AdminDAO {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select created_at from post where p_b_idx = ? and rownum = 1";
+		String sql = "SELECT created_at \r\n" + 
+				"FROM (\r\n" + 
+				"    SELECT created_at, p_title \r\n" + 
+				"    FROM post \r\n" + 
+				"    WHERE p_b_idx = ? \r\n" + 
+				"    ORDER BY created_at DESC  " + 
+				") " + 
+				"WHERE ROWNUM = 1";
 		String cre = "";
 		//System.out.println(sql);
 		try {
