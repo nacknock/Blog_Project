@@ -94,7 +94,7 @@
 								<a class="dropdown-item" onclick="page_term('desc')">最新順</a>
 								<a class="dropdown-item" onclick="page_term('asc')">古い順</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" onclick="page_type('all')">全て</a>
+								<a class="dropdown-item" onclick="page_type('')">全て</a>
 								<a class="dropdown-item" onclick="page_type('yes_a')">回答済み</a>
 								<a class="dropdown-item" onclick="page_type('none_a')">未回答</a>
 							</div>

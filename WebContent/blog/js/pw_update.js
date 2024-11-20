@@ -12,10 +12,24 @@ $(function() {
             var new_pw = $('#new_pw').val();
             var chk_pw = $('#chk_pw').val();
 
+            if(new_pw === ''){
+                alert("新しいパスワードを入力してください。");
+                isValid = false;
+				return false;
+            }
+
+            if(chk_pw === ''){
+                alert("確認用パスワードを入力してください。");
+                isValid = false;
+				return false;
+            }
+
             if(chk_pw !== new_pw){
                 alert("新しいパスワードと確認用パスワードが一致しません。もう一度入力してください。");
                 isValid = false;
+				return false;
             }
+
             if(isValid){
                 $.ajax({
                     type:"post",
@@ -29,6 +43,9 @@ $(function() {
                         if(data.result == "ok"){
                             alert("パスワードの変更が完了しました");
                             location.href="/manage/main.do";
+                        }else if(data.result == "nok0"){
+                            alert(" 安全性を高めるために、半角英字数字と記号を組み合わせてパスワードを入力してください。");
+                            isValid = false;
                         }else if(data.result == "nok1"){
                             alert(" 現在のパスワードが一致しません。");
                             isValid = false;

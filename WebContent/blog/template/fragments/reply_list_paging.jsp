@@ -100,7 +100,7 @@
 
                 <div class="form-group">
                   <label for="message">コメントを入力</label>
-                  <textarea name="r_content" style="display:none;" id="message" cols="30" rows="10" class="form-control r_con_hidden">${re_list.r_content}</textarea>
+                  <textarea style="display:none;" id="message" cols="30" rows="10" class="form-control r_con_hidden">${re_list.r_content}</textarea>
                   <textarea name="r_content" id="message" cols="30" rows="10" class="form-control r_con"></textarea>
                 </div>
                 <div class="form-group" style="display:flex !important;justify-content: space-between;">

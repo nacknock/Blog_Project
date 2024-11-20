@@ -172,7 +172,7 @@
 						</div>
 					</div>
 					<div class="sidebar-box">
-						<h3 class="heading">最近ついたコメント</h3>
+						<h3 class="heading">最近つけたコメント</h3>
 						<c:if test="${empty rep_list3}">
 						<div class="post-entry-sidebar">
 						<h2>最近ついたコメントはありませんでした</h2>

@@ -356,7 +356,7 @@ public class ManageDAO {
 				"        LEFT JOIN img ON img.q_img = q_idx " + 
 				"        LEFT JOIN answer ON answer.a_q_idx = q_idx  " + 
 				"      " + query_where + query_keyword + query_type + " " + 
-				"    ) WHERE rn > (?-1)*? ";
+				"    ) WHERE rn > (?-1)*? and rn <= (?-1)*?+? ";
 
 		//String sql_middle = "";
 		
@@ -371,6 +371,9 @@ public class ManageDAO {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, cri.getPageNum());
 			pstmt.setInt(2, cri.getAmount());
+			pstmt.setInt(3, cri.getPageNum());
+			pstmt.setInt(4, cri.getAmount());
+			pstmt.setInt(5, cri.getAmount());
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {

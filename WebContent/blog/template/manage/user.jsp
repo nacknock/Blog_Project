@@ -143,7 +143,7 @@
 										<h4 style="color: #000;">ブログ名</h4>
 									</div>
 									<div class="ml-15">
-										<input class="form-control" type="text" name="b_title" value="${dto.blog.b_title }" style="height: 30px; background: white !important;">
+										<input class="form-control" type="text" id="b_title" name="b_title" value="${dto.blog.b_title }" style="height: 30px; background: white !important;">
 									</div>
 								</div>
 								<div class="mt-15 mr-25" style="display: flex;justify-content: center;">

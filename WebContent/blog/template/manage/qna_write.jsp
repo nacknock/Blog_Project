@@ -147,22 +147,23 @@
   </body>
   <script>
   function check() {
-		
-		if(q_form.q_title.value=="") {
-			alert("タイトルを入力してください。");
-			p_wrt_form.q_title.focus();
-			return false;
-		}
+
 		if(q_form.q_ctgr.value==="0") {
 			alert("カテゴリを選択してください。");
-			p_wrt_form.q_ctgr.focus();
+			q_form.q_ctgr.focus();
+			return false;
+		}
+		if(q_form.q_title.value=="") {
+			alert("タイトルを入力してください。");
+			q_form.q_title.focus();
 			return false;
 		}
 		if(q_form.q_content.value=="") {
 			alert("文字を入力してください。");
-			p_wrt_form.q_content.focus();
+			q_form.q_content.focus();
 			return false;
 		}
+		console.log("return");
 		return true;
 	}
   </script>
